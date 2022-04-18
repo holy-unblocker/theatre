@@ -1,0 +1,261 @@
+{
+	"image": {
+		"width": 200,
+		"height": 200
+	},
+	"categories": [
+		{
+			"name": "Social",
+			"base": "HTML5/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Discord",
+					"src": "https://discord.com/",
+					"image": 0,
+					"target": "proxy"
+				},
+				{
+					"name": "Reddit",
+					"src": "https://reddit.com/",
+					"image": 2,
+					"target": "proxy"
+				},
+				{
+					"name": "Youtube",
+					"src": "https://www.youtube.com/",
+					"image": 1,
+					"target": "proxy"
+				},
+				{
+					"name": "Invidious",
+					"src": "https://invidio.xamh.de/",
+					"image": 3,
+					"target": "proxy"
+				}
+			]
+		},
+		{
+			"name": "HTML5",
+			"base": "HTML5/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Krunker",
+					"src": "https://krunker.io/",
+					"image": 1,
+					"target": "proxy"
+				},
+				{
+					"name": "1v1.LOL",
+					"src": "https://1v1.lol/",
+					"image": 0,
+					"target": "proxy"
+				},
+				{
+					"name": "Cookie Clicker",
+					"src": "Cookie Clicker/",
+					"image": 2,
+					"target": "embed"
+				}
+			]
+		},
+		{
+			"name": "Ports",
+			"base": "Ports/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Minecraft 0.30",
+					"src": "Minecraft 0.30/",
+					"image": 0,
+					"target": "embed"
+				},
+				{
+					"name": "Super Mario 64",
+					"src": "Super Mario 64/",
+					"image": 1,
+					"target": "embed"
+				}
+			]
+		},
+		{
+			"name": "Game Boy Advance",
+			"base": "GBA/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Super Mario Advance",
+					"src": "Super Mario Advance.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Super Mario Advance 2",
+					"src": "Super Mario Advance 2.gba",
+					"image": 1,
+					"target": "webretro"
+				},
+				{
+					"name": "Mario Kart: Super Circuit",
+					"src": "Mario Kart: Super Circuit.gba",
+					"image": 2,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Red",
+					"src": "Pokemon Red.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Green",
+					"src": "Pokemon Green.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Blue",
+					"src": "Pokemon Blue.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Yellow",
+					"src": "Pokemon Yellow.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Gold",
+					"src": "Pokemon Gold.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Silver",
+					"src": "Pokemon Silver.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Crystal",
+					"src": "Pokemon Crystal.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Ruby",
+					"src": "Pokemon Ruby.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Sapphire",
+					"src": "Pokemon Sapphire.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Emerald",
+					"src": "Pokemon Emerald.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Fire Red",
+					"src": "Pokemon Fire Red.gba",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Pokemon Leaf Green",
+					"src": "Pokemon Leaf Green.gba",
+					"image": 0,
+					"target": "webretro"
+				}
+			]
+		},
+		{
+			"name": "Sega Genesis",
+			"base": "Genesis/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Sonic The Hedgehog",
+					"src": "Sonic The Hedgehog.smd",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Sonic The Hedgehog 2",
+					"src": "Sonic The Hedgehog 2.smd",
+					"image": 1,
+					"target": "webretro"
+				},
+				{
+					"name": "Sonic The Hedgehog 3",
+					"src": "Sonic The Hedgehog 3.smd",
+					"image": 2,
+					"target": "webretro"
+				}
+			]
+		},
+		{
+			"name": "Nintendo Entertainment System",
+			"base": "NES/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Super Mario Bros",
+					"src": "Super Mario Bros.nes",
+					"image": 0,
+					"target": "webretro"
+				},
+				{
+					"name": "Super Mario Bros 2",
+					"src": "Super Mario Bros 2.nes",
+					"image": 1,
+					"target": "webretro"
+				},
+				{
+					"name": "Super Mario Bros 3",
+					"src": "Super Mario Bros 3.nes",
+					"image": 2,
+					"target": "webretro"
+				}
+			]
+		},
+		{
+			"name": "Unity",
+			"base": "Unity/",
+			"image": "category.png",
+			"items": [
+				{
+					"name": "Duck Life",
+					"src": "Duck Life/",
+					"image": 0,
+					"target": "embed"
+				},
+				{
+					"name": "Duck Life 2",
+					"src": "Duck Life 2/",
+					"image": 1,
+					"target": "embed"
+				},
+				{
+					"name": "Duck Life 3",
+					"src": "Duck Life 3/",
+					"image": 2,
+					"target": "embed"
+				},
+				{
+					"name": "Duck Life 4",
+					"src": "Duck Life 4/",
+					"image": 3,
+					"target": "embed"
+				}
+			]
+		}
+	]
+}
