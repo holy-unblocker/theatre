@@ -74,13 +74,6 @@ var StateOver = {
 		);
 		scoreText.anchor.set(0.5, 0.5);
 		scoreText.text = 'Your score: ' + score;
-		fetch(
-			'https://kart.vc.mu/lb/' +
-				text_truncate(prompt("What's your name?") || '', 10) +
-				'/' +
-				score
-		);
-		console.log(111);
 		//Define and add game buttons
 		this.tutorial = game.add.button(
 			232,
