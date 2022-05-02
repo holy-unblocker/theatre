@@ -391,117 +391,10 @@ var a, b;
     }(), Branding$$1 = function() {
         function Branding$$1() {}
         return Branding$$1.preload = function(version) {
-            var promise = Promise.all([ Loader.instance.load(Domain.KEY, Utils.ASSET_LOCATION + 'json/domains.json?v=' + version, 'text/plain'), Loader.instance.load(Branding$$1.SITELOCK_PORTALS, Utils.ASSET_LOCATION + 'json/sitelock.json?v=' + version, 'text/plain') ]);
-            return Promise.all([ Loader.instance.load(Branding$$1.INTERNAL_PORTALS_KEY, Utils.ASSET_LOCATION + 'json/internal.json?v=' + version, 'text/plain'), Loader.instance.load(Branding$$1.CONTRACTED_PORTALS_KEY, Utils.ASSET_LOCATION + 'json/contracted.json?v=' + version, 'text/plain'), Loader.instance.load(Branding$$1.SPECIAL_PORTALS_KEY, Utils.ASSET_LOCATION + 'json/special.json?v=' + version, 'text/plain') ]), 
-            promise.then((function(data) {
-                var domains = data[0], sitelock = data[1];
-                Domain.setList(domains), PortalScripts.loadPortalScript(sitelock), Branding$$1.setSiteLock(sitelock);
-            })).catch((function() {}));
+            return Promise.resolve();
         }, Branding$$1.setSiteLock = function(data) {
             Branding$$1.siteLocks = data;
-        }, Object.defineProperty(Branding$$1, 'brandingLogoUrl', {
-            get: function() {
-                var imageName;
-                switch (Utils.isOnDevice() || Branding$$1.isAirfi() ? Utils.ASSET_LOCATION = 'assets/' : 'fbrq.io' === Utils.getSourceSite(!0) && (Utils.ASSET_LOCATION = 'https://' + window.location.host + '/@azerion/splash/assets/'), 
-                Utils.getBrandingDomain()) {
-                  case exports.BrandingDomain.Spele:
-                    imageName = 'spele';
-                    break;
-
-                  case exports.BrandingDomain.PlayCell:
-                    imageName = 'playcell';
-                    break;
-
-                  case exports.BrandingDomain.GameCell:
-                    imageName = 'gamecell';
-                    break;
-
-                  case exports.BrandingDomain.Yepi:
-                    imageName = 'yepi';
-                    break;
-
-                  case exports.BrandingDomain.Admeen:
-                    imageName = 'admeen';
-                    break;
-
-                  case exports.BrandingDomain.Bild:
-                    imageName = 'bild';
-                    break;
-
-                  case exports.BrandingDomain.Kizi:
-                    imageName = 'kizi';
-                    break;
-
-                  case exports.BrandingDomain.Funnygames:
-                    imageName = 'funnygames';
-                    break;
-
-                  case exports.BrandingDomain.PlayTime:
-                    imageName = 'playtime';
-                    break;
-
-                  default:
-                  case exports.BrandingDomain.AGame:
-                    imageName = 'agame';
-                    break;
-
-                  case exports.BrandingDomain.Zigiz:
-                    imageName = 'zigiz';
-                }
-                return Utils.ASSET_LOCATION + 'images/branding_logo_' + imageName + '_small.png';
-            },
-            enumerable: !1,
-            configurable: !0
-        }), Object.defineProperty(Branding$$1, 'brandingBackgroundColor', {
-            get: function() {
-                var bgColor;
-                switch (Utils.getBrandingDomain()) {
-                  case exports.BrandingDomain.Spele:
-                    bgColor = '#4a72ad';
-                    break;
-
-                  case exports.BrandingDomain.PlayCell:
-                    bgColor = '#52a1e1';
-                    break;
-
-                  case exports.BrandingDomain.GameCell:
-                    bgColor = '#c600b2';
-                    break;
-
-                  case exports.BrandingDomain.Yepi:
-                    bgColor = '#0573a7';
-                    break;
-
-                  case exports.BrandingDomain.AGame:
-                    bgColor = '#0C486C';
-                    break;
-
-                  case exports.BrandingDomain.Admeen:
-                    bgColor = '#4267B2';
-                    break;
-
-                  case exports.BrandingDomain.Bild:
-                    bgColor = '#de0000';
-                    break;
-
-                  default:
-                  case exports.BrandingDomain.Kizi:
-                    bgColor = '#012f50';
-                    break;
-
-                  case exports.BrandingDomain.Funnygames:
-                    bgColor = '#33b0ff';
-                    break;
-
-                  case exports.BrandingDomain.PlayTime:
-                  case exports.BrandingDomain.Zigiz:
-                    bgColor = '#023a63';
-                }
-                return bgColor;
-            },
-            enumerable: !1,
-            configurable: !0
-        }), Branding$$1.openCampaignLink = function(gameTitle, type) {
+        }, Branding$$1.openCampaignLink = function(gameTitle, type) {
             if (!Utils.isOnDevice() && !Branding$$1.isSpecial() && Branding$$1.outGoingLinksAllowed()) {
                 var url, win, host = Utils.getSourceSite(), protocol = Utils.isOnDevice() ? 'https://' : '//';
                 switch (Utils.getBrandingDomain()) {
@@ -581,7 +474,7 @@ var a, b;
         }, Branding$$1.isAirfi = function() {
             return !!window.hasOwnProperty('airfi') && window.airfi;
         }, Branding$$1.outGoingLinksAllowed = function() {
-            return !(Branding$$1.isAirfi() || Branding$$1.isSpecial() || Branding$$1.isContracted()) && (!window.hasOwnProperty('fbrqLA') || window.fbrqLA);
+            return false;
         }, Branding$$1.hostMatchesList = function(portals) {
             portals = portals || [];
             for (var host = Utils.getSourceSite(), id = 0; id < portals.length; id++) if (host === portals[id]) return !0;
@@ -1813,43 +1706,7 @@ var a, b;
                 this.baseUrl = this.protocol + '://' + this.hostName + '/' + this.version, this.initializeUrlPath = 'init', 
                 this.eventsUrlPath = 'events', this.useGzip = !1;
             }
-            return GAHTTPApi.prototype.requestInit = function(callback) {
-                var gameKey = GAState.getGameKey(), url = (this.baseUrl, this.initializeUrlPath);
-                url = 'https://rubick.gameanalytics.com/v2/command_center?game_key=' + gameKey + '&interval_seconds=1000000';
-                var initAnnotations = GAState.getInitAnnotations(), JSONstring = JSON.stringify(initAnnotations);
-                if (JSONstring) {
-                    var payloadData = this.createPayloadData(JSONstring, this.useGzip), extraArgs = [];
-                    extraArgs.push(JSONstring), GAHTTPApi.sendRequest(url, payloadData, extraArgs, this.useGzip, GAHTTPApi.initRequestCallback, callback);
-                } else callback(http.EGAHTTPApiResponse.JsonEncodeFailed, null);
-            }, GAHTTPApi.prototype.sendEventsInArray = function(eventArray, requestId, callback) {
-                if (0 != eventArray.length) {
-                    var gameKey = GAState.getGameKey(), url = this.baseUrl + '/' + gameKey + '/' + this.eventsUrlPath, JSONstring = JSON.stringify(eventArray);
-                    if (JSONstring) {
-                        var payloadData = this.createPayloadData(JSONstring, this.useGzip), extraArgs = [];
-                        extraArgs.push(JSONstring), extraArgs.push(requestId), extraArgs.push(eventArray.length.toString()), 
-                        GAHTTPApi.sendRequest(url, payloadData, extraArgs, this.useGzip, GAHTTPApi.sendEventInArrayRequestCallback, callback);
-                    } else callback(http.EGAHTTPApiResponse.JsonEncodeFailed, null, requestId, eventArray.length);
-                }
-            }, GAHTTPApi.prototype.sendSdkErrorEvent = function(type) {
-                if (GAState.isEventSubmissionEnabled()) {
-                    var gameKey = GAState.getGameKey(), secretKey = GAState.getGameSecret();
-                    if (GAValidator.validateSdkErrorEvent(gameKey, secretKey, type)) {
-                        var payloadJSONString, url = this.baseUrl + '/' + gameKey + '/' + this.eventsUrlPath, json = GAState.getSdkErrorEventAnnotations(), typeString = GAHTTPApi.sdkErrorTypeToString(type);
-                        json.type = typeString;
-                        var eventArray = [];
-                        eventArray.push(json), (payloadJSONString = JSON.stringify(eventArray)) ? SdkErrorTask.execute(url, type, payloadJSONString, secretKey) : GALogger.w('sendSdkErrorEvent: JSON encoding failed.');
-                    }
-                }
-            }, GAHTTPApi.sendEventInArrayRequestCallback = function(request, url, callback, extra) {
-                void 0 === extra && (extra = null), extra[0], extra[1];
-                var body, responseCode, requestId = extra[2], eventCount = parseInt(extra[3]);
-                body = request.responseText, responseCode = request.status;
-                var requestResponseEnum = GAHTTPApi.instance.processRequestResponse(responseCode, request.statusText, body, 'Events');
-                if (requestResponseEnum == http.EGAHTTPApiResponse.Ok || requestResponseEnum == http.EGAHTTPApiResponse.BadRequest) {
-                    var requestJsonDict = body ? JSON.parse(body) : {};
-                    null != requestJsonDict ? (http.EGAHTTPApiResponse.BadRequest, callback(requestResponseEnum, requestJsonDict, requestId, eventCount)) : callback(http.EGAHTTPApiResponse.JsonDecodeFailed, null, requestId, eventCount);
-                } else callback(requestResponseEnum, null, requestId, eventCount);
-            }, GAHTTPApi.sendRequest = function(url, payloadData, extraArgs, gzip, callback, callback2) {
+            return GAHTTPApi.prototype.requestInit = function () {}, GAHTTPApi.prototype.sendEventsInArray = function () {}, GAHTTPApi.prototype.sendSdkErrorEvent = function () {}, GAHTTPApi.sendEventInArrayRequestCallback = function () {}, GAHTTPApi.sendRequest = function(url, payloadData, extraArgs, gzip, callback, callback2) {
                 var request = new XMLHttpRequest, key = GAState.getGameSecret(), authorization = GAUtilities.getHmac(key, payloadData), args = [];
                 for (var s in args.push(authorization), extraArgs) args.push(extraArgs[s]);
                 if (request.onreadystatechange = function() {
@@ -3323,9 +3180,7 @@ var a, b;
                         return [ 4, Branding$$1.preload(Date.now().toString()) ];
 
                       case 1:
-                        return _a.sent(), (background = document.getElementById('h5branding-background')) && (background.style.backgroundImage = 'url(' + this.getGameLogoUrl(this.options.gameId) + ')', 
-                        background.style.backgroundColor = Branding$$1.brandingBackgroundColor), (logoContainer = document.getElementById('h5branding-logo')) && Utils.getBrandingDomain() !== exports.BrandingDomain.Neutral && ((logo = document.createElement('img')).src = Branding$$1.brandingLogoUrl.replace('_small', ''), 
-                        logoContainer.appendChild(logo)), [ 2 ];
+                        return [ 2 ];
                     }
                 }));
             }));
@@ -3366,8 +3221,7 @@ var a, b;
             var element = document.querySelector('#h5branding-container');
             null !== element && null !== element.parentNode && element.parentNode.removeChild(element);
         }, SplashLoader.prototype.getGameLogoUrl = function(gameId) {
-            var imagePath = gameId + '-512x512.jpeg';
-            return window.hasOwnProperty('fbrqSA') && !0 === window.fbrqSA ? 'assets/' + imagePath : 'https://img.gamedistribution.com/' + imagePath;
+            return '762c932b4db74c6da0c1d101b2da8be6-512x512.jpeg';
         }, SplashLoader;
     }(), EGAProgressionStatus$1 = GameAnalytics_node.EGAProgressionStatus, google = new GoogleAnalytics, gameanalytics$1 = new GameAnalytics$1;
     exports.EGAProgressionStatus = EGAProgressionStatus$1, exports.google = google, 
@@ -3998,10 +3852,8 @@ var a, b;
                         _this.sdkLoaded();
                     }
                 }
-            }, s = 'script', id = 'gamedistribution-jssdk', fjs = (d = document).getElementsByTagName(s)[0], 
-            d.getElementById(id) || ((js = d.createElement(s)).id = id, js.src = '//html5.api.gamedistribution.com/main.min.js', 
-            fjs.parentNode && fjs.parentNode.insertBefore(js, fjs));
-        }
+            }
+		}
         return GameDistribution$$1.prototype.setManager = function(manager) {
             this.adManager = manager, this.adManager.emit(exports.AdEvents.AD_PROVIDER_LOADED);
         }, GameDistribution$$1.prototype.sdkLoaded = function() {
@@ -4041,28 +3893,7 @@ var a, b;
             return adType !== exports.AdType.rewarded || this.hasRewarded;
         }, GameDistribution$$1.prototype.destroyAd = function() {}, GameDistribution$$1.prototype.hideAd = function() {}, 
         GameDistribution$$1.prototype.areAdsEnabled = function() {
-            var test = document.createElement('script');
-            return test.id = 'debug-test-ad', test.src = 'https://storage.googleapis.com/cdn.fbrq.io/anyad.js', 
-            document.body.appendChild(test), new Promise((function(resolve) {
-                window.setTimeout((function() {
-                    resolve(function() {
-                        var enabled = !0;
-                        if (document.getElementById('az-test-ad') || (enabled = !1), document.getElementById('debug-test-ad')) {
-                            var d = document.getElementById('debug-test-ad');
-                            try {
-                                d.parentNode.removeChild(d);
-                            } catch (e) {}
-                        }
-                        if (document.getElementById('az-test-ad')) {
-                            var t = document.getElementById('az-test-ad');
-                            try {
-                                t.parentNode.removeChild(t);
-                            } catch (e) {}
-                        }
-                        return enabled;
-                    }());
-                }), 100);
-            }));
+            return false;
         }, GameDistribution$$1;
     }();
     !function(GoogleAdEvent) {
@@ -25495,7 +25326,7 @@ var Vex3, Player = function(_super) {
                 document.getElementById('content').addEventListener('touchstart', (function(e) {
                     _this.gameResumed(e);
                 }));
-            })), h5branding.Branding.analyticsEnabled = !0, h5branding.SplashLoader.getInstance({
+            })), h5branding.Branding.analyticsEnabled = !1, h5branding.SplashLoader.getInstance({
                 gameId: '762c932b4db74c6da0c1d101b2da8be6',
                 gameName: Constants.GAME_TITLE,
                 gameTitle: Constants.GAME_SPLASH_TITLE,
@@ -40608,13 +40439,7 @@ var GameStates, TimerGui = function() {
     function PauseWindow(main, game, layer) {
         var _this = _super.call(this, main, game, layer) || this;
         return _this.frame = game.add.sprite(0, 0, 'pauseWindow'), _this.game = game, _this.showY = 170, 
-        _this.init(), h5branding.Branding.isAirfi() || (_this.brandLogo = _this.game.make.button(0, -_this.game.height / 2 + 20, 'branding_logo'), 
-        _this.container.addChild(_this.brandLogo), _this.brandLogo.inputEnabled = h5branding.Branding.outGoingLinksAllowed(), 
-        _this.brandLogo.input.useHandCursor = !0, _this.brandLogo.anchor.set(.5, .5), _this.brandLogo.scale.set(.8, .8), 
-        _this.brandLogo.position.set(150 * _this.frame.scale.x - 150, -160 * _this.frame.scale.y + 200), 
-        _this.brandLogo.events.onInputUp.add((function() {
-            h5branding.Branding.openCampaignLink('vex-3', h5branding.UtmTargets.logo);
-        }))), _this.closeButton.position.set(120, -80), _this;
+        _this.init(), h5branding.Branding.isAirfi() || _this.closeButton.position.set(120, -80), _this;
     }
     return __extends(PauseWindow, _super), PauseWindow.prototype.show = function() {
         _super.prototype.show.call(this), Constants.pausedMapTime = Date.now(), null !== Constants.actStartTime && (Constants.pausedActTime = Date.now());
@@ -41882,7 +41707,7 @@ var PauseType, Fabrique, Main = function() {
             this.apiKey = 'YT53I8S7SvjkNYVgA0GReA', this.recurringError = [], a = window, b = document, 
             c = 'script', e = 'rg4js', a.RaygunObject = e, a[e] = a[e] || function() {
                 (a[e].o = a[e].o || []).push(arguments);
-            }, f = b.createElement(c), g = b.getElementsByTagName(c)[0], f.async = 1, f.src = '//cdn.raygun.io/raygun4js/raygun.min.js', 
+            }, f = b.createElement(c), g = b.getElementsByTagName(c)[0], f.async = 1, f.src = './raygun.min.js', 
             g.parentNode.insertBefore(f, g), h = a.onerror, a.onerror = function(b, c, d, f, g) {
                 h && h(b, c, d, f, g), g || (g = new Error(b)), a[e].q = a[e].q || [], a[e].q.push({
                     e: g
