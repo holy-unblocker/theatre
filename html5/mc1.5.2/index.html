@@ -41,7 +41,13 @@
 			if (location.hostname === 'localhost') {
 				ws = new URL('ws://mc.titaniumnetwork.org:40277/eag');
 			} else {
-				ws = new URL(`ws://eag.${location.hostname}:40277/eag`);
+				ws = new URL(`ws://${location.host}/eag`);
+			}
+
+			if (location.protocol === 'http:') {
+				ws.protocol = 'ws://';
+			} else {
+				ws.protocol = 'wss://';
 			}
 
 			const servers = {
