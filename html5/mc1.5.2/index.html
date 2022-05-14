@@ -44,12 +44,6 @@
 				ws = new URL(`ws://eag.${location.hostname}:40277/eag`);
 			}
 
-			if (location.protocol === 'http:') {
-				ws.protocol = 'ws://';
-			} else {
-				ws.protocol = 'wss://';
-			}
-
 			const servers = {
 				type: 'compound',
 				name: '',
