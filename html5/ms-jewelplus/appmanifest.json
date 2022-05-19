@@ -1,0 +1,38 @@
+{
+	"name": "Microsoft Jewel+",
+	"short_name": "Microsoft Jewel+",
+	"description": "Microsoft Jewel+ brings MORE sparkle to the classic Match 3 game with a collection of jewels that help you rack up MASSIVE points. Build longer match combinations, play NEW bonus modes, and complete more challenges to reach a HIGHER score. This NEW version of Microsoft Jewel really knows how to shine!",
+	"version": "1.5.84",
+	"start_url": "index.html",
+	"display": "fullscreen",
+	"orientation": "any",
+	"background_color": "#18124d",
+	"theme_color": "#18124d",
+	"icons": [
+		{
+			"src": "icons/icon-16.png",
+			"sizes": "16x16",
+			"type": "image/png"
+		},
+		{
+			"src": "icons/icon-32.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "icons/icon-144.png",
+			"sizes": "144x144",
+			"type": "image/png"
+		},
+		{
+			"src": "icons/icon-128.png",
+			"sizes": "128x128",
+			"type": "image/png"
+		},
+		{
+			"src": "icons/icon-256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		}
+	]
+}
