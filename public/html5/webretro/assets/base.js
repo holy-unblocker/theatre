@@ -1207,12 +1207,6 @@ statesButton.onclick = function(e) {
 	
 	// ?core query
 	if (queries.core) {
-		try {
-			if (!window.chrome) alert("Best performance on Chrome!");
-		} catch (e) {
-			console.warn(e);
-		}
-		
 		// show menu bar
 		menuBar.style.display = "block";
 		
