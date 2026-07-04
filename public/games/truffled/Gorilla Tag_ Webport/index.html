@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gtag</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            overflow: hidden;
+            background: #000;
+        }
+        #unity-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        #unity-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #unity-loading-bar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        #unity-logo {
+            width: 154px;
+            height: 130px;
+            background: url('TemplateData/unity-logo-dark.png') no-repeat center;
+            background-size: contain;
+            margin: 0 auto 20px;
+        }
+        #unity-progress-bar-empty {
+            width: 200px;
+            height: 18px;
+            background: #202020;
+            border-radius: 3px;
+            margin: 0 auto;
+        }
+        #unity-progress-bar-full {
+            width: 0%;
+            height: 18px;
+            background: #fff;
+            border-radius: 3px;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container">
+        <canvas id="unity-canvas"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("unity-canvas");
+        const loadingBar = document.getElementById("unity-loading-bar");
+        const progressBar = document.getElementById("unity-progress-bar-full");
+
+        const buildUrl = "Build";
+        const config = {
+            dataUrl: buildUrl + "/gorilla tag web port build.data.gz",
+            frameworkUrl: buildUrl + "/gorilla tag web port build.framework.js.gz",
+            codeUrl: buildUrl + "/gorilla tag web port build.wasm.gz",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "boolonx",
+            productName: "gorilla tag web",
+            productVersion: "1.0"
+        };
+
+        const script = document.createElement("script");
+        script.src = buildUrl + "/gorilla tag web port build.loader.js";
+        script.onload = () => {
+            createUnityInstance(canvas, config, (progress) => {
+                progressBar.style.width = (100 * progress) + "%";
+            }).then(() => {
+                loadingBar.classList.add("hidden");
+            }).catch((error) => {
+                alert(error);
+            });
+        };
+        
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>

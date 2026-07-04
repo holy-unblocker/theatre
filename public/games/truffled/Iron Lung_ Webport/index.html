@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>IRON LUNG</title>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      #unity-canvas {
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+    <canvas id="unity-canvas"></canvas>
+    <script src="Build/built.loader.js"></script>
+    <script>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var phoneScreenFixer = document.createElement('meta');
+        phoneScreenFixer.name = 'viewport';
+        phoneScreenFixer.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(phoneScreenFixer);
+      }
+
+      var hugeCanvas = document.querySelector("#unity-canvas");
+
+      createUnityInstance(hugeCanvas, {
+        dataUrl: "Build/built.data",
+        frameworkUrl: "Build/built.framework.js",
+        codeUrl: "Build/built.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "98Corbins",
+        productName: "Iron Lung",
+        productVersion: "1.0",
+      });
+    </script>
+  </body>
+</html>

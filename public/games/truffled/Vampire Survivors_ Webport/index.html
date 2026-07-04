@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <meta name="theme-color" content="#000000"/>
+    <link rel="manifest" href="./manifest.json"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <title>Vampire Survivors</title>
+    
+    <style>
+        html, body { height: 100%; margin: 0; background-color: #000000; overflow: hidden; }
+        @font-face { font-family: fontANY; src: url('./assets/fonts/ANY.ttf'); }
+        @font-face { font-family: fontKO; src: url('./assets/fonts/KO.ttf'); }
+    </style>
+ <script>
+        window.onload = function() {
+            alert("Made by zyxify2000. Thanks to him we have Vampire survivors <3");
+        };
+    </script>
+    <script>
+        window.require = function(module) {
+            if (module === 'fs' || module === 'path' || module === 'electron' || module === 'original-fs') {
+                return {
+                    writeFileSync: function(path, data) { localStorage.setItem('VS_SAVE', data); },
+                    readFileSync: function(path) { return localStorage.getItem('VS_SAVE'); },
+                    existsSync: function(path) { return localStorage.getItem('VS_SAVE') !== null; },
+                    mkdirSync: function() {},
+                    join: function(a, b) { return b; }
+                };
+            }
+        };
+        window.process = { platform: 'web', env: {}, nextTick: function(f){setTimeout(f,0)} };
+        window.module = { exports: {} };
+    </script>
+
+    <script defer="defer" src="vendors.bundle.js"></script>
+    <script defer="defer" src="./main.bundle.js"></script>
+</head>
+<body>
+    <div style="font-family:fontANY; position:absolute; left:-1000px; visibility:hidden;">.</div>
+    <div style="font-family:fontKO; position:absolute; left:-1000px; visibility:hidden;">.</div>
+    <div id="phaser-game"></div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>wrapper</title>
+<style>
+  @font-face {
+    font-family: "Andy Bold";
+    src: url("AndyBold.ttf") format("truetype");
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Andy Bold", sans-serif;
+    background: url('backdrop.webp') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .portal-container {
+    background-color: #0e0e66ab;
+    border: 3px solid #333;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  }
+
+  .logo {
+    width: 80%;
+    max-width: 400px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    color: #e0e0e0;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: "Andy Bold", sans-serif;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background: #0e0e66ec;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 1px 1px 2px black;
+    flex: 1;
+  }
+
+  .btn:hover {
+    background: #262674e2;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
+  }
+</style>
+</head>
+<body>
+  <div class="portal-container">
+    <img src="logo.webp" alt="Logo" class="logo" />
+    <p>
+      terraria loader!
+    </p>
+    <div class="button-container">  
+      <button class="btn" onclick="window.location.href='index.html'">slow; good quality (1.4.5)</button>
+      <button class="btn" onclick="window.location.href='/gamefile/terraria48.html'">fast; lower quality (1.4.4)</button>
+    </div>
+  </div>
+</body>
+</html>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>

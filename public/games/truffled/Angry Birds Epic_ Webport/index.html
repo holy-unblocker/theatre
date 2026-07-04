@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/angry-bird/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Epic</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Epic</div>
+      </div>
+    </div>
+    <script>
+    window.fileMergerConfig = {
+      files: [
+        { name: 'EpicWeb.data', parts: 8 },
+        { name: 'EpicWeb.wasm', parts: 2 },
+      ],
+      basePath: 'Build/',
+      debug: true
+    };
+  </script>
+    <script>
+      (function () {
+  "use strict";
+
+  const defaultConfig = {
+    files: [],
+    basePath: "",
+    debug: true,
+  };
+
+  const config = Object.assign(
+    {},
+    defaultConfig,
+    window.fileMergerConfig || {},
+  );
+  window.mergedFiles = window.mergedFiles || {};
+
+  const mergeStatus = {};
+  const mergeProgress = {};
+
+  let loadingDiv;
+  let loadingContent;
+
+  function initializeUI() {
+    loadingDiv = document.createElement("div");
+    loadingDiv.id = "file-merger-loading";
+    loadingDiv.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 16px;
+      z-index: 10000;
+      min-width: 300px;
+      text-align: center;
+    `;
+
+    loadingContent = document.createElement("div");
+    loadingContent.id = "file-merger-content";
+    loadingDiv.appendChild(loadingContent);
+    document.body.appendChild(loadingDiv);
+  }
+
+  function updateLoadingDisplay() {
+    if (!loadingContent) return;
+
+    const lines = [
+      '<div style="font-size: 18px; margin-bottom: 15px;">loading...</div>',
+      '<a href="https://truffled.lol/" style="font-size: 15px; color: #d42222; text-decoration: underline; margin-bottom: 10px; display: block;">truffled.lol</a>'
+    ];
+
+    config.files.forEach((file) => {
+      const status = mergeStatus[file.name] || "waiting";
+      const progress = mergeProgress[file.name] || {
+        current: 0,
+        total: file.parts,
+      };
+
+      let statusText = "";
+      let color = "#888";
+
+      if (status === "merging") {
+        statusText = ` merging... ${progress.current}/${progress.total}`;
+        color = "#ffa500";
+      } else if (status === "ready") {
+        statusText = "done";
+        color = "#00ff00";
+      } else if (status === "failed") {
+        statusText = "failed";
+        color = "#ff0000";
+      } else {
+        statusText = "Waiting...";
+      }
+
+      lines.push(
+        `<div style="margin: 8px 0; color: ${color};">${file.name}: ${statusText}</div>`,
+      );
+    });
+    loadingContent.innerHTML = lines.join("");
+
+    const allDone = config.files.every(
+      (file) =>
+        mergeStatus[file.name] === "ready" ||
+        mergeStatus[file.name] === "failed",
+    );
+
+    if (allDone) {
+      setTimeout(() => {
+        loadingDiv.style.opacity = "0";
+        loadingDiv.style.transition = "opacity 0.5s";
+        setTimeout(() => loadingDiv.remove(), 500);
+      }, 1000);
+    }
+  }
+
+  function log(...args) {
+    if (config.debug) console.log("[FileMerger]", ...args);
+  }
+
+  function error(...args) {
+    console.error("[FileMerger]", ...args);
+  }
+
+  function normalizeUrl(url) {
+    try {
+      return decodeURIComponent(url.toString().split("?")[0]);
+    } catch (e) {
+      return url;
+    }
+  }
+
+  function urlsMatch(url1, url2) {
+    const norm1 = normalizeUrl(url1);
+    const norm2 = normalizeUrl(url2);
+
+    if (norm1 === norm2) return true;
+    if (norm1.endsWith(norm2) || norm2.endsWith(norm1)) return true;
+
+    return norm1.split("/").pop() === norm2.split("/").pop();
+  }
+
+  async function mergeSplitFiles(filePath, numParts) {
+    const fileName = filePath.split("/").pop();
+    mergeProgress[fileName] = { current: 0, total: numParts };
+    updateLoadingDisplay();
+
+    try {
+      const parts = [];
+      for (let i = 1; i <= numParts; i++) {
+        parts.push(`${filePath}.part${i}`);
+      }
+
+      log(`Merging ${filePath} from ${numParts} parts...`);
+
+      const buffers = [];
+      for (let i = 0; i < parts.length; i++) {
+        const response = await window.originalFetch(parts[i]);
+
+        if (!response.ok) {
+          if (response.status === 403 || response.status === 404) {
+            throw new Error(`Part missing: ${parts[i]}`);
+          }
+          throw new Error(
+            `failed to load sowwy (make a report in bug-reports in the discord) ${parts[i]}: ${response.status}`,
+          );
+        }
+
+        const buffer = await response.arrayBuffer();
+        buffers.push(buffer);
+
+        mergeProgress[fileName].current = i + 1;
+        updateLoadingDisplay();
+      }
+
+      const totalSize = buffers.reduce((sum, buf) => sum + buf.byteLength, 0);
+      const mergedArray = new Uint8Array(totalSize);
+      let offset = 0;
+
+      for (const buffer of buffers) {
+        mergedArray.set(new Uint8Array(buffer), offset);
+        offset += buffer.byteLength;
+      }
+
+      log(` ${filePath} done: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
+      return mergedArray.buffer;
+    } catch (err) {
+      error(`Failed to merge ${filePath}:`, err);
+      throw err;
+    }
+  }
+
+  function shouldInterceptFile(url) {
+    const urlStr = normalizeUrl(url);
+    if (urlStr.includes(".part")) return null;
+
+    for (const file of config.files) {
+      const fileName = file.name;
+      const fullPath = config.basePath
+        ? `${config.basePath}${fileName}`
+        : fileName;
+
+      if (
+        urlsMatch(urlStr, fileName) ||
+        urlsMatch(urlStr, fullPath) ||
+        urlsMatch(urlStr, fileName + ".br") ||
+        urlsMatch(urlStr, fullPath + ".br")
+      ) {
+        return fileName;
+      }
+    }
+
+    return null;
+  }
+
+  function getMergedFile(filename) {
+    if (window.mergedFiles[filename]) return window.mergedFiles[filename];
+
+    for (const [key, value] of Object.entries(window.mergedFiles)) {
+      if (urlsMatch(key, filename)) return value;
+    }
+
+    return null;
+  }
+
+  if (!window.originalFetch) window.originalFetch = window.fetch;
+
+  window.fetch = function (url, ...args) {
+    const filename = shouldInterceptFile(url);
+
+    if (filename) {
+      log("Intercepting fetch for:", filename);
+
+      return new Promise((resolve, reject) => {
+        const maxWait = 60000;
+        const startTime = Date.now();
+
+        const check = setInterval(() => {
+          const buffer = getMergedFile(filename);
+
+          if (buffer) {
+            clearInterval(check);
+            const contentType = filename.endsWith(".wasm")
+              ? "application/wasm"
+              : "application/octet-stream";
+            resolve(
+              new Response(buffer, {
+                status: 200,
+                statusText: "OK",
+                headers: {
+                  "Content-Type": contentType,
+                  "Content-Length": buffer.byteLength.toString(),
+                },
+              }),
+            );
+          } else if (mergeStatus[filename] === "failed") {
+            clearInterval(check);
+            reject(new Error(`Merge failed for ${filename}`));
+          } else if (Date.now() - startTime > maxWait) {
+            clearInterval(check);
+            reject(new Error(`Timeout waiting for ${filename}`));
+          }
+        }, 100);
+      });
+    }
+
+    return window.originalFetch.call(this, url, ...args);
+  };
+
+  if (!window.OriginalXMLHttpRequest)
+    window.OriginalXMLHttpRequest = window.XMLHttpRequest;
+
+  window.XMLHttpRequest = function (options) {
+    const xhr = new window.OriginalXMLHttpRequest(options);
+    const originalOpen = xhr.open;
+    const originalSend = xhr.send;
+    let requestUrl = "";
+
+    xhr.open = function (method, url, ...args) {
+      requestUrl = url;
+      return originalOpen.call(this, method, url, ...args);
+    };
+
+    xhr.send = function (...args) {
+      const filename = shouldInterceptFile(requestUrl);
+
+      if (filename) {
+        log("Intercepting XHR for:", filename);
+
+        const waitForMerge = () => {
+          const buffer = getMergedFile(filename);
+
+          if (buffer) {
+            Object.defineProperties(xhr, {
+              status: { value: 200 },
+              statusText: { value: "OK" },
+              response: { value: buffer },
+              responseType: { value: "arraybuffer" },
+              readyState: { value: 4 },
+            });
+
+            setTimeout(() => {
+              if (xhr.onreadystatechange) xhr.onreadystatechange();
+              if (xhr.onload) xhr.onload({ type: "load", target: xhr });
+            }, 1);
+          } else if (mergeStatus[filename] === "failed") {
+            if (xhr.onerror) xhr.onerror(new Error("Merge Failed"));
+          } else {
+            setTimeout(waitForMerge, 100);
+          }
+        };
+
+        waitForMerge();
+        return;
+      }
+
+      return originalSend.call(this, ...args);
+    };
+
+    return xhr;
+  };
+
+  async function autoMergeFiles() {
+    if (!config.files.length) return;
+
+    updateLoadingDisplay();
+
+    try {
+      const promises = config.files.map((file) => {
+        const fullPath = config.basePath
+          ? `${config.basePath}${file.name}`
+          : file.name;
+
+        mergeStatus[file.name] = "merging";
+        updateLoadingDisplay();
+
+        return mergeSplitFiles(fullPath, file.parts)
+          .then((buffer) => {
+            window.mergedFiles[file.name] = buffer;
+            window.mergedFiles[fullPath] = buffer;
+            mergeStatus[file.name] = "ready";
+            updateLoadingDisplay();
+          })
+          .catch((err) => {
+            mergeStatus[file.name] = "failed";
+            updateLoadingDisplay();
+            error(err);
+          });
+      });
+
+      await Promise.all(promises);
+    } catch (e) {
+      error(e);
+    }
+  }
+  function init() {
+    if (document.body) {
+      initializeUI();
+      autoMergeFiles();
+    } else {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          initializeUI();
+          autoMergeFiles();
+        });
+      } else {
+        setTimeout(init, 10);
+      }
+    }
+  }
+
+  init();
+})();
+    </script>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/EpicWeb.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/EpicWeb.data",
+        frameworkUrl: buildUrl + "/EpicWeb.framework.js",
+        codeUrl: buildUrl + "/EpicWeb.wasm",
+        streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/angry-bird/StreamingAssets",
+        companyName: "Rovio Entertainment Ltd.",
+        productName: "Epic",
+        productVersion: "3.0.1",
+        showBanner: unityShowBanner,
+        // errorHandler: function(err, url, line) {
+        //    alert("error " + err + " occurred at line " + line);
+        //    // Return 'true' if you handled this error and don't want Unity
+        //    // to process it further, 'false' otherwise.
+        //    return true;
+        // },
+      };
+
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                document.querySelector("#unity-loading-bar").style.display = "none";
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+
+              }).catch((message) => {
+                alert(message);
+              });
+            };
+
+      document.body.appendChild(script);
+
+    </script>
+  </body>
+</html>

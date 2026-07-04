@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Ice Age Baby Adventure</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <style>
+      * { margin: 0; padding: 0; }
+      html, body { width: 100%; height: 100%; overflow: hidden; background: #231F20; }
+      #unityContainer { width: 100vw; height: 100vh; }
+      #unityContainer canvas { width: 100% !important; height: 100% !important; }
+    </style>
+    <script>
+        async function loadGame() {
+        const chunks = [];
+        for (let i = 1; i <= 7; i++) {
+        const res = await fetch(`Build/webbuild2.data.unityweb.part${i}`);
+        chunks.push(await res.arrayBuffer());
+        }
+        const dataBlob = new Blob(chunks);
+        const dataUrl = URL.createObjectURL(dataBlob);
+        const base = new URL("Build/", window.location.href).href;
+        const jsonRes = await fetch("Build/webbuild2.json");
+        const config = await jsonRes.json();
+        config.dataUrl = dataUrl;
+        config.wasmCodeUrl = base + config.wasmCodeUrl;
+        config.wasmFrameworkUrl = base + config.wasmFrameworkUrl;
+        const jsonBlob = new Blob([JSON.stringify(config)], {type: "application/json"});
+        const jsonUrl = URL.createObjectURL(jsonBlob);
+        window.unityInstance = UnityLoader.instantiate("unityContainer", jsonUrl, {onProgress: UnityProgress});
+        }
+      loadGame();
+    </script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+  </head>
+  <body>
+    <div class="webgl-content">
+    <div id="unityContainer"></div>
+  </body>
+</html>

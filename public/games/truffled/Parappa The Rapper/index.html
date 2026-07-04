@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<style>
+			body {
+				overflow: hidden;
+				background: #000000;
+				margin-top: 0;
+				margin-left: 0;
+				color: #000000;
+			}
+		</style>
+		<style type="text/css">
+			#button {
+				display: none;
+			}
+
+			.imgb_vis {
+				animation: imgb-animation 7s linear;
+			}
+
+			@keyframes imgb-animation {
+				10% {
+					transform: translateX(0);
+				}
+
+				20% {
+					transform: translateX(100px);
+				}
+
+				90% {
+					transform: translateX(100px);
+				}
+
+				100% {
+					transform: translateX(0);
+				}
+			}
+		</style>
+	</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+	<body>
+		<div style="width: 100vw; height: 100vh; max-width: 100%">
+			<div id="game" style="display: none"></div>
+		</div>
+		<script>
+			function mergeFiles(fileParts) {
+				return new Promise((resolve, reject) => {
+					let buffers = [];
+
+					function fetchPart(index) {
+						if (index >= fileParts.length) {
+							let mergedBlob = new Blob(buffers);
+							let mergedFileUrl = URL.createObjectURL(mergedBlob);
+							resolve(mergedFileUrl);
+							return;
+						}
+						fetch(fileParts[index])
+							.then((response) => response.arrayBuffer())
+							.then((data) => {
+								buffers.push(data);
+								fetchPart(index + 1);
+							})
+							.catch(reject);
+					}
+					fetchPart(0);
+				});
+			}
+
+			function getParts(file, start, end) {
+				let parts = [];
+				for (let i = start; i <= end; i++) {
+					parts.push(file + ".part" + i);
+				}
+				return parts;
+			}
+
+			function resizeUnityContainer() {
+				var container = document.getElementById("unityContainer");
+				container.style.width = window.innerWidth + "px";
+				container.style.height = window.innerHeight + "px";
+			}
+			Promise.all([mergeFiles(getParts("game.zip", 1, 4))]).then(
+				([gameUrl]) => {
+					document.getElementById("game").style.display = "none";
+					document.getElementById("game").style.display = "block";
+					window.EJS_player = "#game";
+					window.EJS_core = "psx";
+					window.EJS_gameUrl = gameUrl;
+					window.EJS_pathtodata = "/extra/data/";
+
+					const script = document.createElement("script");
+					script.src = "/extra/data/loader.js";
+					document.body.appendChild(script);
+				}
+			);
+		</script>
+	</body>
+</html>

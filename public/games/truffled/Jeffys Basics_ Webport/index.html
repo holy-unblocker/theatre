@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Jeffys Basics</title>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      UnityLoader.instantiate("unityContainer", "Build/JeffysBasicsBog.json");
+    </script>
+        <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; 
+        height: 100%;
+        width: 100%;
+      }
+      #unityContainer {
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unityContainer" style="width: 960px; height: 600px; margin: auto"></div>
+  </body>
+</html>

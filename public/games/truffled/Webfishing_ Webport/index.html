@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WEBFISHING</title>
+  <link rel="icon" href="favicon.ico" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="webfishing_2_newver.js"></script>
+  <script type="module" src="index.js"></script>
+  <script src="download.js"></script>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+<body>
+  <h1>WEBFISHING</h1>
+
+  <label>
+    Username: 
+    <input type="text" id="username" placeholder="player" />
+  </label>
+
+  <input type="file" id="save" style="display: none" accept=".sav" />
+  <input type="file" id="exe" style="display: none" accept=".exe" disabled />
+
+  <div class="wfmenu">
+    <button onclick="document.getElementById('exe').click()">Load Game</button>
+    <button onclick="downloadEXE()">Download Webfishing.exe</button>
+    <button id="downloadSaveBtn" type="button">Download Save</button>
+    <button id="importSaveBtn" type="button">Import Save</button>
+  <input type="file" id="importFile" accept=".sav" style="display:none" />
+  </div>
+
+  <p>
+    Click Download WEBFISHING.exe. Then click Load Game and select the downloaded file.
+  </p>
+  
+  <canvas id="canvas"></canvas>
+
+  <div style="margin-top: -40px; text-align: left;">  
+    <button id="creditBtn" type="button" style="
+      background: none;
+      border: none;
+      color: #000000;
+      font-size: 0.9rem;
+      cursor: default;
+      user-select: none;
+      padding: 0;
+    ">
+      Made with ❤️ by <strong>aukak</strong> (Design) and <strong>98corbins & Notnite
+      </strong> (Development)
+    </button>
+  </div>
+
+
+<script>
+const usernameInput = document.getElementById('username');
+const downloadSaveBtn = document.getElementById('downloadSaveBtn');
+const importSaveBtn = document.getElementById('importSaveBtn');
+const importFile = document.getElementById('importFile');
+
+let secondName = localStorage.getItem('secondName') || '';
+
+window.addEventListener('load', () => {
+  const savedName = localStorage.getItem('username');
+  if (savedName) {
+    usernameInput.value = savedName;
+  }
+});
+
+usernameInput.addEventListener('input', () => {
+  localStorage.setItem('username', usernameInput.value);
+});
+
+usernameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    localStorage.setItem('username', usernameInput.value);
+  }
+});
+
+function saveSecondName(name) {
+  secondName = name;
+  localStorage.setItem('secondName', secondName);
+}
+
+window.addEventListener('beforeunload', () => {
+  localStorage.setItem('username', usernameInput.value);
+  localStorage.setItem('secondName', secondName);
+});
+
+setInterval(() => {
+  localStorage.setItem('username', usernameInput.value);
+  localStorage.setItem('secondName', secondName);
+}, 10000);
+
+downloadSaveBtn.addEventListener('click', () => {
+  const saveData = {
+    username: usernameInput.value,
+    secondName: secondName
+  };
+  const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'webfishing_save.sav';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+importSaveBtn.addEventListener('click', () => {
+  importFile.click();
+});
+
+importFile.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const saveData = JSON.parse(e.target.result);
+      if (saveData.username) {
+        usernameInput.value = saveData.username;
+        localStorage.setItem('username', saveData.username);
+      }
+      if (saveData.secondName) {
+        saveSecondName(saveData.secondName);
+      }
+      alert('Save loaded successfully!');
+    } catch {
+      alert('Failed to load save file: invalid format.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+</script>
+
+<script src="download.js"></script>
+</body>
+</html>

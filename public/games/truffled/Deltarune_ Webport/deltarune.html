@@ -1,0 +1,216 @@
+
+<html><head>
+  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@a6e2b184812dd22c58e6b6a18325083b7a131981/deltarune/">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+<style>
+     *{
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+}
+
+*:focus {
+  outline: none;
+  -webkit-focus-ring-color: transparent;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+</style>
+<script>
+  (function() {
+    var OrigAudioContext = window.AudioContext || window.webkitAudioContext;
+    if (OrigAudioContext) {
+      var origCreateGain = OrigAudioContext.prototype.createGain;
+
+      class MutedAudioContext extends OrigAudioContext {
+        constructor() {
+          super(...arguments);
+          var mute = origCreateGain.call(this);
+          mute.gain.value = 0;
+          mute.connect(super.destination);
+          this._muteNode = mute;
+        }
+        get destination() {
+          return this._muteNode;
+        }
+      }
+
+      window.AudioContext = MutedAudioContext;
+      window.webkitAudioContext = MutedAudioContext;
+    }
+
+    var origPlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function() {
+      this.muted = true;
+      this.volume = 0;
+      return origPlay.call(this);
+    };
+
+    var OrigAudio = window.Audio;
+    window.Audio = function() {
+      var a = new OrigAudio(...arguments);
+      a.muted = true;
+      a.volume = 0;
+      return a;
+    };
+    window.Audio.prototype = OrigAudio.prototype;
+  })();
+</script>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="logo.png" alt="Logo" class="logo">
+  </div>
+  
+  <div class="menu">
+    <a href="javascript:loadChapter(1)" class="row">
+      <span class="chapter">Chapter 1</span>
+      <span class="title">The Beginning</span>
+      <img src="icons/1.png">
+    </a>
+    <a href="javascript:loadChapter(2)" class="row">
+      <span class="chapter">Chapter 2</span>
+      <span class="title">A Cyber's World</span>
+      <img src="icons/2.png">
+    </a>
+    <a href="javascript:loadChapter(3)" class="row">
+      <span class="chapter">Chapter 3</span>
+      <span class="title">Late Night</span>
+      <img src="icons/3.png">
+    </a>
+    <a href="javascript:loadChapter(4)" class="row">
+      <span class="chapter">Chapter 4</span>
+      <span class="title">Prophecy</span>
+      <img src="icons/4.png">
+    </a>
+    <a href="javascript:alert('Chapter 5 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 5</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:alert('Chapter 6 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 6</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:alert('Chapter 7 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 7</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:window.open('https://truffled.lol', '_blank')" class="row">
+      <span class="chapter"></span>
+      <span class="title">made by bog</span>
+      <span class="badge"></span>
+    </a>
+  </div>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WLTG1S4STB');
+  </script>
+  <audio id="drone" controls="" loop="" autoplay="" hidden="" muted>
+    <source src="audios/AUDIO_DRONE.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+  </audio>
+  <button id="mute" hidden>🔇</button>
+  <script>
+    const audio = document.getElementById('drone');
+    audio.muted = true;
+    audio.volume = 0;
+    const mute = document.getElementById('mute');
+    let gamestarted = false;
+
+    function updateButton() {}
+
+    function loadChapter(chapter) {
+      fetch(`chapter${chapter}/index.html`).then(res => res.text()).then(html => {
+        gamestarted = true;
+        document.documentElement.innerHTML = html;
+        document.documentElement.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+      });
+    }
+
+    const menumoveaudio = new Audio('audios/snd_menumove.mp3');
+    const menuselectaudio = new Audio('audios/snd_select.mp3');
+    document.querySelectorAll('.row').forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        if (!gamestarted) {
+          menumoveaudio.play();
+          if (selectedChapter) {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+          }
+        }
+      });
+      row.addEventListener('click', () => {
+        if (!gamestarted) {
+          menuselectaudio.play();
+        }
+      });
+    });
+
+    let selectedChapter = null;
+    document.addEventListener('keydown', function(event) {
+      if (!gamestarted) {
+      if (event.key === 'ArrowUp') {
+        if (selectedChapter === null) {
+          selectedChapter = 0;
+          document.querySelectorAll('.row')[0].classList.add("selected");
+          menumoveaudio.play();
+        } else {
+          document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+          selectedChapter--;
+          if (selectedChapter < 0) {
+            selectedChapter = document.querySelectorAll('.row').length - 1;
+          }
+          document.querySelectorAll('.row')[selectedChapter].classList.add("selected");
+          menumoveaudio.play();
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (selectedChapter === null) {
+          selectedChapter = 0;
+          document.querySelectorAll('.row')[0].classList.add("selected");
+          menumoveaudio.play();
+        } else {
+          if (selectedChapter+1 >= document.querySelectorAll('.row').length) {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+            selectedChapter = 0;
+            document.querySelectorAll('.row')[0].classList.add("selected");
+            menumoveaudio.play();
+          } else {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+            selectedChapter++;
+            document.querySelectorAll('.row')[selectedChapter].classList.add("selected");
+            menumoveaudio.play();
+          }
+        }
+      } else if (event.key === 'Enter') {
+        if (selectedChapter !== null) {
+          window.location.href = document.querySelectorAll('.row')[selectedChapter].href;
+          menuselectaudio.play();
+        }
+      }
+      }
+    });
+  </script>
+</body></html>

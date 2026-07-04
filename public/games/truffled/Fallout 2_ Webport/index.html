@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <title>Fallout 2</title>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: "Shantell Sans", sans-serif;
+    }
+
+    #viewport {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: block;
+    }
+
+    #canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #fff;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.9));
+      text-align: center;
+      padding: 20px;
+      transition: opacity 200ms ease;
+      z-index: 10;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #logo {
+      max-width: min(420px, 82vw);
+      height: auto;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    #status {
+      font-size: 40px;
+      letter-spacing: 0.04em;
+      color: #cfd8dc;
+    }
+
+
+    #loading-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    #loading-footer img {
+      max-width: min(360px, 80vw);
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewport">
+    <canvas id="canvas"></canvas>
+    <div id="overlay">
+      <img id="logo" src="assets/fo2.webp" alt="Fallout 2" />
+      <div id="status">loading game…</div>
+      <div id="loading-footer">
+        <img src="assets/portcred.png" alt="Port credit" />
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/emulators.js"></script>
+  <script src="assets/indexdb.js"></script>
+  <script src="assets/key.js"></script>
+  <script src="assets/webgl.js"></script>
+  <script src="assets/helper-x.js"></script>
+  <script src="assets/audio-node.js"></script>
+  <script>
+    (function () {
+      var ci;
+
+      const overlay = document.getElementById("overlay");
+      const statusEl = document.getElementById("status");
+      const canvas = document.getElementById("canvas");
+      const assetBase = new URL(".", window.location.href).href;
+      const toolBase = assetBase.endsWith("/") ? assetBase.slice(0, -1) : assetBase;
+
+      const setStatus = (text) => {
+        statusEl.textContent = text;
+      };
+
+      const requestFullscreen = () => {
+        if (document.fullscreenElement) {
+          return;
+        }
+        const target = document.documentElement;
+        if (!target.requestFullscreen) {
+          return;
+        }
+        const promise = target.requestFullscreen();
+        if (promise && typeof promise.catch === "function") {
+          promise.catch(() => {});
+        }
+      };
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "F4") {
+          requestFullscreen();
+        }
+      });
+
+      requestFullscreen();
+
+      const fetchBundle = async (url) => {
+        setStatus("loading game bundle…");
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error("failed to load bundle: " + response.status + " " + response.statusText);
+        }
+
+        const total = Number(response.headers.get("content-length")) || 0;
+        if (!response.body || !total) {
+          const buffer = await response.arrayBuffer();
+          return new Uint8Array(buffer);
+        }
+
+        const reader = response.body.getReader();
+        const chunks = [];
+        let loaded = 0;
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          if (value) {
+            chunks.push(value);
+            loaded += value.length;
+            const percent = Math.min(100, Math.round((loaded / total) * 100));
+            setStatus("loading game bundle… " + percent + "%");
+          }
+        }
+
+        const blob = new Blob(chunks);
+        const buffer = await blob.arrayBuffer();
+        return new Uint8Array(buffer);
+      };
+
+      const startGame = async () => {
+        if (!window.emulators) {
+          throw new Error("emulator libs failed to load. check your network connection.");
+        }
+
+        emulators.pathPrefix = "assets/";
+
+        const bundle = await fetchBundle("assets/fallout2.jsdos");
+
+        const cdImages = [
+          {
+            link: toolBase + "/assets/disc/FALLOUT2.DCD",
+            name: "Fallout 2 Disc",
+            size: 671916128,
+            mount: "FALLOUT2.cue",
+          },
+        ];
+
+        let lastStage = null;
+        const stagePercent = Object.create(null);
+
+        const fallbackTotals = {
+          1: 45564835,
+          3: 491792,
+          5: 671916128,
+          7: 76901,
+        };
+
+        const helper = new HelperX(
+          bundle,
+          canvas,
+          {
+            name: "fallout2_cd",
+            save: 1,
+            mouseSensitivity: 0.6,
+            version: "20251209",
+          },
+          {
+            onReady: function () {
+              helper.Message(
+                "ddyx-settings",
+                {
+                  type: 1,
+                  baseurl: toolBase,
+                  option: "",
+                  voodoo_upscaler: false,
+                  voodoo_aniso: false,
+                  auto_command: undefined,
+                  hardware: {
+                    voodoo: false,
+                    tool: toolBase,
+                    mt32: false,
+                    gm: false,
+                    gmsf: "",
+                    cdImages: cdImages,
+                    selectedCD: 0,
+                    osImages: "/assets/os/WIN95OSR2_EN_OS.DCD",
+                    gameImages: "/assets/game/FALLOUT2.DCD",
+                  },
+                },
+                function () {
+                  setStatus("Starting game…");
+                  overlay.classList.add("hidden");
+                }
+              );
+            },
+            onProgress: function () {},
+            onFrameSize: function () {},
+            onExtractProgress: function (type, message, loaded, total) {
+              if (total) {
+                let stage = Number(type);
+                if (!Number.isFinite(stage)) {
+                  stage = parseInt(String(type), 10);
+                }
+                let effectiveTotal = total;
+                if (!effectiveTotal && Number.isFinite(stage) && fallbackTotals[stage]) {
+                  effectiveTotal = fallbackTotals[stage];
+                }
+                if (Number.isFinite(stage) && Number.isFinite(loaded) && effectiveTotal) {
+                  stagePercent[stage] = Math.min(100, Math.round((loaded / effectiveTotal) * 100));
+                }
+                const label = stage <= 1
+                  ? "preloading emulator… (1/2) "
+                  : stage >= 2 && stage <= 5
+                    ? "preloading emulator… (2/2) "
+                    : stage >= 6
+                      ? "loading game files… "
+                      : "loading emulator… ";
+                const percent = stagePercent[stage] ?? 0;
+                setStatus(label + percent + "%");
+                lastStage = Number.isFinite(stage) ? stage : lastStage;
+              } else if (message || loaded) {
+                let stage = Number(type);
+                if (!Number.isFinite(stage)) {
+                  stage = parseInt(String(type), 10);
+                }
+                let effectiveTotal = total;
+                if (!effectiveTotal && Number.isFinite(stage) && fallbackTotals[stage]) {
+                  effectiveTotal = fallbackTotals[stage];
+                }
+                if (Number.isFinite(stage) && Number.isFinite(loaded) && effectiveTotal) {
+                  stagePercent[stage] = Math.min(100, Math.round((loaded / effectiveTotal) * 100));
+                }
+                const label = stage <= 1
+                  ? "preloading emulator… (1/2) "
+                  : stage >= 2 && stage <= 5
+                    ? "preloading emulator… (2/2) "
+                    : stage >= 6
+                      ? "loading game files… "
+                      : "loading emulator… ";
+                const percent = stagePercent[stage];
+                if (Number.isFinite(stage) && percent !== undefined) {
+                  setStatus(label + percent + "%");
+                } else {
+                  setStatus(label + "100%");
+                }
+                lastStage = Number.isFinite(stage) ? stage : lastStage;
+              } else {
+                let stage = Number(type);
+                if (!Number.isFinite(stage)) {
+                  stage = parseInt(String(type), 10);
+                }
+                if (Number.isFinite(stage) && stage !== lastStage) {
+                  const label = stage <= 1
+                    ? "preloading emulator… (1/2)"
+                    : stage >= 2 && stage <= 5
+                      ? "preloading emulator… (2/2)"
+                      : stage >= 6
+                        ? "loading game files…"
+                        : "loading emulator…";
+                  const percent = stagePercent[stage];
+                  if (percent !== undefined) {
+                    setStatus(label + " " + percent + "%");
+                  } else {
+                    setStatus(label + " 100%");
+                  }
+                  lastStage = stage;
+                }
+              }
+            },
+          }
+        );
+      };
+
+      startGame().catch((error) => {
+        console.error(error);
+        overlay.classList.remove("hidden");
+        setStatus(error.message || "failed to start game. check console for details!");
+      });
+    })();
+  </script>
+</body>
+</html>

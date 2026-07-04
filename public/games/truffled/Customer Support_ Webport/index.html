@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Customer Support WebPort</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			height: 100%;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #1f1f20;
+		}
+		canvas {
+			width: 960px;
+			height: 540px;
+			background: #1f1f20;
+		}
+		::-webkit-scrollbar {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="unity-canvas" tabindex="-1"></canvas>
+
+	<script src="Build/CustomerSupportPort.loader.js"></script>
+	<script>
+		createUnityInstance(document.querySelector("#unity-canvas"), {
+			arguments: [],
+			dataUrl: "Build/CustomerSupportPort.data",
+			frameworkUrl: "Build/CustomerSupportPort.framework.js",
+			codeUrl: "Build/CustomerSupportPort.wasm",
+			streamingAssetsUrl: "StreamingAssets",
+			companyName: "DefaultCompany",
+			productName: "ExportedProject",
+			productVersion: "1.0",
+		});
+	</script>
+</body>
+</html>

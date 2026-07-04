@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Pixl Gun 3D</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #231F20;
+      }
+      .webgl-content {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      #gameContainer {
+        width: 100% !important;
+        height: calc(100vh - 50px) !important;
+        flex: 1;
+        cursor: pointer;
+      }
+      #gameContainer canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+      .footer {
+        height: 50px;
+        background: #191919;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+      .title {
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+      }
+      .fullscreen {
+        width: 38px;
+        height: 38px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>') center no-repeat;
+        background-size: contain;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .fullscreen:hover {
+        opacity: 1;
+      }
+      .webgl-logo {
+        width: 204px;
+        height: 38px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204 38" fill="white"><text x="10" y="25" font-family="Arial" font-size="20">Unity WebGL</text></svg>') center no-repeat;
+        background-size: contain;
+      }
+      #mouseLockPrompt {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        text-align: center;
+        display: none;
+        z-index: 1000;
+        border: 2px solid #555;
+      }
+      #mouseLockPrompt.show {
+        display: block;
+      }
+    </style>
+    <script src="TemplateData/UnityProgress.js"></script>  
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/build.json", {onProgress: UnityProgress});
+      
+      // Mouse lock functionality
+      var canvas;
+      var mouseLockPrompt;
+      
+      window.addEventListener('load', function() {
+        canvas = document.querySelector('#gameContainer canvas');
+        mouseLockPrompt = document.getElementById('mouseLockPrompt');
+        
+        if (!canvas) {
+          // If canvas doesn't exist yet, wait for it
+          var observer = new MutationObserver(function(mutations) {
+            canvas = document.querySelector('#gameContainer canvas');
+            if (canvas) {
+              setupMouseLock();
+              observer.disconnect();
+            }
+          });
+          observer.observe(document.getElementById('gameContainer'), {
+            childList: true,
+            subtree: true
+          });
+        } else {
+          setupMouseLock();
+        }
+      });
+      
+      function setupMouseLock() {
+        // Request pointer lock on canvas click
+        canvas.addEventListener('click', function() {
+          canvas.requestPointerLock = canvas.requestPointerLock ||
+                                      canvas.mozRequestPointerLock ||
+                                      canvas.webkitRequestPointerLock;
+          if (canvas.requestPointerLock) {
+            canvas.requestPointerLock();
+          }
+        });
+        
+        // Handle pointer lock changes
+        document.addEventListener('pointerlockchange', handleLockChange);
+        document.addEventListener('mozpointerlockchange', handleLockChange);
+        document.addEventListener('webkitpointerlockchange', handleLockChange);
+        
+        // Handle pointer lock errors
+        document.addEventListener('pointerlockerror', handleLockError);
+        document.addEventListener('mozpointerlockerror', handleLockError);
+        document.addEventListener('webkitpointerlockerror', handleLockError);
+      }
+      
+      function handleLockChange() {
+        var locked = document.pointerLockElement === canvas ||
+                     document.mozPointerLockElement === canvas ||
+                     document.webkitPointerLockElement === canvas;
+        
+        if (locked) {
+          if (mouseLockPrompt) {
+            mouseLockPrompt.classList.remove('show');
+          }
+        } else {
+          if (mouseLockPrompt) {
+            mouseLockPrompt.classList.add('show');
+            setTimeout(function() {
+              mouseLockPrompt.classList.remove('show');
+            }, 2000);
+          }
+        }
+      }
+      
+      function handleLockError() {
+        console.error('Pointer lock error');
+      }
+    </script>
+  </head>
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer"></div>
+    </div>
+    <div id="mouseLockPrompt">
+      Click to lock mouse • Press ESC to unlock
+    </div>
+  </body>
+</html>

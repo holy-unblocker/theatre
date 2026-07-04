@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>A Dance of Fire And Ice</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #231F20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #gameContainer {
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
+      background: #231F20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #231F20;
+    }
+  </style>
+  <script src="Build/UnityLoader.js"></script>
+  <script src="/js/main.js"></script>
+</head>
+<body>
+  <div id="gameContainer">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+
+  <script>
+    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/adofaiii4.json", {
+      onProgress: function(unityInstance, progress) {
+        console.log("Loading progress: " + (progress * 100).toFixed(2) + "%");
+      }
+    });
+  </script>
+</body>
+</html>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>yikes!</title>
+    <style>
+      #emscripten_logo, .spinner, #status, #controls, .emscripten:not(canvas), #output, #progress {
+        display: none !important;
+      }
+
+      body, html {
+        background-color: black;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .emscripten_border {
+        border: none;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      canvas.emscripten {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        border: 0px none;
+        background-color: black;
+      }
+    </style>
+  </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PXHK7Q7G3Z');
+  </script>
+  <body>
+    <a href="http://emscripten.org" id="emscripten_logo"></a>
+    <div class="spinner" id='spinner'></div>
+    <div id="status"></div>
+    <div id="progress"></div>
+    <div id="controls"></div>
+
+    <div class="emscripten_border">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    </div>
+    
+    <textarea id="output" rows="8" style="display:none;"></textarea>
+
+    <script type='text/javascript'>
+      var statusElement = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement = document.getElementById('spinner');
+      var canvasElement = document.getElementById('canvas');
+      var outputElement = document.getElementById('output');
+      if (outputElement) outputElement.value = '';
+
+      canvasElement.addEventListener('webglcontextlost', (e) => {
+        alert('WebGL context lost. You will need to reload the page.');
+        e.preventDefault();
+      }, false);
+
+      canvasElement.widthNative = screen.availWidth;
+      canvasElement.heightNative = screen.availHeight;
+
+      var Module = {
+        print(...args) {
+          console.log(...args);
+          if (outputElement) {
+            var text = args.join(' ');
+            outputElement.value += text + "\n";
+          }
+        },
+        canvas: canvasElement,
+        setStatus(text) {
+          Module.setStatus.last ??= { time: Date.now(), text: '' };
+          if (text === Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 30) return;
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          if (m) {
+            progressElement.value = parseInt(m[2])*100;
+            progressElement.max = parseInt(m[4])*100;
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing...' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+      window.onerror = (event) => {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        Module.setStatus = (text) => {
+          if (text) console.error('[post-exception status] ' + text);
+        };
+      };
+    </script>
+    <script async type="text/javascript" src="hl2_launcher.js"></script>
+  </body>
+</html>
