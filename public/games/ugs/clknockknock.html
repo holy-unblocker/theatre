@@ -1,0 +1,140 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <title>Knock, Knock</title>
+    <style>
+        html, body, #canvas { margin: 0; padding: 0; border: 0; }
+        body { color: white; background-color: black; overflow: hidden; touch-action: none; }
+        #canvas { display: block; }
+        #canvas:focus { outline: none; }
+        #status {
+            position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+            background-color: #1c1b1b; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; visibility: visible;
+        }
+        #status-progress { width: 50%; margin-bottom: 10px; }
+        #status-notice {
+            background-color: #5b3943; border-radius: 0.5rem; border: 1px solid #9b3943;
+            color: #e0e0e0; font-family: sans-serif; line-height: 1.3;
+            margin: 0 2rem; padding: 1rem; text-align: center; z-index: 1;
+        }
+    </style>
+
+    <script>
+        (function() {
+            'use strict';
+           
+            const BASE_URL = 'https://cdn.jsdelivr.net/gh/shayderrr/portsv3@main/knockknock/';
+            const originalFetch = window.fetch;
+            const mergedData = {}; 
+            const pendingRequests = {}; 
+
+            window.fetch = function(url, ...args) {
+                const urlString = url.toString();
+                if (urlString.includes("Knock, Knock.pck") || urlString.includes("Knock, Knock.wasm")) {
+                    const baseFileName = urlString.split('/').pop().split('?')[0]; 
+
+                    if (mergedData[baseFileName]) {
+                        return Promise.resolve(new Response(mergedData[baseFileName]));
+                    }
+                    return new Promise((resolve) => {
+                        if (!pendingRequests[baseFileName]) pendingRequests[baseFileName] = [];
+                        pendingRequests[baseFileName].push(resolve);
+                    });
+                }
+                return originalFetch(url, ...args);
+            };
+
+            async function mergeFiles(baseFileName, start, end) {
+                const buffers = [];
+                const statusNotice = document.getElementById('status-notice');
+                try {
+                    for (let i = start; i <= end; i++) {
+                       
+                        const partName = `${baseFileName}.part${i}`;
+                        statusNotice.innerText = `Fetching ${baseFileName}: ${i}/${end}`;
+                        
+                        const response = await originalFetch(BASE_URL + partName, { cache: "no-store" });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Part ${i} not found at ${BASE_URL + partName}`);
+                        }
+                        
+                        buffers.push(await response.arrayBuffer());
+                    }
+                    
+                    const mergedBlob = new Blob(buffers, { type: 'application/octet-stream' });
+                    mergedData[baseFileName] = mergedBlob;
+
+                    if (pendingRequests[baseFileName]) {
+                        pendingRequests[baseFileName].forEach(resolve => resolve(new Response(mergedBlob)));
+                        delete pendingRequests[baseFileName];
+                    }
+                } catch (err) {
+                    console.error(err);
+                    statusNotice.innerText = `Merge Error: ${err.message}`;
+                }
+            }
+
+            async function init() {
+            
+                document.getElementById('status-progress').style.display = 'block';
+                
+                await Promise.all([
+                    mergeFiles("Knock, Knock.pck", 1, 20),
+                    mergeFiles("Knock, Knock.wasm", 1, 2)
+                ]);
+
+                if (typeof window.godotRunStart === 'function') {
+                    window.godotRunStart();
+                }
+            }
+            window.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+</head>
+<body>
+    <canvas id="canvas">Your browser does not support the canvas tag.</canvas>
+    <div id="status">
+        <progress id="status-progress" style="display:none;"></progress>
+        <div id="status-notice">Locating files...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv3@main/knockknock/Knock,%20Knock.js"></script>
+    <script>
+        const GODOT_CONFIG = {
+            "args":[],
+            "canvasResizePolicy":2,
+            "executable":"Knock, Knock",
+            "fileSizes":{"Knock, Knock.pck":376286304,"Knock, Knock.wasm":35740641},
+            "focusCanvas":true
+        };
+        const engine = new Engine(GODOT_CONFIG);
+
+        window.godotRunStart = function() {
+            const statusOverlay = document.getElementById('status');
+            const statusProgress = document.getElementById('status-progress');
+            const statusNotice = document.getElementById('status-notice');
+
+            statusNotice.innerText = "Starting engine...";
+
+            engine.startGame({
+                'onProgress': function (current, total) {
+                    if (current > 0 && total > 0) {
+                        statusProgress.value = current;
+                        statusProgress.max = total;
+                    }
+                },
+            }).then(() => {
+                statusOverlay.remove();
+            }).catch(err => {
+                statusNotice.innerText = "Engine Error: " + err.message;
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>soda sim</title>
+<style>
+body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+#canvas { display: block; width: 100vw !important; height: 100vh !important; position: fixed; top: 0; left: 0; border: none; outline: none; object-fit: fill; }
+#status { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; color: #fff; font-family: sans-serif; text-align: center; pointer-events: none; }
+progress { width: 80vw; max-width: 400px; height: 20px; appearance: none; border-radius: 10px; overflow: hidden; }
+progress::-webkit-progress-bar { background-color: #222; }
+progress::-webkit-progress-value { background-color: #fff; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker@latest/coi-serviceworker.min.js"></script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="status">
+<div id="status-text">loading</div>
+<progress id="status-progress" value="0" max="100"></progress>
+</div>
+<script>
+(function() {
+'use strict';
+const BASE = "https://cdn.jsdelivr.net/gh/shayderrr/portsv4@9156d9913093925fa2b479bb0918392b98fbc0eb/web/";
+const originalFetch = window.fetch;
+const mergedData = {};
+const pendingRequests = {};
+
+window.fetch = function(url, ...args) {
+    const u = url.toString();
+    if (u.includes("ggj2025.pck") || u.includes("ggj2025.wasm")) {
+        const f = u.includes(".pck") ? "ggj2025.pck" : "ggj2025.wasm";
+        if (mergedData[f]) return Promise.resolve(new Response(mergedData[f]));
+        return new Promise((resolve) => {
+            if (!pendingRequests[f]) pendingRequests[f] = [];
+            pendingRequests[f].push(resolve);
+        });
+    }
+    return originalFetch(url, ...args);
+};
+
+async function loadFile(name, start, end) {
+    const bufs = [];
+    for (let i = start; i <= end; i++) {
+        const suffix = end > 1 ? `.part${i}` : "";
+        const url = BASE + encodeURIComponent(name + suffix);
+        const r = await originalFetch(url);
+        if (!r.ok) throw new Error();
+        bufs.push(await r.arrayBuffer());
+        document.getElementById('status-progress').value = ((i / end) * 100);
+    }
+    const b = new Blob(bufs, { type: 'application/octet-stream' });
+    mergedData[name] = b;
+    if (pendingRequests[name]) {
+        pendingRequests[name].forEach(res => res(new Response(b)));
+        delete pendingRequests[name];
+    }
+}
+
+async function init() {
+    try {
+        await loadFile("ggj2025.pck", 1, 1);
+        await loadFile("ggj2025.wasm", 1, 2);
+        const s = document.createElement('script');
+        s.src = BASE + encodeURIComponent("ggj2025.js");
+        s.onload = () => {
+            const engine = new Engine({
+                args: [],
+                canvasResizePolicy: 2,
+                executable: "ggj2025",
+                fileExtensions: ["pck", "wasm"]
+            });
+            engine.startGame({
+                onProgress: (c, t) => { if (t > 0) document.getElementById('status-progress').value = (c / t) * 100; }
+            }).then(() => {
+                document.getElementById('status').style.display = 'none';
+                window.dispatchEvent(new Event('resize'));
+            });
+        };
+        document.body.appendChild(s);
+    } catch (e) {
+        document.getElementById('status-text').innerText = "Load Failed";
+    }
+}
+init();
+})();
+</script>
+</body>
+</html>

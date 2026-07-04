@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sonic Mania</title>
+    <style type="text/css">
+      html, body {
+        font-family: arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+        text-align: center;
+      }
+
+      canvas {
+        height: 100%;
+        margin: auto;
+        padding: 0;
+        border: 0 none;
+        background-color: #000;
+        image-rendering: pixelated;
+      }
+
+      .spinner {
+        height: 30px;
+        width: 30px;
+        margin: 20px auto 0;
+        display: block;
+        border-left: 5px solid rgb(235,235,235);
+        border-right: 5px solid rgb(235,235,235);
+        border-bottom: 5px solid rgb(235,235,235);
+        border-top: 5px solid rgb(120,120,120);
+        border-radius: 100%;
+        background-color: rgb(189,215,46);
+        animation: rotation 0.8s linear infinite;
+      }
+
+      @keyframes rotation {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+      }
+
+      #status {
+        display: inline-block;
+        margin-top: 20px;
+        font-weight: bold;
+        color: rgb(180,180,180);
+        line-height: 1.5;
+      }
+
+      #progress {
+        height: 20px;
+        width: 300px;
+        display: block;
+        margin: 10px auto;
+      }
+
+      #output { display: none; }
+
+      #esc-banner {
+        display: none;
+        position: fixed;
+        top: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.55);
+        color: rgb(220, 220, 220);
+        font-family: arial, sans-serif;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.15);
+        backdrop-filter: blur(6px);
+        z-index: 999;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      #esc-banner:hover {
+        background: rgba(0, 0, 0, 0.75);
+      }
+
+      #esc-banner .close-x {
+        margin-left: 14px;
+        opacity: 0.6;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="spinner" id="spinner"></div>
+    <progress id="progress" value="0" max="100" hidden="hidden"></progress>
+    <div id="status">0%</div>
+    <canvas id="canvas" onclick="window.focus();" oncontextmenu="event.preventDefault();"></canvas>
+    <textarea id="output" rows="8"></textarea>
+    <div id="esc-banner">Press ESC to play stages <span class="close-x">✕</span></div>
+
+    <script type="text/javascript">
+      var CDN = 'https://cdn.jsdelivr.net/gh/UGBONTOP/sonic-mania-jsdlivr@refs/heads/main';
+
+      var RSDK_PARTS = [
+        CDN + '/rsdk/xsfgtj.rsdk.part0',
+        CDN + '/rsdk/xsfgtj.rsdk.part1',
+        CDN + '/rsdk/xsfgtj.rsdk.part2',
+        CDN + '/rsdk/xsfgtj.rsdk.part3',
+        CDN + '/rsdk/xsfgtj.rsdk.part4',
+        CDN + '/rsdk/xsfgtj.rsdk.part5',
+        CDN + '/rsdk/xsfgtj.rsdk.part6'
+      ];
+
+      var WASM_PARTS = [
+        CDN + '/wasm/RSDKv5.wasm.part0',
+        CDN + '/wasm/RSDKv5.wasm.part1',
+        CDN + '/wasm/RSDKv5.wasm.part2',
+        CDN + '/wasm/RSDKv5.wasm.part3'
+      ];
+
+      function assembleFile(parts, label) {
+        return new Promise(function(resolve, reject) {
+          var total = parts.length;
+          var buffers = new Array(total);
+          var completed = 0;
+          parts.forEach(function(url, i) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = function() {
+              if (xhr.status === 200) {
+                buffers[i] = new Uint8Array(xhr.response);
+                completed++;
+                if (completed === total) {
+                  var totalBytes = buffers.reduce(function(s,p){return s+p.length;},0);
+                  var merged = new Uint8Array(totalBytes);
+                  var offset = 0;
+                  buffers.forEach(function(p){merged.set(p,offset);offset+=p.length;});
+                  resolve(merged.buffer);
+                }
+              } else {
+                reject(new Error('HTTP ' + xhr.status + ' — ' + url));
+              }
+            };
+            xhr.onerror = function() { reject(new Error('Network error: ' + url)); };
+            xhr.send();
+          });
+        });
+      }
+
+      var rsdkReady = assembleFile(RSDK_PARTS, 'RSDK');
+      var wasmReady = assembleFile(WASM_PARTS, 'WASM');
+
+      var OrigXHR = window.XMLHttpRequest;
+      function InterceptedXHR() {
+        this._xhr = new OrigXHR();
+        this._interceptType = null;
+        this._listeners = {};
+        var self = this;
+        ['load','error','progress','abort','loadstart','loadend','readystatechange','timeout'].forEach(function(evt) {
+          self._xhr.addEventListener(evt, function(e) {
+            if (self['on'+evt]) self['on'+evt](e);
+            (self._listeners[evt]||[]).forEach(function(fn){fn.call(self,e);});
+          });
+        });
+      }
+
+      InterceptedXHR.prototype.open = function(method, url, async) {
+        if (typeof url==='string' && (url.includes('.rsdk')||url.includes('xsfgtj')) && !url.includes('.part')) {
+          this._interceptType = 'rsdk';
+        } else if (typeof url==='string' && url.includes('.wasm') && !url.includes('.part')) {
+          this._interceptType = 'wasm';
+        } else {
+          this._xhr.open(method, url, async!==false);
+        }
+      };
+
+      InterceptedXHR.prototype.send = function(data) {
+        if (!this._interceptType) { this._xhr.send(data); return; }
+        var self = this;
+        var promise = this._interceptType === 'rsdk' ? rsdkReady : wasmReady;
+        if (self.onloadstart) self.onloadstart({});
+        promise.then(function(buffer) {
+          Object.defineProperty(self,'readyState',{get:function(){return 4;},configurable:true});
+          Object.defineProperty(self,'status',{get:function(){return 200;},configurable:true});
+          Object.defineProperty(self,'response',{get:function(){return buffer;},configurable:true});
+          var bytes = buffer.byteLength;
+          var pe = {type:'progress',loaded:bytes,total:bytes,lengthComputable:true};
+          if(self.onprogress)self.onprogress(pe);
+          (self._listeners['progress']||[]).forEach(function(fn){fn.call(self,pe);});
+          var le = {type:'load',loaded:bytes,total:bytes,lengthComputable:true};
+          if(self.onload)self.onload(le);
+          (self._listeners['load']||[]).forEach(function(fn){fn.call(self,le);});
+          var re = {type:'readystatechange'};
+          if(self.onreadystatechange)self.onreadystatechange(re);
+          (self._listeners['readystatechange']||[]).forEach(function(fn){fn.call(self,re);});
+          var ee = {type:'loadend'};
+          if(self.onloadend)self.onloadend(ee);
+          (self._listeners['loadend']||[]).forEach(function(fn){fn.call(self,ee);});
+        }).catch(function(err) {
+          console.error('Assembly failed ('+self._interceptType+'):', err);
+          Object.defineProperty(self,'status',{get:function(){return 0;},configurable:true});
+          var errEvt={type:'error'};
+          if(self.onerror)self.onerror(errEvt);
+          (self._listeners['error']||[]).forEach(function(fn){fn.call(self,errEvt);});
+        });
+      };
+
+      InterceptedXHR.prototype.addEventListener = function(type, fn) {
+        if (!this._listeners[type]) this._listeners[type]=[];
+        this._listeners[type].push(fn);
+        if (!this._interceptType) this._xhr.addEventListener(type, fn);
+      };
+      InterceptedXHR.prototype.removeEventListener = function(type, fn) {
+        if (this._listeners[type]) this._listeners[type]=this._listeners[type].filter(function(f){return f!==fn;});
+        this._xhr.removeEventListener(type, fn);
+      };
+      ['abort','getAllResponseHeaders','getResponseHeader','overrideMimeType','setRequestHeader','timeout','withCredentials','upload'].forEach(function(prop) {
+        Object.defineProperty(InterceptedXHR.prototype, prop, {
+          get:function(){var v=this._xhr[prop];return typeof v==='function'?v.bind(this._xhr):v;},
+          set:function(v){this._xhr[prop]=v;},
+          configurable:true
+        });
+      });
+      ['responseText','responseXML','statusText','responseURL'].forEach(function(prop) {
+        Object.defineProperty(InterceptedXHR.prototype,prop,{get:function(){return this._xhr[prop];},configurable:true});
+      });
+      window.XMLHttpRequest = InterceptedXHR;
+
+      WebAssembly.instantiateStreaming = function(source, imports) {
+        return wasmReady.then(function(buffer) {
+          return WebAssembly.instantiate(buffer, imports);
+        });
+      };
+
+      var statusElement   = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement  = document.getElementById('spinner');
+      var escBanner       = document.getElementById('esc-banner');
+
+      escBanner.addEventListener('click', function() {
+        escBanner.style.display = 'none';
+      });
+
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print:    function(text) { console.log(text); },
+        printErr: function(text) { console.error(text); },
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+          canvas.addEventListener('webglcontextlost', function(e) {
+            alert('WebGL context lost. Reload the page.');
+            e.preventDefault();
+          }, false);
+          return canvas;
+        })(),
+        locateFile: function(path, prefix) {
+          if (path.includes('.rsdk') || path.includes('xsfgtj')) return CDN + '/rsdk/' + path;
+          if (path.includes('.wasm')) return CDN + '/wasm/' + path;
+          return (prefix||'') + path;
+        },
+        setStatus: function(text) {
+          if (!Module.setStatus.last) Module.setStatus.last = {time:Date.now(),text:''};
+          if (text===Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now-Module.setStatus.last.time<30) return;
+          Module.setStatus.last.time=now;
+          Module.setStatus.last.text=text;
+          if (m) {
+            var loaded=parseFloat(m[2]),total=parseFloat(m[4]),pct=Math.round((loaded/total)*100);
+            progressElement.value=loaded*100;
+            progressElement.max=total*100;
+            progressElement.hidden=false;
+            statusElement.innerHTML=pct+'%';
+          } else {
+            progressElement.hidden=true;
+            progressElement.style.display='none';
+            if (!text || text === '') {
+              spinnerElement.style.display='none';
+              statusElement.style.display='none';
+              progressElement.style.display='none';
+              escBanner.style.display='block';
+            } else {
+              statusElement.innerHTML=text;
+            }
+          }
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies=Math.max(this.totalDependencies,left);
+          Module.setStatus(left?'preparing ('+(this.totalDependencies-left)+'/'+this.totalDependencies+')':'');
+        }
+      };
+
+      Module.setStatus('downloading');
+    </script>
+    <script async type="text/javascript" src="https://cdn.jsdelivr.net/gh/UGBONTOP/sonic-mania-jsdlivr@refs/heads/main/RSDKv5.js"></script>
+  </body>
+</html>

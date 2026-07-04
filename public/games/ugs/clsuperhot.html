@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en-us">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/superhot/">
+  <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="hot.jpg">
+    <title>SUPERHOT </title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; 
+        background: black;
+      }
+      canvas.emscripten {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+    </style>
+  </head>
+  <body style="margin: 0;">
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    
+    <script>
+      window.mergedBlobUrls = {};
+      window.assetsReady = false;
+
+      async function mergeSplitFile(fileUrlBase, numParts = 2) {
+        const partUrls = Array.from({ length: numParts }, (_, i) => 
+          `${fileUrlBase}.part${i + 1}`
+        );
+
+        try {
+          const responses = await Promise.all(
+            partUrls.map(url => fetch(url))
+          );
+
+          if (responses.some(r => !r.ok)) {
+            return null;
+          }
+
+          const parts = await Promise.all(
+            responses.map(r => r.arrayBuffer())
+          );
+
+          const combinedBlob = new Blob(parts, {
+            type: 'application/octet-stream'
+          });
+
+          return URL.createObjectURL(combinedBlob);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function setupXHRInterceptor() {
+        if (window.xhrInterceptorInstalled) {
+          return;
+        }
+        
+        const originalOpen = XMLHttpRequest.prototype.open;
+        const originalSend = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.open = function(method, url, ...args) {
+          this._url = url;
+          this._method = method;
+          this._args = args;
+          
+          let finalUrl = url;
+          
+          for (const [filename, blobUrl] of Object.entries(window.mergedBlobUrls)) {
+            if (url.includes(filename)) {
+              finalUrl = blobUrl;
+              break;
+            }
+          }
+          
+          return originalOpen.call(this, method, finalUrl, ...args);
+        };
+
+        XMLHttpRequest.prototype.send = function(...args) {
+          const xhr = this;
+          
+          if (!window.assetsReady) {
+            const checkReady = setInterval(() => {
+              if (window.assetsReady) {
+                clearInterval(checkReady);
+                originalSend.apply(xhr, args);
+              }
+            }, 50);
+            return;
+          }
+          
+          return originalSend.apply(this, args);
+        };
+        
+        window.xhrInterceptorInstalled = true;
+      }
+
+      async function prepareGameAssets() {
+        try {
+          window.assetsReady = false;
+          delete window.xhrInterceptorInstalled;
+          window.mergedBlobUrls = {};
+          
+          setupXHRInterceptor();
+          
+          const filesToMerge = [
+            { filename: 'webgl.jsgz', parts: 2 }
+          ];
+          
+          for (const file of filesToMerge) {
+            const blobUrl = await mergeSplitFile(file.filename, file.parts);
+            if (blobUrl) {
+              window.mergedBlobUrls[file.filename] = blobUrl;
+            }
+          }
+          
+          window.assetsPrepared = true;
+          window.assetsReady = true;
+          
+          loadGame();
+          
+        } catch (error) {
+          window.assetsPrepared = false;
+          window.assetsReady = true;
+          loadGame();
+        }
+      }
+
+      function loadGame() {
+        var script1 = document.createElement('script');
+        script1.src = 'UnityLoader.js';
+        script1.onload = function() {
+          var script2 = document.createElement('script');
+          script2.src = '/js/main.js';
+          document.body.appendChild(script2);
+        };
+        document.body.appendChild(script1);
+      }
+
+      prepareGameAssets();
+    </script>
+    
+    <script>
+      (function () {
+        const canvas = document.getElementById('canvas');
+
+        function resizeCanvas() {
+          if (!canvas) return;
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          const cssW = window.innerWidth;
+          const cssH = window.innerHeight;
+
+          canvas.width = Math.floor(cssW * dpr);
+          canvas.height = Math.floor(cssH * dpr);
+          canvas.style.width = cssW + 'px';
+          canvas.style.height = cssH + 'px';
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', resizeCanvas);
+        resizeCanvas();
+
+    </script>
+    
+    <script type="text/javascript">
+      var Module = {
+        TOTAL_MEMORY: 268435456,
+        errorhandler: null,
+        compatibilitycheck: null,
+        dataUrl: "webgl.datagz",
+        codeUrl: "webgl.jsgz",
+        memUrl: "webgl.memgz",
+      };
+    </script>
+  </body>
+</html>

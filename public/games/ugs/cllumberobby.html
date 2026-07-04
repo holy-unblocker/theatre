@@ -1,0 +1,156 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shayderrr/idk@c31cef47561e8bb4db27d6688defac2cbf301bf7/lumber/style.css">
+
+    <style>
+        canvas:focus {
+            outline: none;
+        }
+
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="dark">
+
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+    </div>
+    <div id="loading-cover">
+        <div id="unity-loading-bar">
+            <div id="unity-progress-bar-empty" style="display: none;">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+            <div class="spinner"></div>
+            <div id="wasm-status" style="color: white; font-family: sans-serif; margin-top: 10px; text-align: center;">Initializing...</div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = "https://cdn.jsdelivr.net/gh/shayderrr/idk@c31cef47561e8bb4db27d6688defac2cbf301bf7/lumber/";
+        const buildUrl = BASE_URL + "Build";
+        const loaderUrl = buildUrl + "/Build.loader.js";
+        
+        const config = {
+            dataUrl: buildUrl + "/Build.data",
+            frameworkUrl: buildUrl + "/Build.framework.js",
+            codeUrl: "", 
+            streamingAssetsUrl: BASE_URL + "StreamingAssets",
+            companyName: "danijar1663",
+            productName: "Obby Wood",
+            productVersion: "0.0.1"
+        };
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+        const wasmStatus = document.querySelector('#wasm-status');
+
+        let ygGameInstance = null;
+        let initGame = false;
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+
+        window.addEventListener('pointerdown', () => FocusGame());
+        window.addEventListener('touchstart', () => FocusGame());
+
+        document.addEventListener('visibilitychange', function () {
+            if (initGame && ygGameInstance) {
+                ygGameInstance.SendMessage('YG2Instance', 'SetFocusWindowGame', document.hidden ? 'false' : 'true');
+            }
+        });
+
+    
+        async function loadAndMergeWasm() {
+            const parts = [
+                buildUrl + "/Build.wasm.part1",
+                buildUrl + "/Build.wasm.part2",
+                buildUrl + "/Build.wasm.part3"
+            ];
+
+            try {
+                wasmStatus.innerText = "Downloading engine components...";
+                const responses = await Promise.all(parts.map(url => fetch(url).then(r => {
+                    if (!r.ok) throw new Error(`Failed to load ${url}`);
+                    return r.arrayBuffer();
+                })));
+
+                wasmStatus.innerText = "Merging components...";
+                const mergedBlob = new Blob(responses, { type: 'application/wasm' });
+                const mergedUrl = URL.createObjectURL(mergedBlob);
+                
+                config.codeUrl = mergedUrl;
+                wasmStatus.innerText = "";
+                startUnity();
+            } catch (err) {
+                console.error("WASM Merge Error:", err);
+                wasmStatus.innerText = "Error loading game engine.";
+            }
+        }
+
+        function startUnity() {
+            const script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                    spinner.style.display = "none";
+                    progressBarEmpty.style.display = "";
+                    const adjustedProgress = Math.max(progress, 0.05);
+                    progressBarFull.style.width = `${100 * adjustedProgress}%`;
+                }).then((unityInstance) => {
+                    ygGameInstance = unityInstance;
+                    loadingCover.style.display = "none";
+                    initGame = true;
+                }).catch((message) => {
+                    console.error(message);
+                });
+            };
+            document.body.appendChild(script);
+        }
+
+  
+        function YG2Instance(method, arg) {
+            if (!ygGameInstance) return;
+            if (!initGame) {
+                setTimeout(() => {
+                    if (arg !== undefined) ygGameInstance.SendMessage('YG2Instance', method, arg);
+                    else ygGameInstance.SendMessage('YG2Instance', method);
+                }, 100);
+            } else {
+                if (arg !== undefined) ygGameInstance.SendMessage('YG2Instance', method, arg);
+                else ygGameInstance.SendMessage('YG2Instance', method);
+            }
+        }
+
+   
+        loadAndMergeWasm();
+
+    </script>
+</body>
+</html>

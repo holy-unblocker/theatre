@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Clicker</title>
+<style>
+    html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+    }
+    .fullscreen {
+        background: #242424;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+    #banner-container {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 90px;
+        display: none !important; /* Reklam alanı tamamen kapalı */
+    }
+    #loading-overlay {
+        font-size: 20px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #icon {
+        max-width: 300px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+    #progress-bar {
+        border-radius: 5px;
+        width: 90%;
+        max-width: 250px;
+        height: 20px;
+        background: #181818;
+        padding: 5px;
+    }
+    #progress-bar-fill {
+        border-radius: 3px;
+        width: 0%;
+        height: 100%;
+        background: #9747FF;
+    }
+</style>
+</head>
+<body>
+<canvas id="canvas" class="fullscreen"></canvas>
+<div id="banner-container"></div>
+<div id="loading-overlay" class="fullscreen">
+    <img id="icon" src="https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/icon.png"/>
+    <div id="progress-bar"><div id="progress-bar-fill"></div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/Deformed-steve/brawl-stars@main/howler.js"></script>
+<script>
+    // Mobil viewport ayarı
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        let meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.head.appendChild(meta);
+    }
+
+    const canvas = document.getElementById('canvas');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const bannerContainer = document.getElementById('banner-container');
+
+    let unityInstance = null;
+    let progressBarFillingInterval = null;
+    let progressBarCompleteFillingStarted = false;
+
+    function sendMessageToUnity(name, value) {
+        if (unityInstance !== null) {
+            unityInstance.SendMessage('PlaygamaBridge', name, value || '');
+        }
+    }
+
+    function onUnityLoadingProgressChanged(progress) {
+        if (progress >= 1 && progressBarFillingInterval !== null) {
+            clearInterval(progressBarFillingInterval);
+            progressBarFillingInterval = null;
+            return;
+        }
+
+        if (progressBarCompleteFillingStarted) return;
+
+        if (progress >= 0.9) {
+            progressBarCompleteFillingStarted = true;
+            completeProgressBarFilling();
+            return;
+        }
+
+        progressBarFill.style.width = `${progress * 100}%`;
+    }
+
+    function completeProgressBarFilling() {
+        if (progressBarFillingInterval !== null) return;
+
+        let currentPercent = 90;
+        progressBarFill.style.width = `${currentPercent}%`;
+        progressBarFillingInterval = setInterval(() => {
+            currentPercent++;
+            if (currentPercent > 100) currentPercent = 100;
+            progressBarFill.style.width = `${currentPercent}%`;
+            if (currentPercent >= 100) {
+                clearInterval(progressBarFillingInterval);
+                progressBarFillingInterval = null;
+            }
+        }, 100);
+    }
+
+    window.addEventListener('pointerdown', () => {
+        window.focus();
+        canvas.focus();
+    });
+
+    // === YANDEX SDK YERİNE BOŞ MOCK OBJESİ ===
+    window.bridge = {
+        platform: { id: '', language: 'en', payload: '', tld: '' },
+        device: { type: 'desktop' },
+        player: { isAuthorizationSupported: false, isAuthorized: false, id: '', name: '', photos: [] },
+        game: { visibilityState: 'visible' },
+        storage: { defaultType: 'local', isSupported: () => true, isAvailable: () => true },
+        advertisement: { interstitialState: '', isBannerSupported: false, minimumDelayBetweenInterstitial: 0 },
+        social: {},
+        leaderboard: {},
+        payments: {},
+        remoteConfig: { isSupported: false },
+        achievements: {},
+
+        // Boş initialize → hemen resolve
+        initialize: () => Promise.resolve(),
+
+        // Tüm event'ler boş
+        advertisement: { on: () => {} },
+        game: { on: () => {} }
+    };
+
+    // === TÜM BRIDGE FONKSİYONLARI BOŞ DÖNÜYOR ===
+    const mockPromise = (success = true, data = '') => 
+        success ? Promise.resolve(data) : Promise.reject();
+
+    // Platform
+    window.getPlatformId = () => '';
+    window.getPlatformLanguage = () => 'en';
+    window.getPlatformPayload = () => '';
+    window.getPlatformTld = () => '';
+    window.sendMessageToPlatform = () => {};
+    window.getServerTime = () => sendMessageToUnity('OnGetServerTimeCompleted', Date.now().toString());
+
+    // Device
+    window.getDeviceType = () => 'desktop';
+
+    // Player
+    window.getIsPlayerAuthorizationSupported = () => 'false';
+    window.getIsPlayerAuthorized = () => 'false';
+    window.getPlayerId = () => '';
+    window.getPlayerName = () => '';
+    window.getPlayerPhotos = () => '[]';
+    window.authorizePlayer = () => sendMessageToUnity('OnAuthorizeCompleted', 'false');
+
+    // Game
+    window.getVisibilityState = () => 'visible';
+
+    // Storage
+    window.getStorageDefaultType = () => 'local';
+    window.getIsStorageSupported = () => 'true';
+    window.getIsStorageAvailable = () => 'true';
+    window.getStorageData = (key) => sendMessageToUnity('OnGetStorageDataSuccess', `${key}{bridge_data_separator}`);
+    window.setStorageData = (key) => sendMessageToUnity('OnSetStorageDataSuccess', key);
+    window.deleteStorageData = (key) => sendMessageToUnity('OnDeleteStorageDataSuccess', key);
+
+    // Advertisement
+    window.getInterstitialState = () => '';
+    window.getIsBannerSupported = () => 'false';
+    window.getMinimumDelayBetweenInterstitial = () => '0';
+    window.setMinimumDelayBetweenInterstitial = () => {};
+    window.showBanner = () => {};
+    window.hideBanner = () => {};
+    window.showInterstitial = () => {};
+    window.showRewarded = () => {};
+    window.checkAdBlock = () => sendMessageToUnity('OnCheckAdBlockCompleted', 'false');
+
+    // Social
+    window.getIsShareSupported = () => 'false';
+    window.getIsInviteFriendsSupported = () => 'false';
+    window.getIsJoinCommunitySupported = () => 'false';
+    window.getIsCreatePostSupported = () => 'false';
+    window.getIsAddToHomeScreenSupported = () => 'false';
+    window.getIsAddToFavoritesSupported = () => 'false';
+    window.getIsRateSupported = () => 'false';
+    window.getIsExternalLinksAllowed = () => 'true';
+    window.share = () => sendMessageToUnity('OnShareCompleted', 'false');
+    window.inviteFriends = () => sendMessageToUnity('OnInviteFriendsCompleted', 'false');
+    window.joinCommunity = () => sendMessageToUnity('OnJoinCommunityCompleted', 'false');
+    window.createPost = () => sendMessageToUnity('OnCreatePostCompleted', 'false');
+    window.addToHomeScreen = () => sendMessageToUnity('OnAddToHomeScreenCompleted', 'false');
+    window.addToFavorites = () => sendMessageToUnity('OnAddToFavoritesCompleted', 'false');
+    window.rate = () => sendMessageToUnity('OnRateCompleted', 'false');
+
+    // Leaderboard
+    window.getIsLeaderboardSupported = () => 'false';
+    window.getIsLeaderboardNativePopupSupported = () => 'false';
+    window.getIsLeaderboardSetScoreSupported = () => 'false';
+    window.getIsLeaderboardGetScoreSupported = () => 'false';
+    window.getIsLeaderboardGetEntriesSupported = () => 'false';
+    window.leaderboardSetScore = () => sendMessageToUnity('OnLeaderboardSetScoreCompleted', 'false');
+    window.leaderboardGetScore = () => sendMessageToUnity('OnLeaderboardGetScoreCompleted', '');
+    window.leaderboardGetEntries = () => sendMessageToUnity('OnLeaderboardGetEntriesCompletedSuccess', '[]');
+    window.leaderboardShowNativePopup = () => sendMessageToUnity('OnLeaderboardShowNativePopupCompleted', 'false');
+
+    // Payments
+    window.getIsPaymentsSupported = () => 'false';
+    window.getIsCatalogSupported = () => 'false';
+    window.getIsPurchaseListSupported = () => 'false';
+    window.getIsPurchaseConsumingSupported = () => 'false';
+    window.paymentsPurchase = () => sendMessageToUnity('OnPaymentsPurchaseFailed', '');
+    window.paymentsConsumePurchase = () => sendMessageToUnity('OnPaymentsConsumePurchaseCompleted', 'false');
+    window.paymentsGetCatalog = () => sendMessageToUnity('OnPaymentsGetCatalogCompletedSuccess', '[]');
+    window.paymentsGetPurchases = () => sendMessageToUnity('OnPaymentsGetPurchasesCompletedSuccess', '[]');
+
+    // Remote Config
+    window.getIsRemoteConfigSupported = () => 'false';
+    window.remoteConfigGet = () => sendMessageToUnity('OnRemoteConfigGetFailed', '');
+
+    // Achievements
+    window.getIsAchievementsSupported = () => 'false';
+    window.getIsGetAchievementsListSupported = () => 'false';
+    window.getIsAchievementsNativePopupSupported = () => 'false';
+    window.achievementsUnlock = () => sendMessageToUnity('OnAchievementsUnlockCompleted', 'false');
+    window.achievementsShowNativePopup = () => sendMessageToUnity('OnAchievementsShowNativePopupCompleted', 'false');
+    window.achievementsGetList = () => sendMessageToUnity('OnAchievementsGetListCompletedSuccess', '[]');
+
+    // === UNITY LOADER DOĞRUDAN BAŞLIYOR ===
+    const unityLoader = document.createElement('script');
+    unityLoader.src = 'https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/Build/web.loader.js';
+    unityLoader.onload = () => {
+        createUnityInstance(canvas, {
+            dataUrl: 'https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/Build/web.data.unityweb',
+            frameworkUrl: 'https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/Build/web.framework.js.unityweb',
+            codeUrl: 'https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/Build/web.wasm.unityweb',
+            streamingAssetsUrl: 'https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/StreamingAssets/',
+            companyName: 'DefaultCompany',
+            productName: 'Clicker',
+            productVersion: '0.1',
+        }, onUnityLoadingProgressChanged)
+        .then((instance) => {
+            window.unityInstance = instance;
+            loadingOverlay.remove();
+            canvas.focus();
+        })
+        .catch((error) => {
+            console.error("Unity yüklenemedi:", error);
+            alert("Oyun yüklenemedi. Lütfen sayfayı yenileyin.");
+        });
+    };
+    unityLoader.onerror = () => {
+        console.error("web.loader.js yüklenemedi!");
+    };
+    document.body.appendChild(unityLoader);
+
+    // === SES KONTROLÜ (Howler) ===
+    var sounds = {};
+    var sound;
+    var isSound = 1;
+
+    sound = new Howl({
+        src: ['https://cdn.jsdelivr.net/gh/ragdoi-archers/zort@main/StreamingAssets/SongInMenu.mp3'],
+        loop: true,
+        volume: 0
+    });
+    sound.play();
+
+    function HowlerSoundOff() {
+        isSound = 0;
+        Howler.volume(0);
+        console.log('Howler Sound Off!');
+    }
+
+    function HowlerSoundOn() {
+        isSound = 1;
+        Howler.volume(1);
+        console.log('Howler Sound On!');
+    }
+
+    function openUrlInNewTab(url) {
+        window.open(url, '_blank');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/slope%203/">
+     <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Slope 3</title>
+
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .webgl-content {
+            width: 100% !important;
+            height: 100% !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #gameContainer {
+            width: 100% !important;
+            height: 100% !important;
+            flex-grow: 1;
+        }
+        .footer {
+            /* Keep footer hidden or minimal */
+            height: 5%;
+            width: 100%;
+            display: none; 
+        }
+    </style>
+
+    <script>
+      window.fileMergerConfig = {
+        files: [
+          // Assuming the data file referenced in build.json is called 'build.data' or similar.
+          // You must confirm the exact name of the data file that was split.
+          { name: 'Slope3.data.unityweb', parts: 2 } 
+        ],
+        // All these files are likely in the root, where build.json is.
+        basePath: '', 
+        debug: true
+      };
+    </script>
+
+    <script>
+    (function() {
+      'use strict';
+      const config = Object.assign({files: [], basePath: '', debug: true}, window.fileMergerConfig || {});
+      window.mergedFiles = window.mergedFiles || {};
+      const mergeStatus = {};
+
+      function log(...args) { if (config.debug) console.log('[FileMerger]', ...args); }
+      function error(...args) { console.error('[FileMerger]', ...args); }
+      function normalizeUrl(url) { try { return decodeURIComponent(url.toString().split('?')[0]); } catch (e) { return url; } }
+      function urlsMatch(url1, url2) {
+        const n1 = normalizeUrl(url1), n2 = normalizeUrl(url2);
+        // Special case for Unity 2018 and older: they append a hash to the data file.
+        // We only check for the base name.
+        const name1 = n1.split('/').pop().split('?')[0];
+        const name2 = n2.split('/').pop().split('?')[0];
+
+        for (const f of config.files) {
+            if (name1.startsWith(f.name) && name1.length >= f.name.length) return f.name;
+            if (name2.startsWith(f.name) && name2.length >= f.name.length) return f.name;
+        }
+
+        return null;
+      }
+
+      async function mergeSplitFiles(filePath, partsCount) {
+        try {
+          const parts = [];
+          for (let i = 1; i <= partsCount; i++) parts.push(`${filePath}.part${i}`);
+          log(`Merging ${filePath} from ${partsCount} parts...`);
+          const responses = await Promise.all(parts.map(p => window.originalFetch(p)));
+          for (const r of responses) if (!r.ok) throw new Error(`Part missing: ${r.url} (${r.status})`);
+          const buffers = await Promise.all(responses.map(r => r.arrayBuffer()));
+          const totalLen = buffers.reduce((acc, b) => acc + b.byteLength, 0);
+          const merged = new Uint8Array(totalLen);
+          let offset = 0;
+          for (const b of buffers) { merged.set(new Uint8Array(b), offset); offset += b.byteLength; }
+          log(`✅ Merged: ${filePath} (${(totalLen/1024/1024).toFixed(2)} MB)`);
+          return merged.buffer;
+        } catch (e) { error(e); throw e; }
+      }
+
+      function shouldIntercept(url) {
+        const s = normalizeUrl(url);
+        if (s.includes('.part')) return null;
+
+        const matchedName = urlsMatch(s, s);
+        if (matchedName) return matchedName;
+        
+        return null;
+      }
+
+      function getMerged(name) {
+        if (window.mergedFiles[name]) return window.mergedFiles[name];
+        // Check by partial key, useful for versioned names like `build.data.12345`
+        for (const [k, v] of Object.entries(window.mergedFiles)) {
+             if (k.startsWith(name)) return v;
+        }
+        return null;
+      }
+
+      if (!window.originalFetch) window.originalFetch = window.fetch;
+      window.fetch = function(url, ...args) {
+        const name = shouldIntercept(url);
+        if (name) {
+          log('Intercepting fetch:', name);
+          return new Promise((resolve, reject) => {
+            const t = setInterval(() => {
+              const b = getMerged(name);
+              if (b) {
+                clearInterval(t);
+                const type = name.endsWith('.wasm') ? 'application/wasm' : 'application/octet-stream';
+                resolve(new Response(b, {status: 200, headers: {'Content-Type': type}}));
+              }
+              else if (mergeStatus[name] === 'failed') { clearInterval(t); reject(new Error('Merge failed')); }
+            }, 50);
+          });
+        }
+        return window.originalFetch.call(this, url, ...args);
+      }
+
+      if (!window.OriginalXMLHttpRequest) window.OriginalXMLHttpRequest = window.XMLHttpRequest;
+      window.XMLHttpRequest = function(opts) {
+        const xhr = new window.OriginalXMLHttpRequest(opts);
+        const open = xhr.open;
+        xhr.open = function(m, u, ...a) { this._url = u; return open.call(this, m, u, ...a); };
+        xhr.send = function(...a) {
+          const name = shouldIntercept(this._url);
+          if (name) {
+            log('Intercepting XHR:', name);
+            const t = setInterval(() => {
+              const b = getMerged(name);
+              if (b) {
+                clearInterval(t);
+                Object.defineProperties(xhr, { status: {value: 200}, response: {value: b}, readyState: {value: 4} });
+                if (xhr.onload) xhr.onload({type: 'load', target: xhr});
+              }
+            }, 50);
+            return;
+          }
+          return window.OriginalXMLHttpRequest.prototype.send.apply(this, a);
+        }
+        return xhr;
+      }
+
+      async function start() {
+        config.files.forEach(f => {
+           const path = config.basePath + f.name;
+           mergeStatus[f.name] = 'merging';
+           mergeSplitFiles(path, f.parts).then(b => {
+             // Store the buffer using the name of the file being requested by Unity
+             window.mergedFiles[f.name] = b; 
+             // Also store it using the full path, just in case
+             window.mergedFiles[path] = b;
+             mergeStatus[f.name] = 'ready';
+           }).catch(() => mergeStatus[f.name] = 'failed');
+        });
+      }
+      start();
+    })();
+    </script>
+
+
+    <script src="UnityLoader.js"></script>
+    <script src="UnityProgress.js"></script>
+    
+    <script>
+        var gameInstance = UnityLoader.instantiate("gameContainer", "build.json", {
+            onProgress: UnityProgress,
+            Module: {
+                onRuntimeInitialized: function() {
+                    UnityProgress(gameInstance, "complete")
+                }
+            }
+        });
+    </script>
+    </head>
+
+<body>
+    <div class="webgl-content">
+        <div id="gameContainer" style="width: 100%; height: 95%; margin: auto;"></div>
+        <div class="footer">
+            </div>
+        
+        <script>
+            function UnityCallJs() {
+                console.log("unity call!");
+            }
+
+            function UnityCallPlayJs() {
+                console.log("untiy call Play game");
+            }
+
+            function UnityCallLeaderboardJs() {
+                console.log("untiy call On Leaderboard");
+            }
+
+            function UnityCallAgainJs() {
+                console.log("unity call Again");
+            }
+
+            function UnityCallEndgameJs() {
+                console.log("untiy call end game");
+
+            }
+
+            function UnityCallBackHomeJs() {
+                console.log("untiy call backHome");
+            }
+
+            function UnityCallChangeDayLeaderboardJs() {
+                console.log("untiy call change day leaderboard");
+            }
+
+            function UnityCallCloseLeaderboardJs() {
+                console.log("untiy call close leaderboard");
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

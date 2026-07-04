@@ -1,0 +1,349 @@
+<!-- ugs file -->
+<!-- shxyder -->
+<!-- regular updating go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/edit?tab=t.oimtgyujc8f -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/z799gs/99@main/TemplateData/style.css"/>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #0a0a1a;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#unity-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+#unity-canvas {
+  width: 100%;
+  height: 100%;
+  background: #0a0a1a;
+}
+#custom-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a1628 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: opacity 0.8s ease;
+}
+#custom-loading.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+}
+.loading-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #00d4ff;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 4px 8px rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+.loading-subtitle {
+  font-size: 13px;
+  color: #6080a0;
+  margin-bottom: 35px;
+  letter-spacing: 1px;
+}
+.progress-container {
+  width: 380px;
+  margin-bottom: 12px;
+}
+.progress-bar-bg {
+  width: 100%;
+  height: 20px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0066ff, #00d4ff, #0066ff);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  animation: shimmer 1.5s linear infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+.progress-text {
+  color: #00d4ff;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 8px;
+}
+.loading-status {
+  color: #5a7a9a;
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: center;
+  min-height: 18px;
+}
+.fun-message {
+  color: #8090b0;
+  font-size: 13px;
+  margin-top: 25px;
+  font-style: italic;
+  opacity: 0.7;
+  text-align: center;
+  min-height: 20px;
+  transition: opacity 0.3s ease;
+}
+</style>
+</head>
+<body class="dark">
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+<div id="custom-loading">
+  <div class="loading-icon">shayder</div>
+  <div class="loading-title">aaaaaa</div>
+  <div class="loading-subtitle">genuienly idk bro just wait i like the styling</div>
+  <div class="progress-container">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="merge-progress-bar"></div>
+    </div>
+    <div class="progress-text" id="merge-progress-text">0%</div>
+    <div class="loading-status" id="merge-status">Initializing... Xd?</div>
+  </div>
+  <div class="fun-message" id="fun-message"></div>
+</div>
+</div>
+<script>
+const funMessages = [
+  "Loading textures and shaders... 🎨",
+  "Building the world around you... 🌍",
+  "Placing all the objects... 📦",
+  "Waking up the NPCs... 🧑",
+  "Polishing the graphics... ✨",
+  "Tuning the physics engine... ⚙️",
+  "Syncing game logic... 🧠",
+  "Almost there, hang tight... 🚀",
+  "Final touches in progress... 🎯",
+  "Get ready to play! 🏆"
+];
+let funMsgIndex = 0;
+const funMsgEl = document.getElementById('fun-message');
+function rotateFunMessage() {
+  funMsgEl.style.opacity = '0';
+  setTimeout(() => {
+    funMsgEl.textContent = funMessages[funMsgIndex % funMessages.length];
+    funMsgEl.style.opacity = '0.7';
+    funMsgIndex++;
+  }, 300);
+}
+rotateFunMessage();
+const funMsgInterval = setInterval(rotateFunMessage, 3000);
+
+const mergeConfig = {
+  files: [
+    { name: 'game.data.br', parts: 4 },
+    { name: 'game.wasm.br', parts: 4 }
+  ],
+  basePath: 'https://cdn.jsdelivr.net/gh/z799gs/99@main/Build/'
+};
+const mergedFiles = {};
+const progressBar = document.getElementById('merge-progress-bar');
+const progressText = document.getElementById('merge-progress-text');
+const statusEl = document.getElementById('merge-status');
+
+async function mergeFileParts(baseName, partCount, progressCallback) {
+  const chunks = [];
+  for (let i = 0; i < partCount; i++) {
+    const partUrl = mergeConfig.basePath + baseName + '.part' + i;
+    const response = await fetch(partUrl);
+    if (!response.ok) throw new Error(`Failed to load ${partUrl}: ${response.status}`);
+    const reader = response.body.getReader();
+    const partChunks = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      partChunks.push(value);
+      received += value.length;
+    }
+    const partData = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of partChunks) {
+      partData.set(chunk, offset);
+      offset += chunk.length;
+    }
+    chunks.push(partData);
+    progressCallback(i + 1, partCount);
+    console.log(`[MERGE] ${baseName} part${i} loaded (${(received / 1024 / 1024).toFixed(2)} MB)`);
+  }
+  const totalSize = chunks.reduce((acc, c) => acc + c.length, 0);
+  const merged = new Uint8Array(totalSize);
+  let off = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, off);
+    off += chunk.length;
+  }
+  console.log(`[MERGE] ${baseName} merged (${(totalSize / 1024 / 1024).toFixed(2)} MB)`);
+  return merged.buffer;
+}
+
+async function mergeAllFiles() {
+  const totalParts = mergeConfig.files.reduce((a, f) => a + f.parts, 0);
+  let completedParts = 0;
+  for (const file of mergeConfig.files) {
+    statusEl.textContent = `Downloading ${file.name}...`;
+    const buffer = await mergeFileParts(file.name, file.parts, (current, total) => {
+      completedParts++;
+      const pct = Math.round((completedParts / totalParts) * 100);
+      progressBar.style.width = pct + '%';
+      progressText.textContent = pct + '%';
+      statusEl.textContent = `${file.name} — part ${current}/${total}`;
+    });
+    mergedFiles[file.name] = buffer;
+  }
+  statusEl.textContent = 'Starting game engine...';
+  progressBar.style.width = '100%';
+  progressText.textContent = '100%';
+}
+
+const originalFetch = window.fetch;
+window.fetch = function(url, options) {
+  if (typeof url === 'string') {
+    for (const file of mergeConfig.files) {
+      if (url.endsWith(file.name) || url.includes('/' + file.name)) {
+        if (mergedFiles[file.name]) {
+          console.log(`[INTERCEPT] Serving merged: ${file.name}`);
+          return Promise.resolve(new Response(mergedFiles[file.name], {
+            status: 200,
+            headers: { 'Content-Type': 'application/octet-stream' }
+          }));
+        }
+      }
+    }
+  }
+  return originalFetch.apply(this, arguments);
+};
+
+const OrigXHR = XMLHttpRequest;
+window.XMLHttpRequest = function() {
+  const xhr = new OrigXHR();
+  const origOpen = xhr.open;
+  xhr.open = function(method, url) {
+    this._url = url;
+    return origOpen.apply(this, arguments);
+  };
+  const origSend = xhr.send;
+  xhr.send = function(body) {
+    if (this._url && typeof this._url === 'string') {
+      for (const file of mergeConfig.files) {
+        if (this._url.endsWith(file.name) || this._url.includes('/' + file.name)) {
+          if (mergedFiles[file.name]) {
+            console.log(`[XHR-INTERCEPT] Serving merged: ${file.name}`);
+            const self = this;
+            setTimeout(() => {
+              Object.defineProperty(self, 'status', { get: () => 200 });
+              Object.defineProperty(self, 'readyState', { get: () => 4 });
+              Object.defineProperty(self, 'response', { get: () => mergedFiles[file.name] });
+              Object.defineProperty(self, 'responseType', { get: () => 'arraybuffer' });
+              if (self.onload) self.onload();
+              if (self.onreadystatechange) self.onreadystatechange();
+            }, 0);
+            return;
+          }
+        }
+      }
+    }
+    return origSend.apply(this, arguments);
+  };
+  return xhr;
+};
+window.XMLHttpRequest.prototype = OrigXHR.prototype;
+window.XMLHttpRequest.DONE = 4;
+window.XMLHttpRequest.HEADERS_RECEIVED = 2;
+window.XMLHttpRequest.LOADING = 3;
+window.XMLHttpRequest.OPENED = 1;
+window.XMLHttpRequest.UNSENT = 0;
+
+const container = document.querySelector('#unity-container');
+const canvas = document.querySelector('#unity-canvas');
+const buildUrl = 'https://cdn.jsdelivr.net/gh/z799gs/99@main/Build';
+const loaderUrl = buildUrl + '/loader.js';
+const config = {
+  dataUrl: buildUrl + '/game.data.br',
+  frameworkUrl: buildUrl + '/game.js',
+  codeUrl: buildUrl + '/game.wasm.br',
+  streamingAssetsUrl: '',
+  companyName: 'GAME',
+  productName: 'GAME',
+  productVersion: '1.0'
+};
+
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  container.className = 'unity-mobile';
+  config.devicePixelRatio = 1;
+}
+
+mergeAllFiles().then(() => {
+  clearInterval(funMsgInterval);
+  const script = document.createElement('script');
+  script.src = loaderUrl;
+  script.onload = function() {
+    createUnityInstance(canvas, config, function(progress) {
+      const pct = Math.round(progress * 100);
+      progressBar.style.width = pct + '%';
+      progressText.textContent = pct + '%';
+      statusEl.textContent = 'Loading game engine... ' + pct + '%';
+    }).then(function(unityInstance) {
+      window.unityInstance = unityInstance;
+      document.getElementById('custom-loading').classList.add('fade-out');
+      setTimeout(() => {
+        document.getElementById('custom-loading').style.display = 'none';
+      }, 800);
+    }).catch(function(message) {
+      console.warn(message);
+    });
+  };
+  document.body.appendChild(script);
+}).catch((err) => {
+  statusEl.textContent = 'Error: ' + err.message;
+  progressBar.style.background = 'red';
+  console.error('[MERGE] Fatal error:', err);
+});
+</script>
+</body>
+</html>

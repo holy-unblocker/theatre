@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<!-- ultimate game stash -->
+<!-- shxyder -->
+  
+
+<html>
+<head>
+<title>ayuncraft</title>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/jsbn.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/jsbn2.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/base64.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/prng4.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/rng.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/rsa.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/jsbn/rsa2.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/asn1-parser.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/music.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/classes.js"></script>
+
+<script type="text/javascript">
+var name="PixelCraft",motd="A public 1.5.2 server",ip="pixelcraft.me";
+window.addEventListener("load", function(){
+document.requestPointerLock=document.requestPointerLock||function(){};
+document.exitPointerLock=document.exitPointerLock||function(){};
+window.minecraftOpts = [
+"game_frame","https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ayuncraft/assets.epk",
+btoa(atob("CgAACQAHc2VydmVycwoAAAABCAAKZm9yY2VkTU9URABtb3RkaGVyZQEAC2hpZGVBZGRyZXNzAQgAAmlwAGlwaGVyZQgABG5hbWUAbmFtZWhlcmUAAA==").replace("motdhere",String.fromCharCode(motd.length)+motd).replace("namehere",String.fromCharCode(name.length)+name).replace("iphere",String.fromCharCode(ip.length)+ip))
+];
+(function(){
+var q = window.location.search;
+if(typeof q === 'string' && q.startsWith("?")) {
+q = new URLSearchParams(q);
+var s = q.get("server");
+if(s) window.minecraftOpts.push(s);
+}
+})();
+main();
+});
+</script>
+</head>
+<body style="margin:0px;width:100vw;height:100vh;" id="game_frame">
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en-us">
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@79091a3feb921044b3597bd32cea7357b43e2d9c/masekd%20for/">
+  <html lang="en-us">
+
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Masked Forces Unlimited</title>
+
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    #gameContainer {
+      width: 100vw !important;
+      height: 100vh !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+  </style>
+
+  <script>
+    window.fileMergerConfig = {
+      files: [
+        { name: 'masked-forces-unlimited.data.unityweb', parts: 2 },
+        { name: 'masked-forces-unlimited.asm.code.unityweb', parts: 1 },
+        { name: 'masked-forces-unlimited.asm.framework.unityweb', parts: 1 },
+      ],
+      basePath: 'Build/',
+      debug: true
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@ac5cdfc0042aca584e72619375b4aca948a9243c/merge.js"></script>
+  <script src="Build/UnityLoader.js"></script>
+
+  <script>
+    var gameInstance = UnityLoader.instantiate(
+      "gameContainer",
+      "Build/masked-forces-unlimited.json",
+      { onProgress: UnityProgress }
+    );
+
+    // auto fullscreen on load
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        if (gameInstance && gameInstance.SetFullscreen)
+          gameInstance.SetFullscreen(1);
+      }, 1500);
+    });
+  </script>
+</head>
+
+<body>
+  <div id="gameContainer"></div>
+</body>
+</html>

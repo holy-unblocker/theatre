@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnas-hotel2/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Five Nights at Shrek's Hotel</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script>
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) { 
+            const element = originalCreateElement.call(document, tagName);
+            if (tagName.toLowerCase() === 'script') {
+                Object.defineProperty(element, 'src', {
+                    set: function(value) {
+                        if (value.includes("https://api.gamemonetize.com/sdk.js")) {
+                            console.log("Intercepted SDK script. Redirecting...");
+                            value = "https://api.gamemonetize.com/sdk.js";
+                        }
+                        element.setAttribute('src', value);
+                    },
+                    get: function() {
+                        return element.getAttribute('src');
+                    }
+                });
+            }
+    
+            return element;
+        };
+    </script>
+    
+</head>
+<body>
+
+<div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+    <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+        </div>
+    </div>
+</div>  
+<script>
+      window.fileMergerConfig = {
+        files: [
+          { name: 'SREK.data.unityweb', parts: 4 },
+          { name: 'SREK.wasm.unityweb', parts: 1 },  
+          { name: 'SREK.framework.js.unityweb', parts: 1 },
+        ],
+        basePath: 'Build/',
+        debug: true
+      };  
+      </script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@ac5cdfc0042aca584e72619375b4aca948a9243c/merge.js"></script>
+<script src="Build/SREK.loader.js"></script>
+<script>
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingBar = document.querySelector("#unity-loading-bar");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const buildUrl = "Build";
+    const config = {
+        dataUrl: buildUrl + "/SREK.data.unityweb",
+        frameworkUrl: buildUrl + "/SREK.framework.js.unityweb",
+        codeUrl: buildUrl + "/SREK.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Evony Games",
+        productName: "Five Nights at Shrek's Hotel",
+        productVersion: "1.0",
+    };
+    loadingBar.style.display = "block";
+
+    createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = (progress * 100) + "%";
+    }).then(() => {
+        loadingBar.style.display = "none";
+    }).catch((message) => {
+        alert("Failed to load game: " + message);
+    });
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+</script>
+
+</body>
+</html>

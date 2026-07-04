@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background-color: #000; 
+        }
+
+        #ruffle-container { 
+            width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            position: relative; 
+        }
+
+        #epiphany-note {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 5px;
+            z-index: 100;
+            pointer-events: none;
+            animation: fadeOut 1s ease-in 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        #ruffle-player {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="epiphany-note">Hosted by Epiphany</div>
+    <div id="ruffle-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle"></script>
+    
+    <script>
+        window.RufflePlayer = window.RufflePlayer || {};
+        
+        // Define your game URL using jsDelivr
+        const GITHUB_USER = "ChenTheIdiot";
+        const REPO_NAME = "funni-game-thingy";
+        const BRANCH = "main";
+        const FILE_NAME = "628617_DinoRunPD-working.swf";
+
+        const gameUrl = `https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${REPO_NAME}@${BRANCH}/${FILE_NAME}`;
+        const baseUrl = `https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${REPO_NAME}@${BRANCH}/`;
+
+        window.RufflePlayer.config = {
+            "letterbox": "on",
+            "autoplay": "on",
+            "unmuteOverlay": "hidden",
+            "scale": "showAll",
+            "forceScale": true,
+            "quality": "high",
+            "base": baseUrl // Important: Helps the game find its own data files
+        };
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById("ruffle-container");
+            
+            container.appendChild(player);
+            player.id = "ruffle-player";
+            
+            // Load the optimized jsDelivr URL
+            player.load(gameUrl);
+        });
+    </script>
+
+</body>
+</html>

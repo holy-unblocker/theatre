@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>RocketGoal | Ripped</title>
+<base href="https://cdn.jsdelivr.net/gh/Slammpreal/slammpgames@main/rocketgoal.io/">
+<style>
+body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:'Comic Sans MS',cursive,sans-serif}
+#loader-ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;background:#000;cursor:pointer}
+.rb-txt{font-weight:bold;font-size:52px;text-align:center;background:linear-gradient(270deg,#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#4b0082,#8f00ff);background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:move 3s ease infinite;text-transform:uppercase}
+.slammp{font-size:32px;margin-top:-10px}
+@keyframes move{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+#unity-canvas{width:100%;height:100%;background:#000;display:block}
+</style>
+<script>
+window.PlaygamaAds = window.PlaygamaAds || {
+    Initialize: function() { return Promise.resolve(); },
+    ShowAd: function(t, c) {
+        if (c) {
+            if (typeof c.onClose === 'function') c.onClose();
+            if (typeof c.onCompleted === 'function') c.onCompleted();
+        }
+    }
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.2.0/firebase-remote-config-compat.js"></script>
+</head>
+<body onclick="res()">
+<div id="loader-ui">
+<div class="rb-txt" id="ld-t">Click to Play</div>
+<div class="rb-txt slammp">Ripped by Slammp</div>
+</div>
+<canvas id="unity-canvas"></canvas>
+<script src="firebase/firebase.js"></script>
+<script src="xsolla/xsolla.js"></script>
+<script src="utils.js"></script>
+<script>
+const cvs = document.querySelector("#unity-canvas");
+const ldr = document.querySelector("#loader-ui");
+const txt = document.querySelector("#ld-t");
+const b = "https://pockethaven.lon1.cdn.digitaloceanspaces.com/rocketgoal/33";
+const g = "https://cdn.jsdelivr.net/gh/Slammpreal/slammpgames@main/rocketgoal.io/";
+function res(){if(window.uI&&window.uI.Module.audioContext){const a=window.uI.Module.audioContext;if(a.state==='suspended')a.resume();}}
+const cfg={dataUrl:b+"/913e38fc4f019cbef3b96126ea9331a5.data.unityweb",frameworkUrl:b+"/924abc59792b1df59857c715aa8b8c90.framework.js.unityweb",codeUrl:b+"/cd7d7b4a616e3504e4f9fea4743c528d.wasm.unityweb",streamingAssetsUrl:g+"StreamingAssets",companyName:"PocketHaven",productName:"RocketGoal",productVersion:"0.309"};
+const s=document.createElement("script");s.src=b+"/b23dd96997961653e2825455633aac82.loader.js";
+s.onload=()=>{createUnityInstance(cvs,cfg,(p)=>{txt.innerText="Loading "+Math.round(p*100)+"%";}).then((i)=>{ldr.style.display="none";window.uI=i;window.unityInstance=i;try{if(typeof firebase!=='undefined'&&firebase.apps.length>0){const a=firebase.app();if(typeof firebase.remoteConfig==='function'){const r=firebase.remoteConfig(a);r.settings.minimumFetchIntervalMillis=3600000;}}if(typeof initializeFirebase==='function')initializeFirebase(i);}catch(e){}try{if(typeof initializeUtils==='function')initializeUtils(i);}catch(e){}}).catch((e)=>{});};
+document.body.appendChild(s);
+</script>
+</body>
+</html>

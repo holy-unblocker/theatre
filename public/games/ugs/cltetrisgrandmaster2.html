@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/CoderandHacker69/Ports/tgm2/">
+  <meta charset="utf-8">
+  <title>TGM2 Portable</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+    }
+    #game {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game"></div>
+
+<script>
+  EJS_player = "#game";
+
+  // Arcade setup
+  EJS_system = "arcade";
+  EJS_core = "fbneo";
+
+  // ROM via direct link
+  EJS_gameUrl = "https://raw.githubusercontent.com/CoderandHacker69/Ports/refs/heads/main/tgm2/emulatorjs/data/roms/tgm2.zip";
+  EJS_gameName = "Tetris The Grand Master 2";
+
+  // EmulatorJS CDN (local)
+  EJS_pathtodata = "emulatorjs/data/";
+</script>
+
+<script src="emulatorjs/data/loader.js"></script>
+
+</body>
+</html>

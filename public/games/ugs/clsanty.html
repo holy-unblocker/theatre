@@ -1,0 +1,112 @@
+<!-- ported by shxyder on discord -->
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Santy!</title>
+    <style>
+      body {
+        margin: 0;
+        background-color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #unity-container {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+      }
+
+      #unity-canvas {
+        width: 100%;
+        height: 100%;
+        background: #601527;
+      }
+
+      #watermark {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10;
+        transition: opacity 1s ease-out, visibility 1s;
+        pointer-events: none;
+      }
+
+      #watermark img {
+        max-width: 40%;
+        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+        transform: scale(1);
+        animation: pulse 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+
+      .fade-out {
+        opacity: 0;
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas"></canvas>
+      <div id="watermark">
+        <img src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/mrdude/TemplateData/0118.png" alt="Watermark" />
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/Build/WebGL.loader.js"></script>
+    <script>
+      const cdnBase = "https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/Build/";
+
+      async function mergeParts(baseName, count) {
+        let parts = [];
+        for (let i = 0; i < count; i++) {
+          const resp = await fetch(`${cdnBase}${baseName}.part${i}`);
+          const buf = await resp.arrayBuffer();
+          parts.push(new Uint8Array(buf));
+        }
+        let totalLength = parts.reduce((sum, p) => sum + p.length, 0);
+        let merged = new Uint8Array(totalLength);
+        let offset = 0;
+        for (let p of parts) {
+          merged.set(p, offset);
+          offset += p.length;
+        }
+        return URL.createObjectURL(new Blob([merged], { type: "application/gzip" }));
+      }
+
+      (async () => {
+        const dataUrl = await mergeParts("WebGL.data.gz", 3);
+        const wasmUrl = await mergeParts("WebGL.wasm.gz", 3);
+        const canvas = document.querySelector("#unity-canvas");
+        const watermark = document.getElementById("watermark");
+
+        setTimeout(() => {
+          watermark.classList.add("fade-out");
+        }, 3000);
+
+        createUnityInstance(canvas, {
+          dataUrl: dataUrl,
+          frameworkUrl: cdnBase + "WebGL.framework.js.js",
+          codeUrl: wasmUrl,
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "Kulu",
+          productName: "Santy is Home",
+          productVersion: "0.1",
+        });
+      })();
+    </script>
+  </body>
+</html>

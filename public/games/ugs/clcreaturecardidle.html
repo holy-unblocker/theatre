@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/creature-card-idle/">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Preload assets that will be shown just after startup-->
+  <link rel="preload" href="assets/images/LargeCursorPointer50Percent.png" as="image">
+  <link rel="preload" href="assets/images/smoke-ring.png" as="image">
+  <link rel="preload" href="assets/images/resources/gem.png" as="image">
+  <link rel="preload" href="assets/images/resources/gold.png" as="image">
+  <link rel="preload" href="assets/images/Buttons/Button_Red_Default.png" as="image">
+  <link rel="preload" href="assets/images/Buttons/Button_Red_Hover.png" as="image">
+  <link rel="preload" href="assets/images/Buttons/Button_Red_Down.png" as="image">
+  <link rel="preload" href="assets/images/Dot_Active.png" as="image">
+  <link rel="preload" href="assets/images/Dot_Default.png" as="image">
+  <link rel="preload" href="assets/images/backgrounds/1.png" as="image">
+  <link rel="preload" href="assets/images/card_slot.png" as="image">
+  <link rel="preload" href="assets/images/card_foreground.png" as="image">
+  <link rel="preload" href="assets/images/cards/ghoul.png" as="image">
+  <link rel="preload" href="assets/images/Tabs/Cards Active.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Settings Default.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Shop Default.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Ascend Default.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Achievements Default.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Cards Default.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Settings Active.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Shop Active.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Ascend Active.svg" as="image">
+  <link rel="preload" href="assets/images/Tabs/Achievements Active.svg" as="image">
+  <link rel="preload" href="assets/images/Buttons/Button_Default_Default.svg" as="image">
+  <link rel="preload" href="assets/images/icons/Erase.svg" as="image">
+  <link rel="preload" href="assets/images/Panel-Wood.svg" as="image">
+  <link rel="preload" href="assets/images/Drop-Down-Box.svg" as="image">
+  <link rel="preload" href="assets/images/icons/Close.svg" as="image">
+  <link rel="preload" href="assets/images/Popup-Window.svg" as="image">
+  <link rel="preload" href="assets/images/Buttons_Framed/ButtonFramed_Red_Default.svg" as="image">
+
+  <!-- Prefetch assets that wont be shown just after startup for quicker loading later -->
+  <link rel="prefetch" href="assets/images/card_foreground.png" as="image">
+  <link rel="prefetch" href="assets/images/card_foreground_boost.png" as="image">
+  <link rel="prefetch" href="assets/images/card_foreground_hero.png" as="image">
+  <link rel="prefetch" href="assets/images/card_foreground_monster.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot_boost.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot_hero.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot_land.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot_monster.png" as="image">
+  <link rel="prefetch" href="assets/images/card_slot_water.png" as="image">
+  <link rel="prefetch" href="assets/images/Frame-Empty.svg" as="image">
+  <link rel="prefetch" href="assets/images/ice-overlay.png" as="image">
+  <link rel="prefetch" href="assets/images/prohibited.png" as="image">
+  <link rel="prefetch" href="assets/images/Section-Yellow.png" as="image">
+  <link rel="prefetch" href="assets/images/shard1.png" as="image">
+  <link rel="prefetch" href="assets/images/shard2.png" as="image">
+  <link rel="prefetch" href="assets/images/shard3.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/1.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/2.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/3.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/4.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/5.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/6.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/7.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/8.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/9.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/10.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/11.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/12.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/13.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/14.png" as="image">
+  <link rel="prefetch" href="assets/images/achievements/15.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/1.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/2-backup.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/2.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/3.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/4.png" as="image">
+  <link rel="prefetch" href="assets/images/backgrounds/5.png" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Default_Default.png" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Default_Down.png" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Default_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Default_Hover.png" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Default_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Gray_Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Green_Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Green_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Green_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Purple_Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Purple_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Purple_Hover.png" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Purple_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Red_Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Red_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons/Button_Red_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons_Framed/ButtonFramed_Default_Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons_Framed/ButtonFramed_Default_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons_Framed/ButtonFramed_Default_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons_Framed/ButtonFramed_Red_Down.svg" as="image">
+  <link rel="prefetch" href="assets/images/Buttons_Framed/ButtonFramed_Red_Hover.svg" as="image">
+  <link rel="prefetch" href="assets/images/ghoul-card-purchaser.png" as="image">
+  <link rel="prefetch" href="assets/images/lil-lumberjack-card-purchaser.png" as="image">
+  <link rel="prefetch" href="assets/images/priestess-card-purchaser.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/armor.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/barracks.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/big_crab.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/bubba.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/chapel.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/crawler.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/deathknight.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/dingo.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/fireball.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/forestinn.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/gargoyle.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/ghoul.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/goblin's_dwelling.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/hades.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/hellspider.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/hood.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/icesword.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/infernal_nest.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/iron_robot.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/knight_capt.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/lizard.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/mana.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/mill.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/missionary.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/nightwatch.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/orc.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/phalanx.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/potion.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/rogue.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sailor.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/shaman.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/shield.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/skeleton.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/spearfisher.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/swamper.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/therisen.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/trampler.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/unused_7.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/unusedmaybe2.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/warlock.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/werewolf.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/adventurer.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/assassin.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/barrel.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/bigmouth.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/carrot.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/chest.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/crossbow.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/demon.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/diver.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/fish.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/forestshroom.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/gauntlet.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/girl.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/gold_mine.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/hatchet.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/helmet.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/horror.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/icy_outpost.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/investor_dog.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/ironcat.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/kobold.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/lodge.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/marauder.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/miner.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/mushroom.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/noclops.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/pancakes.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/pikeman.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/priestess.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/roo.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/scarecrow.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sharky.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sickle.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/skullhelm.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/spider_king.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/swordsman.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/timid giant.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/treant.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/unused4.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/valkyrie.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/warpstone.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/winged_imp.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/arachnid.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/axe.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/beast.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/bird.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/cataclysm.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/coin.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/cultist.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/desert.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/dwarf.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/fisher.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/fort.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/gem.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/girl2.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/golem.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/heart.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/hideaway.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/ice_fish.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/igloo.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/invisibility.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/jarofdeath.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/krakken.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/lucy.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/meat.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/mining_beast.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/naga.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/oasis.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/parrot.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/pipe.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/rabbid.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/ruins.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/scimitar.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sheep.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sight.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/slimey_miner.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/starfire.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/tavern.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/toad.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/turtle.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/unused7.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/viking.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/warrior.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/yeti.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/archery_yard.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/baby_dragon.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/beer.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/boar.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/cavern.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/crab.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/deathimp.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/devourer.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/egg.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/fishery.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/frog.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/ghost.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/goblin.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/gwen.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/heathen.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/honey.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/icestalker.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/imp.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/iron_golem.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/knight.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/lil_lumberjack.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/mace.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/meteor.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/missingno.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/necromancer.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/obelisk.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/petrify.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/possessed.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/reptile.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/safe_refuge.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/shack.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/shellhouse.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sign.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/slug.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/sushi.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/telepath.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/tower.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/undertaker.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/unused15.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/wagon.png" as="image">
+  <link rel="prefetch" href="assets/images/cards/well.png" as="image">
+  <link rel="prefetch" href="assets/images/icons/Save.svg" as="image">
+  <link rel="prefetch" href="assets/images/icons/Cart.svg" as="image">
+  <link rel="prefetch" href="assets/images/packs/1.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/2.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/2-big.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/3.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/4.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/forest1.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/forest2.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/forest3.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/forest4.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld1.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld2.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld3.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld4.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld5.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld6.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld7.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld8.png" as="image">
+  <link rel="prefetch" href="assets/images/packs/underworld9.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/ether.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/feathers.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/gem.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/gold.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/iron.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/skulls.png" as="image">
+  <link rel="prefetch" href="assets/images/resources/wood.png" as="image">
+  <link rel="prefetch" href="assets/images/Tabs/Cards Default.svg" as="image">
+  <link rel="prefetch" href="assets/images/Tabs/Settings Active.svg" as="image">
+  <link rel="prefetch" href="assets/images/Tabs/Shop Active.svg" as="image">
+  <link rel="prefetch" href="assets/images/Tabs/Ascend Active.svg" as="image">
+  <link rel="prefetch" href="assets/images/Tabs/Achievements Active.svg" as="image">
+
+
+
+  <script src='https://cdn1.kongregate.com/javascripts/kongregate_api.js'></script>
+  <meta charset="utf-8">
+  <title>Creature Card Idle</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <script>
+    window.scaleFactor = 1; // Global variable
+
+    window.setTutorialCursorPosition = function(x, y) {
+      const el = tutorialCursorImg.parentElement;
+      if (el) {
+        el.style.top = `${y}px`;
+        el.style.left = `${x}px`;
+      }
+    };
+
+    window.animateClick = function() {
+      if (tutorialCursorImg) {
+        tutorialCursorImg.classList.add('click-animation');
+
+        // Remove the class after the animation completes
+        setTimeout(() => {
+          tutorialCursorImg.classList.remove('click-animation');
+        }, 500);
+      }
+    };
+
+    function forceRefresh() {
+      var canvas = document.getElementById("forceRefreshCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      window.requestAnimationFrame(forceRefresh);
+    }
+
+    function updateScaleFactor() {
+      const outerContainer = document.getElementById('outer-container');
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+
+      // Calculate the scale factor based on the window dimensions
+      window.scaleFactor = Math.min(windowWidth / 1024, windowHeight / 576);
+
+      // Apply the scale to the container
+      outerContainer.style.setProperty('--scale-factor', window.scaleFactor);
+    }
+
+    // Ensure everything is loaded before running this script
+    window.addEventListener('load', function() {
+      // Now you can safely access the DOM element
+      window.tutorialCursorImg = document.getElementById('tutorialCursorImg');
+
+      // Add your event listeners here
+      window.addEventListener('resize', updateScaleFactor);
+      updateScaleFactor(); // Trigger scale factor calculation on load
+    });
+  </script>
+  <link rel="stylesheet" href="styles.107409f11aa7878723d0.css">
+</head>
+
+<body onload="forceRefresh();">
+  <div id="outer-container">
+    <app-root></app-root>
+  </div>
+  <div class="tutorial-cursor">
+    <img id="tutorialCursorImg" style="position:absolute; top:-9999px; left:-9999px;" class="tutorial-cursor-hidden" src="assets/images/LargeCursorPointer50Percent.png" alt="Cursor">
+  </div>
+
+  <div id="shard-container"></div>
+  <img id="smoke-ring" style="position:absolute; top:-9999px; left:-9999px;" class="smoke-ring" src="assets/images/smoke-ring.png">
+
+  <canvas id="forceRefreshCanvas" width="1" height="1"></canvas>
+
+  <div id="preload-images" style="position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; overflow: hidden;">
+    <button id="preload-button" class="nine-sliced-framed-button preload1"></button>
+    <img id="preload-tab-image" class="arena-hover" src="assets/images/Tabs/Cards Default.svg" alt="Preload Tab Image">
+  </div>
+
+  <script>
+    // Array of shard images
+    const shardImages = [
+      'assets/images/shard1.png',
+      'assets/images/shard2.png',
+      'assets/images/shard3.png'
+    ];
+
+    // Array of shard objects with their respective classes and size multipliers
+    const shards = [
+      ...Array.from({
+        length: 24
+      }, (_, i) => ({
+        class: `shard${i + 1}`,
+        sizeMultiplier: 1
+      })),
+      ...Array.from({
+        length: 24
+      }, (_, i) => ({
+        class: `shard${i + 25}`,
+        sizeMultiplier: 0.5
+      }))
+    ];
+
+    // Get the shard container
+    const shardContainer = document.getElementById('shard-container');
+
+    // Create and append shard elements to the container
+    shards.forEach((shard) => {
+      const shardDiv = document.createElement('div');
+      shardDiv.className = `ice-shard ${shard.class}`;
+      shardContainer.appendChild(shardDiv);
+    });
+
+    var preloadButton = document.getElementById('preload-button');
+    var preloadBorderImagesCount = 30; // Adjust based on preload classes count.
+    var currentPreloadBorderImage = 0;
+
+    // Adds and removes each of the preload classes setting the background image on a button until all 9-sliced images are preloaded.
+    // 100% preloading, prefetching, prerendering doesn't work. This is a workaround to preload the 9-sliced images.
+    function setPreloadBorderImage() {
+      requestAnimationFrame(() => {
+        preloadButton.classList.remove('preload' + currentPreloadBorderImage);
+        currentPreloadBorderImage++;
+        preloadButton.classList.add('preload' + currentPreloadBorderImage);
+        if (currentPreloadBorderImage <= preloadBorderImagesCount) {
+          setPreloadBorderImage();
+        }
+      });
+    }
+    setPreloadBorderImage();
+
+    var classesToAdd = [
+      'arena-hover',
+      'arena-hover',
+      'arena-not-hovered',
+      'shop-hover',
+      'shop-not-hovered',
+      'options-hover',
+      'options-not-hovered',
+      'ascend-hover',
+      'ascend-not-hovered',
+      'achievement-hover',
+      'achievement-not-hovered'
+    ]
+    var currentPreloadImageCount = 0;
+    var preloadTabImage = document.getElementById('preload-tab-image');
+
+    function preloadImages() {
+      if (currentPreloadImageCount < classesToAdd.length) {
+        preloadTabImage.classList.add(classesToAdd[currentPreloadImageCount]);
+        currentPreloadImageCount++;
+        requestAnimationFrame(() => {
+          preloadTabImage.classList.remove(classesToAdd[currentPreloadImageCount - 1]);
+          preloadImages();
+        });
+      }
+    }
+
+    preloadImages();
+  </script>
+  <script src="runtime-es2015.858f8dd898b75fe86926.js" type="module"></script>
+  <script src="polyfills-es2015.27661dfa98f6332c27dc.js" type="module"></script>
+  <script src="runtime-es5.741402d1d47331ce975c.js" nomodule></script>
+  <script src="polyfills-es5.4e06eb653a3c8a2d581f.js" nomodule></script>
+  <script src="scripts.f5aff390d16a45f85571.js"></script>
+  <script src="main-es2015.fd0d993ee3c3f8a75003.js" type="module"></script>
+  <script src="main-es5.737585da9b34a82c2957.js" nomodule></script>
+</body>
+
+</html>

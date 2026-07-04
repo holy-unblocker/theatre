@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/ports@main/sonic-and-the-falling-star/">
+
+<style type="text/css">
+  body {
+      background-color: #000;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+  }
+  
+  #gameContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  #MMFCanvas {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+      display: none; 
+  }
+  
+  #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+  }
+  
+  #loadingText {
+      color: #FFF;
+      font-size: 24px;
+      margin-bottom: 20px;
+  }
+  
+  
+  h1 {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #F00;
+	  font-size: x-large;
+  }
+  p {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #000;
+	  font-size: small;
+  }
+  #bloctxt {
+	  border-left-width: 5px;
+	  border-left-style: solid;
+	  border-left-color: #F00;
+	  padding-left: 10px;
+	  position: absolute;
+	  left: 50%;
+	  width: 600px;
+	  margin-left: -260px;
+	  background-color: #FFF;
+  }
+</style>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="HandheldFriendly" content="true" />
+
+  <title>Sonic and The Fallen Star</title>
+
+	<script>
+	    if (!document.createElement("canvas").getContext)
+	    {
+			window.open("http://www.clickteam.com/html5-fallback", "_self");
+		}
+	</script>
+
+    <script src="src/Runtime.js"></script>
+
+  <script>
+	if (window.location.protocol == "file:")
+	{
+		document.write('<div id="bloctxt">');
+		document.write('<h1>The application cannot be run...</h1>');
+		document.write('<p>HTML browsers do not allow you to launch data files directly from the file system.<br>');
+		document.write('A drag & drop of the html file on a web-browser window will not work, on any machine.<br>');
+		document.write('Please use the Build & Run option (it opens a local web server) to run your application,<br>')
+		document.write('or upload your application folder to a remote web-server, and start it from there...</p>');
+		document.write('</div>');
+		throw new error("Cannot run application");
+	}
+  </script>
+</head>
+
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen">
+    <div id="loadingText">Loading...</div>
+    <div id="loadingDetails">Initializing...</div>
+</div>
+
+<div id="gameContainer">
+    <canvas id="MMFCanvas" width="424" height="240">
+    	Your browser does not support Canvas.
+    </canvas>
+</div>
+
+<script>
+    // Loading tracker
+    const loadingDetails = document.getElementById('loadingDetails');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const canvas = document.getElementById('MMFCanvas');
+    
+    let loadingSteps = [
+        'Loading john.cch...',
+        'Loading resources...',
+        'Initializing runtime...',
+        'Starting game...'
+    ];
+    let currentStep = 0;
+    
+    function updateLoadingText(text) {
+        loadingDetails.textContent = text;
+    }
+    
+    function simulateLoading() {
+        if (currentStep < loadingSteps.length) {
+            updateLoadingText(loadingSteps[currentStep]);
+            currentStep++;
+            setTimeout(simulateLoading, 300);
+        }
+    }
+    
+    window.addEventListener("load", windowLoaded, false);
+    function windowLoaded()
+    {
+        // Start showing loading messages
+        simulateLoading();
+        
+        // Intercept XMLHttpRequest to track actual file loading
+        const originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url) {
+            // Extract filename from URL
+            const filename = url.split('/').pop();
+            if (filename.includes('.cc')) {
+                updateLoadingText('Loading ' + filename + '...');
+            }
+            return originalOpen.apply(this, arguments);
+        };
+        
+        // Start the runtime
+        new Runtime("MMFCanvas", "resources/john.cch");
+        
+        // Hide loading screen after a delay (adjust time as needed)
+        setTimeout(function() {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.5s';
+            canvas.style.display = 'block';
+            setTimeout(function() {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }, 3000); // Wait 3 seconds, adjust based on your game's load time
+        
+        // Resize handling
+        window.addEventListener('resize', resizeCanvas, false);
+        resizeCanvas();
+    }
+    
+    function resizeCanvas() {
+        const canvas = document.getElementById('MMFCanvas');
+        const scaleX = window.innerWidth / 424;
+        const scaleY = window.innerHeight / 240;
+        const scale = Math.min(scaleX, scaleY);
+        
+        canvas.style.width = (424 * scale) + 'px';
+        canvas.style.height = (240 * scale) + 'px';
+    }
+</script>
+
+</body>
+</html>

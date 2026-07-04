@@ -1,0 +1,35 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | The Gateway</title>
+
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/school-management-google/readme@main/TemplateData/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/school-management-google/readme@main/TemplateData/style.css">
+
+  <script src="https://cdn.jsdelivr.net/gh/school-management-google/readme@main/TemplateData/UnityProgress.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/school-management-google/readme@main/Build/UnityLoader.js"></script>
+
+  <script>
+    var gameInstance = UnityLoader.instantiate(
+      "gameContainer",
+      "https://cdn.jsdelivr.net/gh/school-management-google/readme@main/Build/Seven%20Days%20in%20Purgatory.json",
+      { onProgress: UnityProgress }
+    );
+  </script>
+</head>
+<body>
+  <div class="webgl-content">
+    <div id="gameContainer" style="width: 1344px; height: 756px;"></div>
+
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+      <div class="title">shayder</div>
+    </div>
+  </div>
+</body>
+</html>

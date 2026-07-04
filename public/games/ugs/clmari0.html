@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>Mari0</title>
+  <base href="https://cdn.jsdelivr.net/gh/deformed-steve/The-Cheese-Stash@main/games/mari0/">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: block;
+    }
+    #canvas { display: none; z-index: 10; }
+    #loadingCanvas { z-index: 20; background: #000; }
+  </style>
+</head>
+<body>
+
+  <canvas id="loadingCanvas"></canvas>
+  <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+  <script>
+alert("Due to a bug, the game may get stuck at loading. If this happens, please refresh the page and try again.");
+    const canvas = document.getElementById("canvas");
+    const loadingCanvas = document.getElementById("loadingCanvas");
+    const ctx = loadingCanvas.getContext("2d");
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      loadingCanvas.width = window.innerWidth;
+      loadingCanvas.height = window.innerHeight;
+      drawStatus(Module.lastStatus || "Initializing...");
+    }
+
+    function drawStatus(text) {
+      if (!ctx) return;
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, loadingCanvas.width, loadingCanvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = "20px Monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(text, loadingCanvas.width / 2, loadingCanvas.height / 2);
+    }
+
+var Module = {
+  arguments: ["./"],
+  canvas: canvas,
+  lastStatus: "",
+  totalDependencies: 0,
+  remainingDependencies: 0,
+  didSyncFS: false,
+
+  locateFile: function (path) {
+    const base = "https://cdn.jsdelivr.net/gh/deformed-steve/The-Cheese-Stash@main/games/mari0/";
+    return base + path.replace(/^undefined/, "");
+  },
+
+  setStatus: function (text) {
+    Module.lastStatus = text;
+    console.log("Status:", text);
+    if (text) drawStatus(text);
+  },
+
+  monitorRunDependencies: function (left) {
+    this.remainingDependencies = left;
+    this.totalDependencies = Math.max(this.totalDependencies, left);
+
+    if (left === 0) {
+      FS.syncfs(true, function (err) {
+        if (err) {
+          console.error("FS sync failed", err);
+          return;
+        }
+
+        Module.didSyncFS = true;
+        Module.callMain(Module.arguments);
+        loadingCanvas.style.display = "none";
+        canvas.style.display = "block";
+      });
+    } else {
+      this.setStatus(`Loading assets: ${this.totalDependencies - left}/${this.totalDependencies}`);
+    }
+  }
+};
+
+
+Module.preRun = Module.preRun || [];
+
+
+  </script>
+
+  <script src="game.js"></script>
+  <script async src="love.js"></script>
+
+</body>
+</html>

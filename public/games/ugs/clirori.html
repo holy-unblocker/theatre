@@ -1,0 +1,76 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | irori</title>
+    <style>
+      body { background-color: #000; margin: 0; padding: 0; overflow: hidden; }
+      #unityContainer { width: 960px; height: 540px; margin: auto; }
+    </style>
+    <script>
+     
+      const BASE_URL = "https://cdn.jsdelivr.net/gh/shayderrr/portsv4@114f2b84db8dc19984e28757ba92474d1c52c2bf/1848413/Web_v0.32/Build/";
+
+      async function fetchAndMerge(fileParts) {
+        const blobs = await Promise.all(fileParts.map(part => 
+          fetch(BASE_URL + part).then(res => {
+            if (!res.ok) throw new Error("Failed to load part: " + part + " at " + BASE_URL);
+            return res.blob();
+          })
+        ));
+        return URL.createObjectURL(new Blob(blobs));
+      }
+
+      (async () => {
+        try {
+
+          const dataParts = ["Web_v0.32.data.unityweb.part1", "Web_v0.32.data.unityweb.part2"];
+          const mergedDataUrl = await fetchAndMerge(dataParts);
+
+         
+          const originalFetch = window.fetch;
+          window.fetch = (url, options) => {
+            const urlString = (typeof url === 'string' ? url : url.url);
+            
+            if (urlString.includes('Web_v0.32.data.unityweb')) {
+              return originalFetch(mergedDataUrl, options);
+            }
+            
+            if (!urlString.startsWith('http') && !urlString.startsWith('blob:')) {
+              return originalFetch(BASE_URL + urlString, options);
+            }
+            return originalFetch(url, options);
+          };
+
+          const xhrOpen = XMLHttpRequest.prototype.open;
+          XMLHttpRequest.prototype.open = function(method, url) {
+            if (url.includes('Web_v0.32.data.unityweb')) {
+              url = mergedDataUrl;
+            } else if (!url.startsWith('http') && !url.startsWith('blob:')) {
+              url = BASE_URL + url;
+            }
+            return xhrOpen.apply(this, arguments);
+          };
+
+         
+          const loaderScript = document.createElement("script");
+          loaderScript.src = BASE_URL + "UnityLoader.js";
+          loaderScript.onload = () => {
+            
+            UnityLoader.instantiate("unityContainer", BASE_URL + "Web_v0.32.json");
+          };
+          document.head.appendChild(loaderScript);
+
+        } catch (e) {
+          console.error("Initialization Error:", e);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="unityContainer"></div>
+  </body>
+</html>

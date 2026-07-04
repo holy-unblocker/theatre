@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pet World</title>
+    <style>
+      body { margin: 0; background: #000; color: #0f0; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+      #status { background: #111; padding: 20px; border: 1px solid #0f0; width: 350px; text-align: center; }
+      .bar-container { width: 100%; background: #222; height: 10px; margin-top: 15px; border: 1px solid #444; }
+      #bar { width: 0%; height: 100%; background: #0f0; }
+      #unity-canvas { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background: #000; display: none; }
+    </style>
+  </head>
+  <body>
+    <canvas id="unity-canvas"></canvas>
+    <div id="status">
+      <div id="msg">INITIALIZING...</div>
+      <div class="bar-container"><div id="bar"></div></div>
+    </div>
+
+    <script>
+    const msg = document.getElementById("msg");
+    const bar = document.getElementById("bar");
+    const BASE = "https://cdn.jsdelivr.net/gh/dskjfoisjfsjio/Standalone-games@main/pet%20world/Build/";
+
+    const FILES = {
+      data: {
+        name: "pet-world[16]-mirraSDK[4.3.39].data",
+        parts: 4
+      },
+      wasm: {
+        name: "pet-world[16]-mirraSDK[4.3.39].wasm",
+        parts: 5
+      }
+    };
+
+    async function download(fileObj) {
+      let chunks = [];
+      for(let i = 1; i <= fileObj.parts; i++) {
+        msg.innerText = `FETCHING ${fileObj.name.split('.').pop().toUpperCase()}: ${i}/${fileObj.parts}`;
+        const r = await fetch(`${BASE}${fileObj.name}.part${i}`);
+        chunks.push(new Uint8Array(await r.arrayBuffer()));
+      }
+      const b = new Blob(chunks, { type: 'application/octet-stream' });
+      chunks = [];
+      return URL.createObjectURL(b);
+    }
+
+    async function start() {
+      const dataUrl = await download(FILES.data);
+      const wasmUrl = await download(FILES.wasm);
+
+      const XHR = window.XMLHttpRequest;
+      window.XMLHttpRequest = function() {
+        const xhr = new XHR();
+        const open = xhr.open;
+        xhr.open = function(method, url) {
+          if (url.indexOf(".data") !== -1) url = dataUrl;
+          if (url.indexOf(".wasm") !== -1) url = wasmUrl;
+          return open.apply(this, arguments);
+        };
+        return xhr;
+      };
+
+      const _fetch = window.fetch;
+      window.fetch = async (url, opt) => {
+        const u = typeof url === 'string' ? url : url.url;
+        if (u.indexOf(".data") !== -1) return _fetch(dataUrl, opt);
+        if (u.indexOf(".wasm") !== -1) return _fetch(wasmUrl, opt);
+        return _fetch(url, opt);
+      };
+
+      const config = {
+        dataUrl: FILES.data.name,
+        frameworkUrl: `${BASE}pet-world[16]-mirraSDK[4.3.39].framework.js`,
+        codeUrl: FILES.wasm.name,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Pet World",
+        productVersion: "0.1",
+      };
+
+      const s = document.createElement("script");
+      s.src = `${BASE}pet-world[16]-mirraSDK[4.3.39].loader.js`;
+      s.onload = () => {
+        createUnityInstance(document.querySelector("#unity-canvas"), config, (p) => {
+          bar.style.width = (p * 100) + "%";
+          msg.innerText = "LOADING ENGINE: " + Math.floor(p * 100) + "%";
+        }).then(() => {
+          document.getElementById("status").style.display = "none";
+          document.getElementById("unity-canvas").style.display = "block";
+        });
+      };
+      document.body.appendChild(s);
+    }
+
+    start().catch(console.error);
+    </script>
+  </body>
+</html>

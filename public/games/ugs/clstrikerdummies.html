@@ -1,0 +1,116 @@
+<html>
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html>
+
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/striker-dummies/">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Striker dummies</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <script>
+    window.config = {
+      loader: 'unity',
+      debug: false,
+      maxRatio: 16 / 9,
+      minRatio: 9 / 16,
+
+      title: 'Striker dummies',
+      thumbnail: 'e9a16c6f058d25f9e9e4b2cd18fddc3e.jpg',
+      numScreenshots: 8,
+
+      unityVersion: '2018.3.12f1',
+      unityWebglBuildUrl: 'Build\/Striker Dummies.json',
+
+      fileSize: 89,
+      cachedDecompressedFileSizes: {
+        'Striker Dummies.asm.code.unityweb': 32061230,
+        'Striker Dummies.asm.framework.unityweb': 447094,
+        'Striker Dummies.asm.memory.unityweb': 2276109,
+        'Striker Dummies.data.unityweb': 36412453,
+        'Striker Dummies.wasm.code.unityweb': 18249134,
+        'Striker Dummies.wasm.framework.unityweb': 500014,
+      },
+    };
+
+    async function mergeSplitFiles(part1Path, part2Path) {
+      try {
+        const [part1Response, part2Response] = await Promise.all([
+          fetch(part1Path),
+          fetch(part2Path)
+        ]);
+
+        const [part1Buffer, part2Buffer] = await Promise.all([
+          part1Response.arrayBuffer(),
+          part2Response.arrayBuffer()
+        ]);
+
+        const mergedArray = new Uint8Array(part1Buffer.byteLength + part2Buffer.byteLength);
+        mergedArray.set(new Uint8Array(part1Buffer), 0);
+        mergedArray.set(new Uint8Array(part2Buffer), part1Buffer.byteLength);
+
+        return mergedArray.buffer;
+      } catch (error) {
+        console.error('Error merging files:', error);
+        throw error;
+      }
+    }
+
+    window.mergedDataBuffer = null;
+
+    (function() {
+      const originalOpen = XMLHttpRequest.prototype.open;
+      const originalSend = XMLHttpRequest.prototype.send;
+
+      XMLHttpRequest.prototype.open = function(method, url, ...args) {
+        this._url = url;
+        return originalOpen.call(this, method, url, ...args);
+      };
+
+      XMLHttpRequest.prototype.send = function(...args) {
+        if (this._url && this._url.includes('Striker Dummies.data.unityweb')) {
+          console.log('Intercepting data file request');
+          
+          const checkData = setInterval(() => {
+            if (window.mergedDataBuffer) {
+              clearInterval(checkData);
+              Object.defineProperty(this, 'status', { value: 200, writable: false });
+              Object.defineProperty(this, 'response', { value: window.mergedDataBuffer, writable: false });
+              Object.defineProperty(this, 'responseType', { value: 'arraybuffer', writable: true });
+              
+              setTimeout(() => {
+                if (this.onload) this.onload();
+              }, 0);
+              
+              return;
+            }
+          }, 50);
+          
+          return;
+        }
+        
+        return originalSend.call(this, ...args);
+      };
+    })();
+
+    (async function() {
+      window.mergedDataBuffer = await mergeSplitFiles(
+        'Build/Striker Dummies.data.unityweb.part1',
+        'Build/Striker Dummies.data.unityweb.part2'
+      );
+      console.log('Data files merged successfully, size:', window.mergedDataBuffer.byteLength);
+    })();
+  </script>
+</head>
+
+<body>
+  <script src="master-loader.js"></script>
+</body>
+
+</html>

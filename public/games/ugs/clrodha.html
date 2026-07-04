@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en-us">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/rod-ha/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>game</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        #unity-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        #unity-canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+        #unity-loading-bar { z-index: 10; }
+    </style>
+</head>
+
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var loaderUrl =  "Build/d50cc3ee055c5f5e237cc0492cefedce.js";
+        var config = {
+            dataUrl: "Build/7ef3b8b9f1644e77a81f596e8b0cc75b.data",
+            frameworkUrl: "Build/5793d61484e6d62e0d89174f4dba923f.js",
+            codeUrl: "Build/4fbbfd201ecb27c6f7074aa0f3d839c5.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "Garuda Games",
+            productName: "Rodha",
+            productVersion: "1.0",
+        };
+
+        var container = document.querySelector("#unity-container");
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
+        var dataBlobUrl = null;
+        var wasmBlobUrl = null;
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            document.getElementsByTagName("head")[0].innerHTML += '<meta name="viewport" content="user-scalable=no">';
+            document.getElementsByTagName("head")[0].innerHTML += '<meta name="HandheldFriendly" content="true" />';
+
+            document.addEventListener("gesturestart", function(e) {
+                e.preventDefault();
+            });
+
+            document.addEventListener("gesturechange", function(e) {
+                e.preventDefault();
+            });
+            document.addEventListener("gestureend", function(e) {
+                e.preventDefault();
+            });
+
+            container.className = "unity-mobile";
+            config.devicePixelRatio = 1;
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+        } else {
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            config.devicePixelRatio = window.devicePixelRatio || 1;
+        }
+        loadingBar.style.display = "block";
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            (async () => {
+                try {
+                    async function fetchMaybeSplit(baseUrl) {
+                        try {
+                            const p1 = await fetch(baseUrl + '.part1');
+                            const p2 = await fetch(baseUrl + '.part2');
+                            if (p1.ok && p2.ok) {
+                                const b1 = await p1.arrayBuffer();
+                                const b2 = await p2.arrayBuffer();
+                                const combined = new Uint8Array(b1.byteLength + b2.byteLength);
+                                combined.set(new Uint8Array(b1), 0);
+                                combined.set(new Uint8Array(b2), b1.byteLength);
+                                return combined.buffer;
+                            }
+                        } catch (e) {
+                        }
+
+                        const single = await fetch(baseUrl);
+                        if (!single.ok) throw new Error('Failed to fetch ' + baseUrl);
+                        return await single.arrayBuffer();
+                    }
+
+                    const dataBuf = await fetchMaybeSplit(config.dataUrl);
+                    const wasmBuf = await fetchMaybeSplit(config.codeUrl);
+
+                    const dataSlice = new Blob([dataBuf], { type: 'application/octet-stream' });
+                    const wasmSlice = new Blob([wasmBuf], { type: 'application/wasm' });
+                    
+                    dataBlobUrl = URL.createObjectURL(dataSlice);
+                    wasmBlobUrl = URL.createObjectURL(wasmSlice);
+
+                    config.dataUrl = dataBlobUrl;
+                    config.codeUrl = wasmBlobUrl;
+
+                    let unityInstanceVar = null;
+                    createUnityInstance(canvas, config, (progress) => {
+                        progressBarFull.style.width = 100 * progress + "%";
+                    }).then((unityInstance) => {
+                        unityInstanceVar = unityInstance;
+                        loadingBar.style.display = 'none';
+                        function resizeCanvas() {
+                            const dpr = config.devicePixelRatio || 1;
+                            const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+                            const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+                            if (canvas.width !== w || canvas.height !== h) {
+                                canvas.width = w;
+                                canvas.height = h;
+                            }
+                        }
+                        resizeCanvas();
+                        window.addEventListener('resize', resizeCanvas);
+
+                        setTimeout(() => {
+                            try {
+                                if (dataBlobUrl) URL.revokeObjectURL(dataBlobUrl);
+                                if (wasmBlobUrl) URL.revokeObjectURL(wasmBlobUrl);
+                            } catch (e) {
+                            }
+                        }, 5000);
+                    }).catch((message) => {
+                        alert(message);
+                    });
+                } catch (e) {
+                    alert('Error loading build files: ' + e);
+                }
+            })();
+        };
+        document.body.appendChild(script);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<!-- shxyder -->
+<!-- ultimate game stash file -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/netclassroom/998800@main/n/TemplateData/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/netclassroom/998800@main/n/TemplateData/style.css">
+  <style>
+  
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #unity-container {
+      width: 100%;
+      height: 100%;
+    }
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+
+  <script>
+    var container = document.querySelector('#unity-container');
+    var canvas = document.querySelector('#unity-canvas');
+
+    function unityShowBanner(msg, type) {
+
+      console.log('[Unity Banner]', type, msg);
+    }
+
+    const mergeConfig = {
+      files: [
+        { name: 'web.data.gz', parts: 4 },
+        { name: 'web.wasm.gz', parts: 3 }
+      ],
+      basePath: 'https://cdn.jsdelivr.net/gh/netclassroom/998800@main/n/Build/'
+    };
+
+    const mergedFiles = {};
+
+    async function mergeFileParts(baseName, partCount) {
+      const chunks = [];
+      for (let i = 0; i < partCount; i++) {
+        const partUrl = mergeConfig.basePath + baseName + '.part' + i;
+        const response = await fetch(partUrl);
+        if (!response.ok) throw new Error(`Failed to load ${partUrl}: ${response.status}`);
+
+        const reader = response.body.getReader();
+        let received = 0;
+        const partChunks = [];
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          partChunks.push(value);
+          received += value.length;
+        }
+
+        const partData = new Uint8Array(received);
+        let offset = 0;
+        for (const chunk of partChunks) {
+          partData.set(chunk, offset);
+          offset += chunk.length;
+        }
+        chunks.push(partData);
+      }
+
+      const totalSize = chunks.reduce((acc, c) => acc + c.length, 0);
+      const merged = new Uint8Array(totalSize);
+      let off = 0;
+      for (const chunk of chunks) {
+        merged.set(chunk, off);
+        off += chunk.length;
+      }
+      return merged.buffer;
+    }
+
+    async function mergeAllFiles() {
+      for (const file of mergeConfig.files) {
+        const buffer = await mergeFileParts(file.name, file.parts);
+        mergedFiles[file.name] = buffer;
+      }
+    }
+
+    const originalFetch = window.fetch;
+    window.fetch = function (url, options) {
+      if (typeof url === 'string') {
+        for (const file of mergeConfig.files) {
+          if (url.endsWith(file.name) || url.includes('/' + file.name)) {
+            if (mergedFiles[file.name]) {
+              return Promise.resolve(
+                new Response(mergedFiles[file.name], {
+                  status: 200,
+                  headers: { 'Content-Type': 'application/octet-stream' }
+                })
+              );
+            }
+          }
+        }
+      }
+      return originalFetch.apply(this, arguments);
+    };
+
+    var buildUrl = 'https://cdn.jsdelivr.net/gh/netclassroom/998800@main/n/Build';
+    var loaderUrl = buildUrl + '/web.loader.js';
+
+    var config = {
+      dataUrl: buildUrl + '/web.data.gz',
+      frameworkUrl: buildUrl + '/web.framework.js',
+      codeUrl: buildUrl + '/web.wasm.gz',
+      streamingAssetsUrl:
+        'https://cdn.jsdelivr.net/gh/netclassroom/998800@main/n/StreamingAssets',
+      companyName: 'Wave Infinite',
+      productName: 'Taco Stand',
+      productVersion: '0.1',
+      showBanner: unityShowBanner
+    };
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content =
+        'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      container.className = 'unity-mobile';
+      canvas.className = 'unity-mobile';
+    }
+
+    mergeAllFiles()
+      .then(() => {
+        var script = document.createElement('script');
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+            console.log('Unity load progress:', Math.round(progress * 100) + '%');
+          }).catch((message) => {
+            console.error(message);
+          });
+        };
+        document.body.appendChild(script);
+      })
+      .catch((err) => {
+        console.error('[MERGE] Fatal error:', err);
+      });
+  </script>
+</body>
+</html>

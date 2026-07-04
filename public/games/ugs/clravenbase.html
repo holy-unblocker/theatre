@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- ultimate game stash file -->
+<!-- shxyder --> 
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/jquery.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/jsinput/style.css"/>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/jsinput/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/jsinput/joy.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/storage.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/crsdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/interop.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/gameloader.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/style.css"/>
+
+<script>
+    window.alert = function(_log){ console.log(_log); };
+    document.addEventListener('DOMContentLoaded', function() {
+     
+      window.unityInstance = UnityLoader.instantiate(
+        "unityContainer",
+        "https://cdn.jsdelivr.net/gh/shayderrr/portsv2@main/ravenbase/Build/build.json"
+      );
+    });
+  </script>
+</head>
+<body oncontextmenu="return false;">
+  <div id="unityContainer" style="width: 100%; height: 100%; margin: auto"></div>
+</body>
+</html>

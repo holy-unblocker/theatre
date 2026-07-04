@@ -1,0 +1,177 @@
+<html lang="en-us">
+
+<head>
+<!--ripped and modified a bit by greeni-->
+	<base href="https://cdn.jsdelivr.net/gh/greeniYT/y@main/smashhit/" target="_blank">
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Smash Hit</title>
+	<link rel="shortcut icon" href="favicon.ico">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background: #070c23;
+		}
+
+		#container {
+			top: 50%;
+			left: 50%;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			/* background:#222c36; */
+			background: #000416;
+			overflow: hidden;
+		}
+
+		#logo {
+			position: absolute;
+			display: block;
+			top: 50%;
+			left: 50%;
+			min-width: 400px;
+			-webkit-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+			text-align: center;
+			overflow: hidden;
+		}
+
+		#footer {
+			width: 100%;
+			height: 40px;
+			bottom: 0;
+			left: 50%;
+			position: absolute;
+			transform: translate(-50%, 0%);
+			background: linear-gradient(to bottom, #ccc 0%, #fff 100%);
+		}
+
+		div.button {
+			background: #222c36;
+			padding: 0 8px;
+			text-align: center;
+			border-radius: 3px;
+			color: white;
+			font-weight: bold;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		div.moregames {
+			height: 38px;
+			line-height: 38px;
+			padding: 0 5px;
+			margin: 1px 1px 0 0;
+			float: left;
+			color: #333;
+			text-align: left;
+			font-size: 15px;
+			position: relative;
+			z-index: 10;
+		}
+
+		div.fullscreen {
+			margin: 1px 1px 0 0;
+			position: absolute;
+			right: 5px;
+			height: 38px;
+			line-height: 38px;
+			display: inline-flex;
+			font-weight: bold;
+		}
+
+		div.fullscreen img {
+			padding-left: 5px;
+		}
+	</style>
+	<script src="js/unityloader.js"></script>
+	<script type="text/javascript">
+		function UnityProgress(gameInstance, progress) {
+		  if (!gameInstance.Module) {
+			 return;
+		  } else if (progress === "complete") {
+			 document.getElementById("logo").style.display = "none";
+			 document.getElementById("FullscreenImg").style.display = "block";
+			  document.getElementById("sitelogo").style.display = "block";
+			return;
+		  } else if (progress == 1) {
+			document.getElementById("loadinginfo").innerHTML = "PROCESSING...";
+		  } else if (progress > 0) {
+			document.getElementById("loadinginfo").innerHTML = "Loading: " + Math.round(progress * 100) + "%";
+			 document.getElementById("sitelogo").style.display = "none";
+		  }
+    }
+    var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/greeniYT/y@main/shofficial/Build/Smash-Hit2.json", {
+      onProgress: UnityProgress,
+      Module: {
+        onRuntimeInitialized: function() { UnityProgress(gameInstance, "complete") }
+      }
+    });
+      
+      function FitScreen(){
+       var w=800;
+       var h=550;
+       var availWidth=window.innerWidth;
+       var availHeight=window.innerHeight-40;
+	   
+       var canvas = document.getElementById("#canvas");
+       if(availWidth/availHeight>w/h){
+         height = availHeight;
+         width = (height*w/h);
+      }else{
+         width = availWidth;
+         height = width*h/w;
+      }
+      canvas.width = width;
+      canvas.height = height;
+       document.getElementById("container").style.width=width + "px";
+       document.getElementById("container").style.height=(height + 40) + "px";
+       document.getElementById("gameContainer").style.width=width + "px";
+       document.getElementById("gameContainer").style.height=height + "px";
+	  
+       if(width/height>4/3){
+           document.getElementById("logo").style.height=Math.round(height*0.6) + "px";  
+           document.getElementById("logo").style.width=Math.round(height*0.6*4/3) + "px";
+       }else{
+           document.getElementById("logo").style.width=Math.round(width*0.8) + "px";
+           document.getElementById("logo").style.height=Math.round(width*0.8*3/4) + "px";
+       }
+	   
+    }
+	</script>
+	<script src="js/functions.js_0123"></script>
+	<link rel="stylesheet" href="css/inline_styles.css">
+</head>
+
+<body onFocus="FitScreen();" onLoad="FitScreen();" onResize="FitScreen();">
+	<div id="container" style="width: 800px; height: 550px">
+		<div id="gameContainer" style="width:  800px; height: 550px"></div>
+		<div id="footer">
+			<div class="moregames" onClick='CreateLinksInGame("Smash Hit","all","moregames")'>
+				<!--<div class="button">More Games</div>-->
+			</div>
+			<div id="sitelogo" onClick='CreateLinksInGame("Smash Hit","game","logo")'
+				style="position:absolute;bottom:5px;left:50%;transform: translate(-50%,0);display:none;cursor:pointer;">
+				<!--<img src='https://cdn.jsdelivr.net/gh/greeniYT/gug@main/assets/greeni-text.png' alt="greeni">-->
+			</div>
+			<div class="fullscreen">Smash Hit <img src="image/fullscreen.png" width="38" height="38" onclick="gameInstance.SetFullscreen(1);" style="display:none;" id="FullscreenImg">
+			</div>
+		</div>
+
+		<div id="logo">
+			<img src="image/img.jpg" width="100%" height="100%">
+			<img src="https://cdn.jsdelivr.net/gh/greeniYT/gug@main/assets/raebg.png" style="bottom:-2px;position:absolute;left:50%;width:80%;transform: translate(-50%, 0%); cursor:pointer;" onClick='CreateLinksInGame("Smash Hit","loading","logo")'>
+			<div id="loadinginfo"
+				style="position:absolute;bottom:10px;left:50%;width:50%;max-height:10px;transform: translate(-50%, 0%);color:#a59d96;font-size:14px;">
+				Loading...
+			</div>
+		</div>
+	</div>
+	</div>
+
+</body>
+
+</html>

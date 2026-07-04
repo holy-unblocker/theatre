@@ -1,0 +1,282 @@
+<!-- shxyder -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/z-f3-f1/1@main/style.css"/>
+<script type="text/javascript">
+window.SDK_OPTIONS = {
+  gameId: "jp112o3o4hzgrnc7zaewjkrfk282pul8",
+  onEvent: function (a) {
+    switch (a.name) {
+      case "SDK_GAME_PAUSE":
+        console.log("Oyun duraklatıldı, ses kapatılıyor...");
+        if (typeof myGameInstance !== 'undefined' && myGameInstance) {
+          myGameInstance.SendMessage('AudioManager', 'MuteAudio');
+        }
+        break;
+      case "SDK_GAME_START":
+        console.log("Reklam bitti, oyun devam ediyor...");
+        if (typeof myGameInstance !== 'undefined' && myGameInstance) {
+          myGameInstance.SendMessage('AudioManager', 'UnmuteAudio');
+        }
+        break;
+      case "SDK_READY":
+        console.log("SDK hazır.");
+        break;
+    }
+  }
+};
+(function (a, b, c) {
+  var d = a.getElementsByTagName(b)[0];
+  if (!a.getElementById(c)) {
+    a = a.createElement(b);
+    a.id = c;
+    a.src = "https://cdn.jsdelivr.net/gh/testamalame/sef@main/sedk.js";
+    d.parentNode.insertBefore(a, d);
+  }
+})(document, "script", "gamemonetize-sdk");
+</script>
+<style>
+canvas:focus { outline: none; }
+html, body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  height: 100%;
+}
+</style>
+</head>
+<body class="dark">
+<div id="unity-container" class="unity-desktop">
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+</div>
+<div id="loading-cover" style="display:none;">
+  <div id="unity-loading-bar">
+    <div id="unity-progress-bar-empty" style="display: none;">
+      <div id="unity-progress-bar-full"></div>
+    </div>
+    <div class="spinner"></div>
+  </div>
+</div>
+<script>
+const hideFullScreenButton = "";
+const buildUrl = "https://cdn.jsdelivr.net/gh/z-f3-f1/1@main/Build";
+const loaderUrl = buildUrl + "/yandexBrotli.loader.js";
+const config = {
+  dataUrl: buildUrl + "/yandexBrotli.data.br",
+  frameworkUrl: buildUrl + "/yandexBrotli.framewor.js",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "Brain massage",
+  productName: "Supercar Battle Royale",
+  productVersion: "0.0.197"
+};
+function loadAndMergeFiles(files, callback) {
+  var mergedBlob = [];
+  var loadNextFile = function (index) {
+    if (index < files.length) {
+      var file = files[index];
+      fetch(buildUrl + "/" + file)
+        .then(response => response.arrayBuffer())
+        .then(data => {
+          mergedBlob.push(new Uint8Array(data));
+          loadNextFile(index + 1);
+        })
+        .catch(error => console.error('Dosya yüklenemedi:', file, error));
+    } else {
+      callback(new Blob(mergedBlob));
+    }
+  };
+  loadNextFile(0);
+}
+var wasmFiles = ["yandexBrotli.wasm.br.part1", "yandexBrotli.wasm.br.part2"];
+const container = document.querySelector("#unity-container");
+const canvas = document.querySelector("#unity-canvas");
+const loadingCover = document.querySelector("#loading-cover");
+const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+const progressBarFull = document.querySelector("#unity-progress-bar-full");
+const spinner = document.querySelector('.spinner');
+const canFullscreen = (function () {
+  for (const key of [
+    'exitFullscreen',
+    'webkitExitFullscreen',
+    'webkitCancelFullScreen',
+    'mozCancelFullScreen',
+    'msExitFullscreen'
+  ]) {
+    if (key in document) return true;
+  }
+  return false;
+}());
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  container.className = "unity-mobile";
+}
+let myGameInstance = null;
+let isAdShown = false;
+function showAdOnClick() {
+  if (!isAdShown && typeof sdk !== 'undefined' && typeof sdk.showBanner !== 'undefined') {
+    sdk.showBanner();
+    isAdShown = true;
+  }
+}
+loadAndMergeFiles(wasmFiles, function (mergedWasmBlob) {
+  var mergedWasmFile = URL.createObjectURL(mergedWasmBlob);
+  config.codeUrl = mergedWasmFile;
+  var script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = () => {
+    createUnityInstance(canvas, config, (progress) => {
+      progressBarFull.style.width = 100 * progress + "%";
+    }).then((unityInstance) => {
+      myGameInstance = unityInstance;
+      loadingCover.style.display = "none";
+      canvas.addEventListener('pointerdown', showAdOnClick);
+      canvas.addEventListener('touchstart', showAdOnClick);
+    }).catch((message) => {
+      alert(message);
+    });
+  };
+  document.body.appendChild(script);
+});
+document.addEventListener('contextmenu', event => event.preventDefault());
+function FocusGame() {
+  window.focus();
+  canvas.focus();
+}
+window.addEventListener('pointerdown', FocusGame);
+window.addEventListener('touchstart', FocusGame);
+let StartUnityInstance;
+let ysdk = null;
+let environmentData = {
+  language: "en",
+  domain: "default_domain",
+  deviceType: "desktop",
+  isMobile: false,
+  isDesktop: true,
+  isTablet: false,
+  isTV: false,
+  appID: "default_app_id",
+  browserLang: navigator.language || "en",
+  payload: null,
+  promptCanShow: false,
+  reviewCanShow: false,
+  platform: navigator.platform,
+  browser: (function() {
+    let userAgent = navigator.userAgent;
+    if (userAgent.includes("YaBrowser")) return "Yandex";
+    if (userAgent.includes("OPR") || userAgent.includes("Opera")) return "Opera";
+    if (userAgent.includes("Firefox")) return "Firefox";
+    if (userAgent.includes("MSIE") || userAgent.includes("Trident")) return "IE";
+    if (userAgent.includes("Edge")) return "Edge";
+    if (userAgent.includes("Chrome")) return "Chrome";
+    if (userAgent.includes("Safari")) return "Safari";
+    return "Other";
+  })()
+};
+let cloudSaves = 'noData';
+let paymentsData = 'none';
+let playerData = 'noData';
+let player = null;
+let payments = null;
+let initGame = false;
+let nowFullAdOpen = false;
+function GetPayments() {
+  console.warn("GetPayments is not implemented");
+  return Promise.resolve("none");
+}
+function SaveCloud() {
+  console.warn("SaveCloud is not implemented");
+}
+function LoadCloud() {
+  console.warn("LoadCloud is not implemented");
+  return Promise.resolve("noData");
+}
+function InitPlayer() {
+  console.warn("InitPlayer is not implemented");
+  return Promise.resolve("noData");
+}
+function FullAdShow() {
+  console.warn("FullAdShow is not implemented");
+}
+function RewardedShow() {
+  console.warn("RewardedShow is not implemented");
+}
+function StickyAdActivity() {
+  console.warn("StickyAdActivity is not implemented");
+}
+function Review() {
+  console.warn("Review is not implemented");
+}
+function PromptShow() {
+  console.warn("PromptShow is not implemented");
+}
+function InitLeaderboards() {
+  console.warn("InitLeaderboards is not implemented");
+}
+function GetLeaderboardScores() {
+  console.warn("GetLeaderboardScores is not implemented");
+}
+function SetLeaderboardScores() {
+  console.warn("SetLeaderboardScores is not implemented");
+}
+function ConsumePurchase() {
+  console.warn("ConsumePurchase is not implemented");
+}
+function ConsumePurchases() {
+  console.warn("ConsumePurchases is not implemented");
+}
+function InitLeaderboard() {
+  console.warn("InitLeaderboard is not implemented");
+}
+function BuyPayments() {
+  console.warn("BuyPayments is not implemented");
+}
+try {
+  const script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = () => {
+    StartUnityInstance = function () {
+      createUnityInstance(canvas, config, (progress) => {
+        spinner.style.display = "none";
+        progressBarEmpty.style.display = "";
+        progressBarFull.style.width = `${100 * progress}%`;
+      }).then((unityInstance) => {
+        myGameInstance = unityInstance;
+        loadingCover.style.display = "none";
+      }).catch((message) => {
+        console.error("Unity yükleme hatası:", message);
+      });
+    };
+    StartUnityInstance();
+  };
+  document.body.appendChild(script);
+} catch (error) {
+  console.error("Başlatma sırasında hata:", error);
+}
+function InitGame() {
+  try {
+    console.log('Init Game Success');
+    initGame = true;
+    if (nowFullAdOpen === true && myGameInstance != null) {
+      myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
+    }
+  } catch (error) {
+    console.error("InitGame sırasında hata:", error);
+  }
+}
+window.addEventListener("unhandledrejection", function(event) {
+  console.warn("Hata es geçildi:", event.reason);
+  event.preventDefault();
+});
+</script>
+</body>
+</html>

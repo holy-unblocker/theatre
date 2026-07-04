@@ -1,0 +1,119 @@
+<!-- shxyder -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title class="cloak">Pixel Gun Survival | MacVG</title>
+  <span id="macvgmacvg" name="game173"></span>
+  <link class="favicon" rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/fnafben/1234188746455876655@main/logo.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fnafben/1234188746455876655@main/TemplateData/style.css" />
+</head>
+<body>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" width="100%" height="100%"></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+    <div id="unity-mobile-warning">
+      WebGL builds are not supported on mobile devices.
+    </div>
+  </div>
+
+  <script>
+    var buildUrl = "https://cdn.jsdelivr.net/gh/fnafben/1234188746455876655@main/Build";
+    var loaderUrl = buildUrl + "/Shooting.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/Shooting.data.unityweb",
+      frameworkUrl: buildUrl + "/Shooting.framework.js.unityweb",
+      codeUrl: buildUrl + "/Shooting.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "Mentolatux",
+      productName: "Pixel Gun Survival",
+      productVersion: "3",
+    };
+
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    var mobileWarning = document.querySelector("#unity-mobile-warning");
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      container.className = "unity-mobile";
+      config.devicePixelRatio = 1;
+      mobileWarning.style.display = "block";
+      setTimeout(() => {
+        mobileWarning.style.display = "none";
+      }, 5000);
+    } else {
+      canvas.style.width = "870px";
+      canvas.style.height = "570px";
+    }
+
+    canvas.style.background = "url('https://cdn.jsdelivr.net/gh/organization-schoogls/y@main/background.gif') center / cover";
+    loadingBar.style.display = "block";
+
+    // Dosya birleştirme fonksiyonu
+    async function mergeDataParts() {
+      const partFiles = [
+        buildUrl + "/Shooting.data.unityweb.part001",
+        buildUrl + "/Shooting.data.unityweb.part002",
+        buildUrl + "/Shooting.data.unityweb.part003"
+      ];
+
+      const blobs = [];
+
+      // Parçaları sırayla indir
+      for (const part of partFiles) {
+        try {
+          const response = await fetch(part);
+          if (!response.ok) throw new Error(`Parça yüklenemedi: ${part}`);
+          const blob = await response.blob();
+          blobs.push(blob);
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
+      }
+
+      // Parçaları birleştir
+      const mergedBlob = new Blob(blobs, { type: "application/octet-stream" });
+      const mergedUrl = URL.createObjectURL(mergedBlob);
+      return mergedUrl;
+    }
+
+    // Unity yüklemesini başlat
+    mergeDataParts().then((mergedDataUrl) => {
+      if (mergedDataUrl) {
+        config.dataUrl = mergedDataUrl; // Birleştirilmiş dosya URL'sini kullan
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+            progressBarFull.style.width = 100 * progress + "%";
+          })
+          .then((unityInstance) => {
+            loadingBar.style.display = "none";
+            if (fullscreenButton) {
+              fullscreenButton.onclick = () => {
+                unityInstance.SetFullscreen(1);
+              };
+            }
+          })
+          .catch((message) => {
+            console.error("Unity yükleme hatası:", message);
+          });
+        };
+        document.body.appendChild(script);
+      } else {
+        console.error("Dosya birleştirme başarısız, Unity yüklenemiyor.");
+      }
+    });
+  </script>
+</body>
+</html>

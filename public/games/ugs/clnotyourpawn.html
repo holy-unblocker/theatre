@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en-us">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/not%20your%20pawn/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | GTMK2022</title>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #unity-canvas {
+        width: 100vw ;
+        height: 100vh ;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #231F20;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="unity-canvas"></canvas>
+
+    <script>
+      window.fileMergerConfig = {
+        files: [
+          { name: 'WebBuild1.data', parts: 1 },
+          { name: 'WebBuild1.wasm', parts: 2 },
+          { name: 'WebBuild1.framework.js', parts: 1 },
+        ],
+        basePath: 'Build/',
+        debug: true
+      };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@ac5cdfc0042aca584e72619375b4aca948a9243c/merge.js"></script>
+    <script src="Build/WebBuild1.loader.js"></script>
+
+    <script>
+      // Mobile viewport handling
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no';
+        document.head.appendChild(meta);
+      }
+
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/WebBuild1.data",
+        frameworkUrl: "Build/WebBuild1.framework.js",
+        codeUrl: "Build/WebBuild1.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "GTMK2022",
+        productVersion: "1.0",
+      });
+    </script>
+
+  </body>
+</html>

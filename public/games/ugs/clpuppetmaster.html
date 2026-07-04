@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@latest/puppet-master/"
+  <title>Puppet Master</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <script>
+    window.config = {
+      loader: 'unity',
+      debug: false,
+      maxRatio: 16 / 9,
+      minRatio: 9 / 16,
+
+      title: 'Puppet Master',
+
+      thumbnail: 'https://img.poki.com/cdn-cgi/image/width=100,height=100,fit=cover,g=0.5x0.5,f=auto/62716b17955d5a00474bb1c4a49a5c70.png',
+      numScreenshots: 4,
+
+      unityWebglBuildUrl: 'Build/puppet-master.json',
+      unityWebglLoaderUrl: 'Build/UnityLoader.js',
+
+      // **** Optional Settings ****
+      fileSize: 21,
+      loadingComments: ['Loading...'],
+      cachedDecompressedFileSizes: {
+        'puppet-master.asm.framework.unityweb': 420043,
+        'puppet-master.asm.memory.unityweb': 1245884,
+        'puppet-master.asm.code.unityweb': 22966163,
+        'puppet-master.data.unityweb': 21733770,
+      },
+      //
+    };
+  </script>
+</head>
+
+<body>
+                <script>
+      window.fileMergerConfig = {
+        files: [
+          { name: 'puppet-master.data.unityweb', parts: 2 },
+          { name: 'puppet-master.asm.code.unityweb', parts: 2 },
+        ],  
+        basePath: 'Build/',
+        debug: true
+      };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/merge.js"></script>
+  <script src="master-loader.js"></script>
+</body>
+
+</html>

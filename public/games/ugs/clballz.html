@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en"><head>
+    <base href="https://cdn.jsdelivr.net/gh/ccported/games@c511baeb6639c3a210f166b0e47bd7d2f7d5dde9/game_a1a3_7ed8bf533bbdd/">
+<script>
+(function() {
+  var base = document.querySelector('base');
+  var CDN_BASE = base ? base.href : '';
+  if (!CDN_BASE) return;
+
+  // Helper to check if a URL is relative
+  function isRelative(url) {
+    return typeof url === 'string' && !/^(?:[a-z]+:)?\/\//i.test(url) && url[0] !== '/';
+  }
+
+  // Patch fetch
+  var origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    if (typeof input === 'string' && isRelative(input)) {
+      input = CDN_BASE + input;
+    } else if (input && input.url && isRelative(input.url)) {
+      input = new Request(CDN_BASE + input.url, input);
+    }
+    return origFetch.call(this, input, init);
+  };
+
+  // Patch XMLHttpRequest
+  var OrigXHR = window.XMLHttpRequest;
+  function PatchedXHR() {
+    var xhr = new OrigXHR();
+    var origOpen = xhr.open;
+    xhr.open = function(method, url) {
+      if (isRelative(url)) {
+        url = CDN_BASE + url;
+      }
+      return origOpen.apply(this, arguments);
+    };
+    return xhr;
+  }
+  PatchedXHR.prototype = OrigXHR.prototype;
+  window.XMLHttpRequest = PatchedXHR;
+})();
+
+</script><script>(()=>{
+                        window.gameID = "game_a1a3_7ed8bf533bbdd";
+                        window.ccPorted = {
+                            gameID: "game_a1a3_7ed8bf533bbdd"
+                        };
+                    })()</script><script src="https://cdn.jsdelivr.net/gh/ccported/games@c511baeb6639c3a210f166b0e47bd7d2f7d5dde9/big_game_script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BallZ | Unblocked on CCPorted</title>
+    <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Break the bricks with your stream of balls in this bouncing physics game."></head>
+  <body>
+    <div class="game-container">
+      <canvas id="can"></canvas>
+      <div class="game-info">
+        <div class="score-board">
+          <h1>BallZ</h1>
+          <div class="score">Score: <span id="score">0</span></div>
+        </div>
+        <div class="controls">
+          <h3>Controls</h3>
+          <p>Drag your mouse and aim to shoot.</p>
+          <p>Collect more balls by hitting the circles.</p>
+          <p>Don't let the squares reach the ground.</p>
+          <p>Hit enter to skip the round.</p>
+        </div>
+        <div class="leaders">
+            <h3>Leaderboard</h3>
+            <ol id="leaderboard">
+            </ol>
+        </div>
+      </div>
+    </div>
+    <script src="game.js"></script>
+  
+
+</body></html>

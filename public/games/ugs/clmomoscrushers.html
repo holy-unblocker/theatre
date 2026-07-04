@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html>
+<head>
+    <meta charset="UTF-8">
+	<title>Super Momos Crushers</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/momos-crusher/">
+	<!-- Made with Construct, the game and app creator :: https://www.construct.net -->
+	<meta name="generator" content="Scirra Construct"> 
+
+	<meta name="author" content="xobydev">
+	<meta name="description" content="Platform Fighting Game">
+
+	<link rel="manifest" href="appmanifest.json">
+	<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
+	<link rel="apple-touch-icon" sizes="256x256" href="icons/icon-256.png">
+	<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+	<link rel="icon" type="image/png" href="icons/icon-512.png">
+
+	<link rel="stylesheet" href="style.css">
+
+
+
+</head> 
+ 
+<body>
+
+	
+
+<script>
+if (location.protocol.substr(0, 4) === "file")
+{
+	alert("Web exports won't work until you upload them. (When running on the file: protocol, browsers block many features from working for security reasons.)");
+}
+</script>
+	
+	<noscript>
+		<div id="notSupportedWrap">
+			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
+			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
+		</div>
+	</noscript>
+  <script>
+    (function() {
+        const OriginalWorker = window.Worker;
+        window.Worker = function(scriptURL, options) {
+            if (typeof scriptURL === 'string' && scriptURL.includes('waker.js')) {
+                const blobCode = `importScripts("${scriptURL}");`;
+                const blob = new Blob([blobCode], { type: 'application/javascript' });
+                const blobURL = URL.createObjectURL(blob);
+                return new OriginalWorker(blobURL, options);
+            }
+            return new OriginalWorker(scriptURL, options);
+        };
+    })();
+</script>
+	<script src="scripts/modernjscheck.js"></script>
+	<script src="scripts/supportcheck.js"></script>
+	<script src="scripts/offlineclient.js" type="module"></script> 
+	<script src="scripts/main2.js" type="module"></script>
+	<script src="scripts/register-sw.js" type="module"></script>
+
+</body> 
+</html>

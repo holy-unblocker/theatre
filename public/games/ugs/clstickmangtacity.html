@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/STICKMAN%20GTA/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Stickman Gta City</title>
+  <style>
+    html,
+    body {
+      background: #000;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      padding: 0;
+      margin: 0;
+    }
+
+    div#gameContainer {
+      background: transparent !important;
+      position: absolute;
+    }
+
+    div#gameContainer canvas {
+      position: absolute;
+    }
+
+    div#gameContainer canvas[data-pixel-art="true"] {
+      position: absolute;
+      image-rendering: optimizeSpeed;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-crisp-edges;
+      image-rendering: crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+      image-rendering: pixelated;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+  </style>
+
+  <style type="text/css">
+    body {
+      overflow: hidden;
+    }
+  </style>
+
+  <script>
+    function SubmitLeaderboardScore(newScore) {}
+    function GetLeaderboardEntries() {}
+
+    function InitApi(_appId) {
+      var dateNow = new Date();
+      var secondsSinceEpoch = Math.round(dateNow.getTime() / 1000);
+      console.log('InitApi');
+      window.callTime = secondsSinceEpoch - 181;
+    }
+
+    function InitExternEval(_appId) {
+      console.log("InitExternEval");
+      ExternEval();
+    }
+
+    function ExternEval() {
+      console.log("ExternEval");
+      var dateNow = new Date();
+      var secondsSinceEpoch = Math.round(dateNow.getTime() / 1000);
+
+      if (window.callTime != undefined && secondsSinceEpoch - window.callTime > 180) {
+        console.log('ExternEval 2');
+        window.callTime = secondsSinceEpoch;
+
+        if (typeof preroll !== 'undefined') {
+          if (window[preroll.config.loaderObjectName] != undefined) {
+            gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onOpen');
+            try {
+              window[preroll.config.loaderObjectName].refetchAd(ExternEvalResumeGame);
+            } catch (err) {
+              console.log(err.message);
+              gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onClose');
+            }
+          }
+        }
+      }
+    }
+
+    function ExternEvalResumeGame() {
+      console.log("ExternEvalResumeGame");
+      gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onClose');
+    }
+
+    function PreloadRewarded() {
+      console.log("PreloadRewarded");
+      if (window.rewardedCallbacks == undefined) {
+        window.rewardedCallbacks = true;
+        try {
+          window[window.preroll.config.loaderObjectName].registerRewardCallbacks({
+            onReady: RewardedReady,
+            onSuccess: RewardedSuccess,
+            onFail: RewardedFail,
+            onClose: RewardedClose
+          });
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+    }
+
+    function ShowRewarded() {
+      console.log("ShowRewarded");
+      if (typeof preroll !== 'undefined') {
+        if (window.rewardedCallbacks == undefined) {
+          PreloadRewarded();
+        }
+        if (window[preroll.config.loaderObjectName] != undefined) {
+          gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onOpen');
+          try {
+            window[preroll.config.loaderObjectName].showRewardAd();
+          } catch (err) {
+            console.log(err.message);
+            gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onClose');
+          }
+        }
+      }
+    }
+
+    function RewardedReady() {
+      console.log("RewardedReady");
+      if (window.rewardedCount == undefined) {
+        window.rewardedCount = 1;
+        window.gameInstance.SendMessage('FreezeNovaAPI', 'RewardedReady');
+      } else {
+        window.rewardedCount = window.rewardedCount + 1;
+        window.gameInstance.SendMessage('FreezeNovaAPI', 'RewardedReady');
+      }
+    }
+
+    function RewardedSuccess() {
+      console.log("RewardedSuccess");
+      gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'RewardedOnRewarded');
+    }
+
+    function RewardedFail() {
+      console.log("RewardedFail");
+      gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'RewardedOnFail');
+    }
+
+    function RewardedClose() {
+      console.log("RewardedClose");
+      gameInstance.SendMessage('FreezeNovaAPI', 'AdMessage', 'onClose');
+    }
+
+    InitApi(0);
+  </script>
+
+</head>
+
+<body>
+  <div id="gameContainer">
+    <canvas id="unity-canvas" data-pixel-art=""></canvas>
+    <script src="Build/game.loader.js"></script>
+    <script>
+      window.mergedBlobUrls = {};
+      window.assetsReady = false;
+
+      async function mergeSplitFile(fileUrlBase, numParts = 2) {
+        const partUrls = Array.from({ length: numParts }, (_, i) => 
+          `${fileUrlBase}.part${i + 1}`
+        );
+
+        try {
+          const responses = await Promise.all(
+            partUrls.map(url => fetch(url))
+          );
+
+          if (responses.some(r => !r.ok)) {
+            return null;
+          }
+
+          const parts = await Promise.all(
+            responses.map(r => r.arrayBuffer())
+          );
+
+          const combinedBlob = new Blob(parts, {
+            type: 'application/octet-stream'
+          });
+
+          return URL.createObjectURL(combinedBlob);
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function setupXHRInterceptor() {
+        if (window.xhrInterceptorInstalled) {
+          return;
+        }
+        
+        const originalOpen = XMLHttpRequest.prototype.open;
+        const originalSend = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.open = function(method, url, ...args) {
+          this._url = url;
+          this._method = method;
+          this._args = args;
+          
+          let finalUrl = url;
+          
+          for (const [filename, blobUrl] of Object.entries(window.mergedBlobUrls)) {
+            if (url.includes(filename)) {
+              finalUrl = blobUrl;
+              break;
+            }
+          }
+          
+          return originalOpen.call(this, method, finalUrl, ...args);
+        };
+
+        XMLHttpRequest.prototype.send = function(...args) {
+          const xhr = this;
+          
+          if (!window.assetsReady) {
+            const checkReady = setInterval(() => {
+              if (window.assetsReady) {
+                clearInterval(checkReady);
+                originalSend.apply(xhr, args);
+              }
+            }, 50);
+            return;
+          }
+          
+          return originalSend.apply(this, args);
+        };
+        
+        window.xhrInterceptorInstalled = true;
+      }
+
+      function setupFetchInterceptor() {
+        if (window.fetchInterceptorInstalled) {
+          return;
+        }
+
+        const originalFetch = window.fetch;
+        window.fetch = function(url, ...args) {
+          let finalUrl = url;
+          
+          for (const [filename, blobUrl] of Object.entries(window.mergedBlobUrls)) {
+            if (typeof url === 'string' && url.includes(filename)) {
+              finalUrl = blobUrl;
+              break;
+            }
+          }
+          
+          return originalFetch.call(this, finalUrl, ...args);
+        };
+
+        window.fetchInterceptorInstalled = true;
+      }
+
+      async function prepareGameAssets() {
+        try {
+          window.assetsReady = false;
+          delete window.xhrInterceptorInstalled;
+          delete window.fetchInterceptorInstalled;
+          window.mergedBlobUrls = {};
+          
+          setupXHRInterceptor();
+          setupFetchInterceptor();
+          
+          const filesToMerge = [
+            { filename: 'Build/game.data.unityweb', parts: 3 }
+          ];
+          
+          for (const file of filesToMerge) {
+            const blobUrl = await mergeSplitFile(file.filename, file.parts);
+            if (blobUrl) {
+              window.mergedBlobUrls[file.filename] = blobUrl;
+            }
+          }
+          
+          window.assetsPrepared = true;
+          window.assetsReady = true;
+          
+        } catch (error) {
+          window.assetsPrepared = false;
+          window.assetsReady = true;
+        }
+      }
+
+      prepareGameAssets().then(() => {
+        initUnity();
+      });
+
+      function initUnity() {
+        var canvas = document.querySelector("#unity-canvas");
+        var config = {
+          dataUrl: "Build/game.data.unityweb",
+          frameworkUrl: "Build/game.framework.js.unityweb",
+          codeUrl: "Build/game.wasm.unityweb",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "FreezeNova",
+          productName: "Crazy Drifter",
+          productVersion: "0.1",
+        };
+        var scaleToFit;
+        try {
+          scaleToFit = !!JSON.parse("true");
+        } catch (e) {
+          scaleToFit = true;
+        }
+
+        function progressHandler(progress) {
+          var percent = progress * 100 + '%';
+          canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
+          canvas.style.backgroundSize = '100% 1rem';
+        }
+
+        function onResize() {
+          var container = canvas.parentElement;
+          var w;
+          var h;
+
+          if (scaleToFit) {
+            w = window.innerWidth;
+            h = window.innerHeight;
+
+            var r = 540 / 960;
+
+            if (w * r > window.innerHeight) {
+              w = Math.min(w, Math.ceil(h / r));
+            }
+            h = Math.floor(w * r);
+          } else {
+            w = 960;
+            h = 540;
+          }
+
+          container.style.width = canvas.style.width = w + "px";
+          container.style.height = canvas.style.height = h + "px";
+          container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+          container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+        }
+
+        createUnityInstance(canvas, config, progressHandler).then(function(instance) {
+          canvas = instance.Module.canvas;
+          onResize();
+          gameInstance = instance;
+        });
+        window.addEventListener('resize', onResize);
+        onResize();
+      }
+    </script>
+  </div>
+</body>
+
+</html>

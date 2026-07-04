@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<base href="https://cdn.jsdelivr.net/gh/bubbls/clickspeed//">
+<html lang="en-us">
+<head>
+<!-- Content encoding -->
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=yes"/>
+<!-- Page info and stylesheets -->
+<title>Obby</title>
+<link rel="shortcut icon" href="TemplateData/favicon.ico"/>
+<link rel="stylesheet" href="TemplateData/style.css"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+</head>
+<body>
+<!-- Unity canvas -->
+<div id="unity-container">
+<canvas id="unity-canvas" tabindex="-1"></canvas>
+<div id="unity-loading-bar">
+<div id="unity-logo"></div>
+<div id="unity-progress-bar-empty">
+<div id="unity-progress-bar-full"></div>
+</div>
+</div>
+</div>
+<!-- Unity loader script -->
+<script src="unityApp.js"></script>
+<script>
+        if (!window.blurFocusHandlersInstalled) {
+            window.addEventListener('blur', function () {
+                let blockerButton = document.createElement('button');
+                blockerButton.style.position = 'fixed';
+                blockerButton.style.top = '0';
+                blockerButton.style.left = '0';
+                blockerButton.style.width = '100%';
+                blockerButton.style.height = '100%';
+                blockerButton.style.zIndex = '9999';
+                blockerButton.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                blockerButton.style.border = 'none';
+                blockerButton.style.cursor = 'default';
+                document.body.appendChild(blockerButton);
+
+                function removeBlocker() {
+                    if (blockerButton && blockerButton.parentNode) {
+                        blockerButton.parentNode.removeChild(blockerButton);
+                    }
+                    window.removeEventListener('focus', removeBlocker);
+                }
+                window.addEventListener('focus', removeBlocker);
+            });
+            window.blurFocusHandlersInstalled = true;
+        }
+    </script>
+</body>
+</html>

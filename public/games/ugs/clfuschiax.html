@@ -1,0 +1,29 @@
+<!-- Subscribe to @MMC-Gaming on YouTube! -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Eaglercraft FuschiaX</title>
+</head>
+<body>
+  <script>
+    async function loadAndRun() {
+      const urls = [
+        "https://cdn.jsdelivr.net/gh/marty-games/mga-html5@main/eaglercraft-fuschiax/index.html"
+      ];
+
+      let fullHtml = "";
+      for (const u of urls) {
+        const res = await fetch(u);
+        fullHtml += await res.text();
+      }
+
+      document.open();
+      document.write(fullHtml);
+      document.close();
+    }
+
+    loadAndRun();
+  </script>
+</body>
+</html> 

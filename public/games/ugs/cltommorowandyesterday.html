@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/tommorowandyesterday/">
+<head>
+  <title>T&Y 3D</title>
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+</head>
+
+<body onload="initGame()">
+  <div id="hint">
+    <div id="innerhint"></div>
+  </div>
+  <div id="menu">
+    <div id="innermenu"></div>
+  </div>
+  <div id="buttons">
+    <div class="button" id="restart">Restart</div>
+    <div class="button" id="sleep">Sleep</div>
+    <div class="button" id="drop">Drop</div>
+    <div id="bottom-buttons">
+      <div class="button" id="menu-button">Menu</div>
+    </div>
+  </div>
+  <div id="fade"></div>
+  <div id="loadinglogo"></div>
+  <div id="loadingbar"></div>
+  <div id="dev" style="display:none;text-align:center;padding:100px;position:fixed;top:0;bottom:0;left:0;right:0;z-index:2;">
+    <div onClick="hideDev()" style="position:fixed;top:0;bottom:0;left:0;right:0;z-index:-1;background-color:rgba(0,0,0,.5)"></div>
+    <textarea id="code"></textarea>
+    <br>
+    <button onClick="loadCode()">load</button>
+  </div>
+  <canvas id="gamescreen" style="display:none"></canvas>
+  <script src="js/three.min.js" type="text/javascript"></script>
+  <script src="js/helvetiker_regular.typeface.js"></script>
+  <script src="js/koala.js"></script>
+  <script src="js/initkoala.js"></script>
+  <script src="js/touch.js"></script>
+  <script src="js/makeLevels.js"></script>
+  <script src="js/hint.js"></script>
+  <script src="js/gameLogic.js"></script>
+</body>
+
+</html>
