@@ -1,0 +1,33 @@
+{
+  "name": "Sonic 4 - Episode I",
+  "short_name": "S4E1",
+  "description": "The sequel fans have waited 16 years for is finally here - Sonic the Hedgehog 4 Episode I! Featuring enhanced gameplay elements, including the classic Sonic Spin Dash, and the versatile Homing Attack, Sonic the Hedgehog 4 Episode I picks up right where Sonic and Knuckles™ left off.",
+  "id": "Games_zfgz6xjnaz0ym!S4E1",
+  "start_url": "./?source=pwa",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FFFFFF",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "https://wamwoowam.co.uk/api/media/plated/Games_zfgz6xjnaz0ym/S4E1/square30x30logo",
+      "sizes": "30x30",
+      "type": "image/png"
+    },
+    {
+      "src": "https://wamwoowam.co.uk/api/media/plated/Games_zfgz6xjnaz0ym/S4E1/square70x70logo",
+      "sizes": "70x70",
+      "type": "image/png"
+    },
+    {
+      "src": "https://wamwoowam.co.uk/api/media/plated/Games_zfgz6xjnaz0ym/S4E1/square150x150logo",
+      "sizes": "150x150",
+      "type": "image/png"
+    },
+    {
+      "src": "https://wamwoowam.co.uk/api/media/plated/Games_zfgz6xjnaz0ym/S4E1/apple-touch-icon",
+      "sizes": "120x120",
+      "type": "image/png"
+    }
+  ]
+}

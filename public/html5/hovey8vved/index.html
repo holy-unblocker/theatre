@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+  <base href="https://cdn.jsdelivr.net/gh/aukak/hlm/main@latest">
+  <meta charset="utf-8"/>
+  <title>HOTLINE MIAMI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      image-rendering: pixelated;
+    }
+
+    #credits {
+      position: absolute;
+      bottom: 8px;  
+      right: 12px;
+      font-size: 24px;
+      color: #00ffe5;
+      text-shadow: 1px 1px #ff0080;
+      user-select: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+<script>
+  const OriginalXHR = window.XMLHttpRequest;
+
+  function InterceptedXHR() {
+    const xhr = new OriginalXHR();
+
+    let blocked = false;
+
+    const originalOpen = xhr.open;
+    xhr.open = function(method, url, async, user, password) {
+      blocked = (url.endsWith("steamon") || url.endsWith("achievements.dat") || url.endsWith("mask.tmp") || url.endsWith("surfaces") || url.endsWith("steamoff") || url.endsWith("skip") || url.endsWith("restartmusic") || url.endsWith("xbox") || url.endsWith("volume.dat") || url.endsWith("keyboard.dat") || url.endsWith("volume.dat") || url.endsWith("blood") || url.endsWith("volume.dat") || url.endsWith("alienware"));
+      return originalOpen.apply(this, arguments);
+    };
+
+    const originalSend = xhr.send;
+    xhr.send = function(body) {
+      if (blocked) {
+        // simulate async 404 response
+        setTimeout(() => {
+          this.readyState = 4;
+          this.status = 404;
+          this.statusText = "Not Found";
+          this.response = "Not Found";
+          this.responseText = "Not Found";
+
+          if (typeof this.onreadystatechange === "function") {
+            this.onreadystatechange();
+          }
+          if (typeof this.onload === "function") {
+            this.onload();
+          }
+        }, 0);
+        return;
+      }
+      return originalSend.apply(this, arguments);
+    };
+
+    return xhr;
+  }
+
+  window.XMLHttpRequest = function () {
+    return new InterceptedXHR();
+  };
+</script>
+<body>
+  <canvas id="canvas" width="1920" height="1080"></canvas>
+    <div id="credits" data-credit="truffled-98c">
+    port by 98corbins — truffled.lol
+    </div>
+  <script src="html5game/HotlineMiami.js"></script>
+</body>
+</html>

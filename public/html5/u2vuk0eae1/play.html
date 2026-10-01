@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="icon" type="x-icon" href="fav.ico" />
+  <title>UNDERTALE Yellow</title>
+  <link rel="stylesheet" href="uty.css" />
+  <script src="jszip.min.js"></script>
+</head>
+<body oncontextmenu="return false;">
+  <div id="game-container">
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    <div class="loading">
+      <div class="spinner" id="spinner"></div>
+      <noscript class="nsmessage">This requires JavaScript and WebAssembly to be enabled in your browser.</noscript>
+      <div class="emscripten" id="status">Loading...</div>
+      <progress value="0" max="100" id="progress" hidden="1"></progress>
+    </div>
+    <div id="mobile-controls">
+      <div id="joystick-zone"></div>
+      <div id="button-zone">
+        <img class="action-button" id="button-c" alt="C Button" />
+        <img class="action-button" id="button-x" alt="X Button" />
+        <img class="action-button" id="button-z" alt="Z Button" />
+        <div id="dpad-container"></div>
+      </div>
+    </div>
+    <div class="output-container" id="output-container">
+      <div id="mobile-buttons">
+        <button class="output-button" onclick="window.enterPositionMode()" title="Position Controls">Position Controls?</button>
+        <button class="output-button" onclick="toggleDpadMode()" title="Toggle D-Pad/Joystick">Toggle D-Pad / Joystick!</button>
+      </div>
+      <button class="output-button" id="fullscreen" title="Toggle Fullscreen">Toggle Fullscreen?</button>
+      <button class="output-button" onclick="toggleConsole()" title="Toggle Console">Toggle Console!</button>
+      <button class="output-button" id="stats-button" onclick="toggleFPS()" title="Toggle FPS">Toggle FPS Counter!</button>
+      <button class="output-button" onclick="window.SAVEManager.openSAVEManager()" title="SAVE Manager">SAVE Manager!</button>
+      <button class="output-button" onclick="toggleWASD(this)" title="Mirror WASD">Mirror WASD to Arrows!</button>
+      <input id="colorpicker" type="color" onchange="document.body.style.backgroundColor=this.value" />
+      <textarea id="output"></textarea>
+    </div>
+    <button id="closeUIButton" onclick="hideUI()">&times;</button>
+    <div id="message-container">
+      <div id="messages"></div>
+    </div>
+  </div>
+
+  <div id="customMessageBox" class="custom-message-box">
+    <div class="custom-message-box-content">
+      <p id="messageBoxText"></p>
+      <button id="messageBoxConfirmBtn">OK</button>
+    </div>
+  </div>
+
+  <div id="saveManagerModal" class="save-manager-modal">
+    <div class="save-manager-content">
+      <span class="close-button" onclick="window.SAVEManager.closeSAVEManager()">&times;</span>
+      <div class="save-manager-content2">
+        <span class="minimize-button" onclick="window.SAVEManager.closeSMnoreload()">&dash;</span>
+        <h2>SAVE File Manager!</h2>
+        <button class="output-button" onclick="toggleclear_site_cache()">Wipe all of your SAVEs?</button>
+        <button id="exportAllBtn" class="output-button" onclick="SAVEManager.exportAllToZip()">Export all SAVEs to ZIP?</button>
+        <h3>Current SAVE Files:</h3>
+        <div id="saveFileList" class="save-file-list">
+          <p style="text-align:center;color:#888;">No saves found. Try importing one or saving in-game first.</p>
+        </div>
+        <div class="file-upload-section">
+          <h3>Import Save Files?</h3>
+          <input type="file" id="uploadFileInput" accept="*" multiple />
+          <input type="text" id="uploadFileNameInput" placeholder="Enter filename (e.g., filech1_0, dr.ini / single file only)" />
+          <button onclick="SAVEManager.handleUpload()">Select File(s)!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script id="tick-worker" type="javascript/worker">
+    let running = false, stop_called = false, intervalMs = 16;
+    onmessage = (e) => {
+      if (e.data.run) {
+        intervalMs = Math.floor(1000 / e.data.fps);
+        if (!running) { running = true; setTimeout(tick, intervalMs); }
+      } else { stop_called = true; }
+    };
+    const tick = () => {
+      if (stop_called) { stop_called = false; running = false; return; }
+      const start = Date.now();
+      postMessage('');
+      setTimeout(tick, Math.max(0, start + intervalMs - Date.now()));
+    };
+  </script>
+
+  <script>
+    const blob = new Blob([document.querySelector('#tick-worker').textContent]);
+    const worker = new Worker(URL.createObjectURL(blob));
+    worker.onmessage = () => GM_tick(performance.now());
+
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    const canvasElement = document.getElementById("canvas");
+    const statusElement = document.getElementById("status");
+    const progressElement = document.getElementById("progress");
+    const spinnerElement = document.getElementById("spinner");
+    const outputElement = document.getElementById("output");
+    const outputContainerElement = document.getElementById("output-container");
+    const messageContainerElement = document.getElementById("message-container");
+    const messagesElement = document.getElementById("messages");
+
+    let startingHeight, startingWidth, startingAspect;
+    let loadprogress = 0;
+    let rollbackMessages = [];
+    let clearRollbackMessagesTimeoutId = -1;
+
+    const FILTERED_MESSAGES = [
+      "layer_set_visible() - could not find specified layer in current room",
+      "layer_tilemap_get_id() - specified tilemap not found",
+      "layer_depth() - can't find specified layer",
+      "draw_tilemap() - couldn't find specified tilemap",
+      "layer_get_all_elements() - can't find specified layer"
+    ];
+
+    const actualDocumentTitle = document.title;
+    Object.defineProperty(document, "title", { set() {}, get() { return actualDocumentTitle; } });
+
+    canvasElement.addEventListener("click", () => canvasElement.focus());
+
+    function ensureAspectRatio() {
+      if (!canvasElement || startingHeight === undefined) return;
+      canvasElement.classList.add("active");
+      const maxW = window.innerWidth, maxH = window.innerHeight;
+      let newW, newH;
+      if (startingHeight / maxH > startingWidth / maxW) {
+        newH = maxH; newW = newH * startingAspect;
+      } else {
+        newW = maxW; newH = newW / startingAspect;
+      }
+      canvasElement.style.width = newW + "px";
+      canvasElement.style.height = newH + "px";
+    }
+
+    const showRollbackMessage = (message) => {
+      rollbackMessages.push(message);
+      messagesElement.innerHTML = rollbackMessages.map(m => `<p>${m}</p>`).join('');
+      messageContainerElement.style.display = 'block';
+      if (clearRollbackMessagesTimeoutId !== -1) clearTimeout(clearRollbackMessagesTimeoutId);
+      clearRollbackMessagesTimeoutId = setTimeout(() => {
+        clearRollbackMessagesTimeoutId = -1;
+        rollbackMessages = [];
+        messageContainerElement.style.display = 'none';
+      }, 5000);
+    };
+
+    var Module = {
+      preRun: [],
+      postRun: [],
+      print: (function() {
+        if (outputElement) outputElement.value = "";
+        return function(text) {
+          if (text === "Starting WAD") loadprogress++;
+          if (loadprogress === 1) Module.setStatus(text);
+          else if (loadprogress >= 2) Module.setStatus("");
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(" ");
+          if (!FILTERED_MESSAGES.includes(text)) console.log(text);
+          if (text === "Entering main loop.") { ensureAspectRatio(); loadprogress++; }
+          if (outputElement && !FILTERED_MESSAGES.includes(text)) {
+            outputElement.value += text + "\n";
+            outputElement.scrollTop = outputElement.scrollHeight;
+          }
+        };
+      })(),
+      printErr: function(text) { if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(" "); console.error(text); },
+      canvas: canvasElement,
+      setStatus: (text) => {
+        if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: "" };
+        if (text === Module.setStatus.last.text) return;
+        const m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+        const now = Date.now();
+        if (m && now - Module.setStatus.last.time < 30) return;
+        if (text.includes("Downloading data...")) text = "Downloading data...";
+        Module.setStatus.last = { time: now, text };
+        if (m) {
+          text = m[1];
+          progressElement.value = parseInt(m[2]) * 100;
+          progressElement.max = parseInt(m[4]) * 100;
+          progressElement.hidden = false;
+          spinnerElement.hidden = false;
+        } else {
+          progressElement.hidden = true;
+          if (!text) { spinnerElement.style.display = "none"; canvasElement.style.display = "block"; }
+        }
+        statusElement.innerHTML = text;
+      },
+      totalDependencies: 0,
+      monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        Module.setStatus(left ? `Preparing... (${this.totalDependencies - left}/${this.totalDependencies})` : "All downloads complete.");
+      }
+    };
+
+    Module.setStatus("Downloading...");
+
+    window.onerror = () => {
+      spinnerElement.style.display = "none";
+      Module.setStatus = (text) => { if (text) Module.printErr("[post-exception status] " + text); };
+    };
+
+    if (typeof window === "object") {
+      Module['arguments'] = window.location.search.substr(1).trim().split('&');
+      if (!Module['arguments'][0]) Module['arguments'] = [];
+    }
+
+    const originalConsoleLog = console.log;
+    console.log = function(...args) {
+      originalConsoleLog.apply(console, args);
+      const str = args.join(' ');
+      if (str.includes("Heading back to homepage...")) window.location.href = '/';
+      if (str.includes("ERROR in") && confirm("Heya! Seems like UNDERTALE Yellow has crashed! Would you like to reload the page?")) location.reload();
+      if (str.includes("Toggling fullscreen...")) toggleFullscreen();
+    };
+
+    function toggleConsole() {
+      const shown = outputElement.style.display === "flex";
+      outputElement.style.display = shown ? "none" : "flex";
+      outputElement.scrollIntoView(!shown);
+    }
+
+    async function toggleclear_site_cache() {
+      if (await window.SAVEManager.confirmBox("This will clear ALL OF YOUR SAVES. Only do this if the site/game crashes repeatedly. Continue?")) {
+        try {
+          (await window.indexedDB.databases()).forEach(db => window.indexedDB.deleteDatabase(db.name));
+          window.SAVEManager.showMessageBox("All site data cleared! Please reload the page.");
+        } catch (e) {
+          window.SAVEManager.showMessageBox("Failed to clear site data: " + e.message);
+        }
+      }
+    }
+
+    (function(window) {
+      let stats = null, isLoaded = false, isVisible = false;
+      function loop() { if (stats) { stats.update(); requestAnimationFrame(loop); } }
+      window.toggleFPS = (btn) => {
+        if (!isLoaded) {
+          const s = document.createElement('script');
+          s.src = 'https://mrdoob.github.io/stats.js/build/stats.min.js';
+          s.onload = () => { stats = new Stats(); stats.showPanel(0); document.body.appendChild(stats.dom); requestAnimationFrame(loop); isLoaded = isVisible = true; };
+          document.head.appendChild(s);
+          return;
+        }
+        isVisible = !isVisible;
+        stats.dom.style.display = isVisible ? 'block' : 'none';
+      };
+    })(window);
+
+    function toggleFullscreen() {
+      const d = document, el = d.documentElement;
+      if (d.fullscreenElement || d.webkitFullscreenElement || d.mozFullScreenElement || d.msFullscreenElement) {
+        (d.exitFullscreen || d.webkitExitFullscreen || d.mozCancelFullScreen || d.msExitFullscreen).call(d);
+      } else {
+        (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen).call(el);
+      }
+    }
+
+    (function(window) {
+      const WASD = {
+        enabled: false, handler: null,
+        map: { w: 38, a: 37, s: 40, d: 39, W: 38, A: 37, S: 40, D: 39 },
+        names: { 38: 'ArrowUp', 37: 'ArrowLeft', 40: 'ArrowDown', 39: 'ArrowRight' },
+        handle(e) {
+          if (!this.enabled) return;
+          const t = e.target.nodeName.toLowerCase();
+          if (t === 'input' || t === 'textarea' || e.target.isContentEditable) return;
+          const kc = this.map[e.key];
+          if (!kc) return;
+          e.preventDefault(); e.stopPropagation();
+          const evt = new KeyboardEvent(e.type, { key: this.names[kc], code: this.names[kc], bubbles: true, cancelable: true, composed: true });
+          Object.defineProperty(evt, 'keyCode', { value: kc }); Object.defineProperty(evt, 'which', { value: kc });
+          document.body.dispatchEvent(evt);
+        },
+        toggle(btn) {
+          this.enabled = !this.enabled;
+          this.handler = this.handler || this.handle.bind(this);
+          if (this.enabled) {
+            document.addEventListener('keydown', this.handler, true);
+            document.addEventListener('keyup', this.handler, true);
+          } else {
+            document.removeEventListener('keydown', this.handler, true);
+            document.removeEventListener('keyup', this.handler, true);
+          }
+          showToggleMessage(btn, this.enabled ? 'Toggled on!' : 'Toggled off!');
+        }
+      };
+      window.toggleWASD = (btn) => WASD.toggle(btn);
+    })(window);
+
+    function showToggleMessage(button, message) {
+      document.querySelectorAll('.toggle-feedback').forEach(el => el.remove());
+      const rect = button.getBoundingClientRect();
+      const popup = document.createElement('div');
+      popup.textContent = message;
+      Object.assign(popup.style, {
+        position: 'absolute', backgroundColor: 'rgba(255,255,255,0.9)', color: '#1a1a1a',
+        padding: '6px 12px', borderRadius: '15px', fontFamily: 'sans-serif', fontSize: '13px',
+        fontWeight: 'bold', zIndex: '9999', pointerEvents: 'none', opacity: '1',
+        left: `${rect.left + rect.width / 2}px`, top: `${rect.top}px`,
+        transform: 'translate(-50%, -110%)', transition: 'opacity 0.4s ease-out, transform 0.4s ease-out'
+      });
+      document.body.appendChild(popup);
+      setTimeout(() => { popup.style.opacity = '0'; popup.style.transform = 'translate(-50%, -160%)'; }, 800);
+      setTimeout(() => popup.remove(), 1200);
+    }
+
+    const konamiCode = ['p', 'i', 'e'];
+    let konamiIndex = 0;
+
+    function hideUI() {
+      document.getElementById('output-container').classList.remove('visible');
+      document.getElementById('message-container').classList.add('hidden-ui');
+      document.getElementById('closeUIButton').style.display = 'none';
+    }
+
+    function showUI() {
+      document.getElementById('output-container').classList.add('visible');
+      document.getElementById('message-container').classList.remove('hidden-ui');
+      document.getElementById('closeUIButton').style.display = 'block';
+      ensureAspectRatio();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === konamiCode[konamiIndex]) { konamiIndex++; if (konamiIndex === konamiCode.length) { showUI(); konamiIndex = 0; } }
+      else konamiIndex = 0;
+    });
+
+    var g_pWadLoadCallback, g_pAddAsyncMethod = -1, g_pJSExceptionHandler;
+    function setWadLoadCallback(cb) { g_pWadLoadCallback = cb; }
+    function setAddAsyncMethod(m) { g_pAddAsyncMethod = m; }
+    function setJSExceptionHandler(h) { if (typeof h === "function") g_pJSExceptionHandler = h; }
+    function hasJSExceptionHandler() { return typeof g_pJSExceptionHandler === "function"; }
+    function doJSExceptionHandler(json) { if (typeof g_pJSExceptionHandler === "function") g_pJSExceptionHandler(JSON.parse(json)); }
+
+    function manifestFiles() {
+      return ["game.unx","index.html","mus/UNDERTALE_oogloop.ogg","mus/a_call_to_action.ogg","mus/a_new_partner.ogg","mus/a_place_to_rest.ogg","mus/abandoned.ogg","mus/acquittal.ogg","mus/after_hours.ogg","mus/ajourned.ogg","mus/ambient_river.ogg","mus/apex.ogg","mus/apprehension_yellow.ogg","mus/asgoreop.ogg","mus/aviation.ogg","mus/axis_chase.ogg","mus/axis_flashlight.ogg","mus/bailador_overworld.ogg","mus/barrier.ogg","mus/battle_snowdin.ogg","mus/birdnoise.ogg","mus/birdsofafeather.ogg","mus/blossom.ogg","mus/build_a_bot.ogg","mus/cafe.ogg","mus/cafe_arcade.ogg","mus/card_game.ogg","mus/change_of_plans.ogg","mus/clover_jump_dunes.ogg","mus/complex.ogg","mus/computer_ambience.ogg","mus/coolestcave.ogg","mus/corner_of_a_circle.ogg","mus/credits.ogg","mus/crescendo_of_dread.ogg","mus/cymbal.ogg","mus/dalv_diary.ogg","mus/dalvbattle_yellow.ogg","mus/dalventertainer.ogg","mus/dalvopening_yellow.ogg","mus/danza_attack_01_yellow.ogg","mus/danza_attack_02_yellow.ogg","mus/danza_attack_03_yellow.ogg","mus/danza_attack_04_yellow.ogg","mus/danza_attack_05_yellow.ogg","mus/danza_attack_06_yellow.ogg","mus/danza_attack_07_yellow.ogg","mus/danza_attack_08_yellow.ogg","mus/danza_attack_09_yellow.ogg","mus/danza_attack_10_yellow.ogg","mus/danza_attack_finale_01_yellow.ogg","mus/danza_attack_finale_02_yellow.ogg","mus/danza_attack_finale_yellow.ogg","mus/danza_attack_inst_01_yellow.ogg","mus/danza_attack_inst_02_yellow.ogg","mus/danza_attack_inst_03_yellow.ogg","mus/danza_attack_inst_04_yellow.ogg","mus/danza_attack_inst_05_yellow.ogg","mus/danza_attack_inst_06_yellow.ogg","mus/danza_attack_inst_07_yellow.ogg","mus/danza_attack_inst_08_yellow.ogg","mus/danza_attack_inst_09_yellow.ogg","mus/danza_attack_inst_10_yellow.ogg","mus/danza_attack_inst_finale_01_yellow.ogg","mus/danza_attack_inst_finale_02_yellow.ogg","mus/danza_battle_yellow.ogg","mus/darkruins.ogg","mus/deal_em_out_ace_yellow.ogg","mus/deal_em_out_ed_yellow.ogg","mus/deal_em_out_mooch_yellow.ogg","mus/deal_em_out_moray_yellow.ogg","mus/deal_em_out_yellow.ogg","mus/decibat_yellow.ogg","mus/delivery.ogg","mus/delivery_intro.ogg","mus/detainment.ogg","mus/detour.ogg","mus/doorclose.ogg","mus/doorlock.ogg","mus/dual.ogg","mus/dual_short.ogg","mus/dunes_cave.ogg","mus/dunes_cave_outdoors.ogg","mus/elevator.ogg","mus/elevator_long.ogg","mus/enter_axis.ogg","mus/f_laugh.ogg","mus/f_newlaugh.ogg","mus/f_phase2_clay.ogg","mus/f_phase2_lowpoly.ogg","mus/f_phase2_mechanical.ogg","mus/f_phase2_organic.ogg","mus/f_phase2_paper.ogg","mus/f_phase2_yarn.ogg","mus/fall2.ogg","mus/fallendownyellow.ogg","mus/feisty.ogg","mus/final_stand.ogg","mus/flame_loop.ogg","mus/flock_together.ogg","mus/flowey_final_boss_1_intro.ogg","mus/flowey_final_boss_1_main.ogg","mus/flowey_roof_intro_1.ogg","mus/flowey_roof_intro_2.ogg","mus/flowey_soundscape.ogg","mus/flowey_world.ogg","mus/floweynew_yellow.ogg","mus/funsized_yellow.ogg","mus/gameover_yellow.ogg","mus/gemstone_fever.ogg","mus/genobattle_yellow.ogg","mus/getting_the_thoughts_out.ogg","mus/gift_1.ogg","mus/gift_2.ogg","mus/gimme_ur_cash_yellow.ogg","mus/golden_opportunity.ogg","mus/gotcha.ogg","mus/greenhouse.ogg","mus/guardener_theme.ogg","mus/guns_blazing.ogg","mus/guns_blazing_geno.ogg","mus/gunshop.ogg","mus/happy_hour.ogg","mus/heatwave_approaching.ogg","mus/honest_days_work.ogg","mus/honeydew_bark.ogg","mus/honeydew_dalv.ogg","mus/honeydew_lodge.ogg","mus/honeydew_ruins.ogg","mus/honeydew_snow.ogg","mus/intro.ogg","mus/intronoise.ogg","mus/justice.ogg","mus/kanako.ogg","mus/kanako_reprise.ogg","mus/lounging_around.ogg","mus/mail_jingle_alt.ogg","mus/manta_sail.ogg","mus/mart_geno_wind_yellow.ogg","mus/martletbattle_yellow.ogg","mus/medium.ogg","mus/menu_darkruins.ogg","mus/menu_options.ogg","mus/menu_ruins.ogg","mus/menu_snowdin.ogg","mus/menu_wild_east.ogg","mus/mew.ogg","mus/mew_boss.ogg","mus/mew_intro.ogg","mus/mew_logo.ogg","mus/micro_temperature.ogg","mus/microsprings_froggits.ogg","mus/missing_inaction.ogg","mus/mixin_it_up.ogg","mus/mo_pop.ogg","mus/mothers_love_intro.ogg","mus/mothers_love_phase_1.ogg","mus/mothers_love_phase_2.ogg","mus/mothers_love_phase_3.ogg","mus/mothers_love_phase_3_buildup.ogg","mus/mothers_love_temp.ogg","mus/nobodycame_yellow.ogg","mus/nothing_but_the_truth.ogg","mus/notsoquietstray.ogg","mus/null.ogg","mus/oasis.ogg","mus/oasis_indoors.ogg","mus/occupied_turf_yellow.ogg","mus/ones_past.ogg","mus/pinkgoo_move.ogg","mus/pipin_hot_yellow.ogg","mus/pops_deflate.ogg","mus/prebattle1_yellow.ogg","mus/prebattle2_yellow.ogg","mus/prebattle3_yellow.ogg","mus/quietstray.ogg","mus/relaxation.ogg","mus/remedy.ogg","mus/renewed.ogg","mus/ruins_yellow.ogg","mus/sadlo.ogg","mus/sandstorm.ogg","mus/sheriffs_fate.ogg","mus/shimmer.ogg","mus/shop.ogg","mus/showdown.ogg","mus/shuffling1.ogg","mus/shuffling2.ogg","mus/shuffling3.ogg","mus/snoring_justice.ogg","mus/snow.ogg","mus/snowdin_bridge.ogg","mus/snowfall.ogg","mus/some_point_of_no_return.ogg","mus/soulmate_located.ogg","mus/spook.ogg","mus/starlo_entrance.ogg","mus/steamworks_overworld.ogg","mus/sunnyside_ranch.ogg","mus/the_straw.ogg","mus/the_trek.ogg","mus/the_wandering.ogg","mus/the_wild_east.ogg","mus/the_wild_east_barn.ogg","mus/the_wild_east_hospital.ogg","mus/the_wild_east_house.ogg","mus/the_wild_east_jail.ogg","mus/the_wild_east_sleepy.ogg","mus/through_the_macro_lens.ogg","mus/train_trouble.ogg","mus/train_trouble_2.ogg","mus/trampled_flowers.ogg","mus/trapdoor.ogg","mus/treading_lightly.ogg","mus/trial_by_fury.ogg","mus/trial_by_fury_2.ogg","mus/tucked_in.ogg","mus/uhoh.ogg","mus/unforgiving.ogg","mus/vigorous_terrain.ogg","mus/vsasgore.ogg","mus/well_be_okay.ogg","mus/wild_east_shocking_sound.ogg","mus/wind.ogg","mus/wood_flowey.ogg","mus/wood_pull.ogg","mus/wood_zap.ogg","runner.data","runner.js","runner.svg","runner.wasm","audio-worklet.js","runnerLocal.svg","snd/axis_flashlight.ogg","snd/clover_jump_dunes.ogg","snd/doorclose.ogg","snd/doorlock.ogg","snd/elevator_long.ogg","snd/fall2.ogg","snd/flame_loop.ogg","snd/mail_jingle_alt.ogg","snd/manta_sail.ogg","snd/microsprings_froggits.ogg","snd/mo_pop.ogg","snd/pinkgoo_move.ogg","snd/pops_deflate.ogg","snd/sandstorm.ogg","snd/snowdin_bridge.ogg","snd/wild_east_shocking_sound.ogg","snd/wood_flowey.ogg","snd/wood_pull.ogg","snd/wood_zap.ogg"].join(";");
+    }
+
+    function onFirstFrameRendered() {}
+
+    function onGameSetWindowSize(width, height) {
+      if (startingHeight === undefined && startingWidth === undefined) {
+        startingHeight = height; startingWidth = width;
+        startingAspect = startingWidth / startingHeight;
+        ensureAspectRatio();
+      }
+    }
+
+    function pause() { if (!canvasElement.classList.contains("active")) return; GM_pause(); canvasElement.classList.add("paused"); }
+    function resume() { GM_unpause(); canvasElement.classList.remove("paused"); canvasElement.classList.add("unpaused"); ensureAspectRatio(); }
+
+    function quitIfSupported() {
+      if (window.oprt?.closeTab) window.oprt.closeTab();
+      else if (window.chrome?.runtime?.sendMessage) window.chrome.runtime.sendMessage('mpojjmidmnpcpopbebmecmjdkdbgdeke', { command: 'closeTab' });
+    }
+    function enterFullscreenIfSupported() {
+      if (!window.oprt?.enterFullscreen) return;
+      window.oprt.enterFullscreen();
+      const vs = GM_get_view_status(); vs.fullscreen = true; GM_set_view_status(vs);
+    }
+    function lockOrientationIfSupported() {
+      if (!window.oprt?.lockPortraitOrientation || !window.oprt?.lockLandscapeOrientation) return;
+      const vs = GM_get_view_status();
+      if ((vs.landscape === true && vs.portrait === false) || (vs.landscape === false && vs.portrait === true)) window.oprt.lockPortraitOrientation();
+    }
+
+    new ResizeObserver(() => {
+      requestAnimationFrame(ensureAspectRatio);
+      setTimeout(() => requestAnimationFrame(ensureAspectRatio), 100);
+    }).observe(document.body);
+
+    if (/Android|iPhone|iPod/i.test(navigator.userAgent)) {
+      document.body.className = "scrollingDisabled";
+      outputContainerElement.hidden = true;
+    }
+
+    setWadLoadCallback(() => { enterFullscreenIfSupported(); lockOrientationIfSupported(); });
+
+    window.addEventListener('load', () => {
+      if ((!window.oprt?.enterFullscreen) && (!window.chrome?.runtime?.sendMessage)) {
+        const qb = document.getElementById("quitButton"); if (qb) qb.hidden = true;
+      }
+      outputContainerElement.classList.remove('visible');
+      document.querySelector('.loading').classList.add('hidden-ui');
+      messageContainerElement.classList.add('hidden-ui');
+      document.getElementById('closeUIButton').style.display = 'none';
+      if (isMobile) document.getElementById('mobile-buttons').style.display = 'block';
+      document.getElementById('fullscreen')?.addEventListener('click', toggleFullscreen);
+    });
+
+    if ("getGamepads" in navigator) {
+      const sendGamepadInfo = (id) => {
+        const ff = id.match(/^([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-(.*)$/);
+        const cr = id.match(/^(.*) ?\(.*[vV][eE][nN][dD][oO][rR]: ?([0-9a-fA-F]{4}).*[pP][rR][oO][dD][uU][cC][tT]: ?([0-9a-fA-F]{4})\)$/);
+        const name = (ff?.[3] || cr?.[1] || "").toLowerCase();
+        const vendor = (ff?.[1] || cr?.[2] || "").toLowerCase();
+        const ps = vendor === "054c" || /dualsense|ps[1-5]|playstation|dualshock/.test(name);
+        const dualsense = /dualsense|ps5/.test(name);
+        window.postMessage({ gamepadIsPlaystation: ps, gamepadIsDualsense: dualsense });
+      };
+
+      window.addEventListener("gamepadconnected", (e) => sendGamepadInfo(e.gamepad.id));
+
+      setInterval(() => {
+        for (const gp of navigator.getGamepads()) {
+          if (!gp) continue;
+          let active = false;
+          if (gp.mapping !== "standard" || gp.axes.length < 2) {
+            active = gp.axes.some(a => Math.abs(a) >= 0.4) || gp.buttons.some(b => b.pressed);
+          } else {
+            active = Math.abs(gp.axes[0]) >= 0.4 || Math.abs(gp.axes[1]) >= 0.4 || gp.buttons.some(b => b.pressed);
+          }
+          if (active) { sendGamepadInfo(gp.id); break; }
+        }
+      }, 16);
+    }
+
+    window.SAVEManager = (() => {
+      const DB_NAME = '/_savedata', STORE_NAME = 'FILE_DATA', DB_VERSION = 21;
+      let db;
+
+      function showMessageBox(message, onConfirm = null) {
+        const box = document.getElementById('customMessageBox');
+        const text = document.getElementById('messageBoxText');
+        const btn = document.getElementById('messageBoxConfirmBtn');
+        const cancel = document.getElementById('messageBoxCancelBtn');
+        text.textContent = message;
+        btn.textContent = 'Alright!';
+        if (cancel) cancel.style.display = 'none';
+        box.style.display = 'flex';
+        btn.onclick = () => { box.style.display = 'none'; onConfirm?.(); };
+      }
+
+      function confirmBox(message) {
+        return new Promise((resolve) => {
+          const box = document.getElementById('customMessageBox');
+          const text = document.getElementById('messageBoxText');
+          const btn = document.getElementById('messageBoxConfirmBtn');
+          let cancel = document.getElementById('messageBoxCancelBtn');
+          if (!cancel) {
+            cancel = document.createElement('button');
+            cancel.id = 'messageBoxCancelBtn';
+            cancel.style.backgroundColor = '#6c757d';
+            cancel.style.marginLeft = '10px';
+            btn.parentNode.appendChild(cancel);
+          }
+          text.textContent = message;
+          btn.textContent = 'Sure!';
+          cancel.textContent = 'Nah.';
+          cancel.style.display = 'inline-block';
+          box.style.display = 'flex';
+          btn.onclick = () => { box.style.display = 'none'; resolve(true); };
+          cancel.onclick = () => { box.style.display = 'none'; resolve(false); };
+        });
+      }
+
+      async function openIndexedDB() {
+        if (db) return db;
+        if (!window.indexedDB) { showMessageBox("Your browser doesn't support IndexedDB."); throw new Error("No IndexedDB"); }
+        const dbs = await window.indexedDB.databases();
+        if (!dbs.some(d => d.name === DB_NAME)) throw new Error(`Database '${DB_NAME}' not found. Save in-game first!`);
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open(DB_NAME, DB_VERSION);
+          req.onerror = (e) => { showMessageBox("Error opening IndexedDB"); reject(e.target.error); };
+          req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+          req.onupgradeneeded = (e) => { db = e.target.result; };
+        });
+      }
+
+      async function getSaveFiles() {
+        try {
+          await openIndexedDB();
+          const tx = db.transaction([STORE_NAME], 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          return new Promise((resolve, reject) => {
+            const filesReq = store.getAll();
+            filesReq.onsuccess = () => {
+              const keysReq = store.getAllKeys();
+              keysReq.onsuccess = () => resolve(filesReq.result.map((f, i) => ({ name: keysReq.result[i], data: f })));
+              keysReq.onerror = (e) => reject(e.target.error);
+            };
+            filesReq.onerror = (e) => reject(e.target.error);
+          });
+        } catch (e) { showMessageBox("Failed to retrieve saves: " + e.message); return []; }
+      }
+
+      async function displaySaveFiles() {
+        const list = document.getElementById('saveFileList');
+        list.innerHTML = '';
+        try {
+          const files = await getSaveFiles();
+          if (!files.length) { list.innerHTML = 'No saves found.'; return; }
+          files.forEach(({ name, data }) => {
+            const item = document.createElement('div');
+            item.classList.add('save-file-item');
+            const info = document.createElement('div');
+            info.classList.add('save-file-info');
+            info.innerHTML = `<span><strong>File:</strong> ${name.replace('/_savedata/', '')}</span><span><strong>Modified:</strong> ${data.timestamp ? new Date(data.timestamp).toLocaleString() : 'N/A'}</span><span><strong>Size:</strong> ${data.contents?.byteLength || 0} bytes</span>`;
+            const actions = document.createElement('div');
+            actions.classList.add('save-file-actions');
+            const dl = document.createElement('button'); dl.textContent = 'Download';
+            dl.onclick = () => {
+              if (!data.contents) { showMessageBox("No content to download!"); return; }
+              const a = document.createElement('a');
+              a.href = URL.createObjectURL(new Blob([data.contents]));
+              a.download = name; document.body.appendChild(a); a.click(); a.remove();
+              showMessageBox(`"${name}" downloaded.`);
+            };
+            const del = document.createElement('button'); del.textContent = 'Delete'; del.classList.add('delete-btn');
+            del.onclick = async () => {
+              if (await confirmBox(`Delete "${name}"?`)) {
+                const tx = db.transaction([STORE_NAME], 'readwrite');
+                tx.objectStore(STORE_NAME).delete(name).onsuccess = () => { showMessageBox(`"${name}" deleted.`); displaySaveFiles(); };
+              }
+            };
+            actions.append(dl, del); item.append(info, actions); list.appendChild(item);
+          });
+        } catch (e) { list.innerHTML = `<p style="text-align:center;color:#FA1E4E;">Error: ${e.message}</p>`; }
+      }
+
+      async function saveSaveFile(name, data) {
+        await openIndexedDB();
+        return new Promise((resolve, reject) => {
+          const req = db.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put(data, name);
+          req.onsuccess = resolve;
+          req.onerror = (e) => { showMessageBox("Error saving: " + e.target.error?.message); reject(e.target.error); };
+        });
+      }
+
+      async function handleUpload() {
+        const input = document.getElementById('uploadFileInput');
+        const nameInput = document.getElementById('uploadFileNameInput');
+        if (!input.files.length) { showMessageBox("Select at least one file."); return; }
+        try {
+          const promises = [...input.files].map(async (file) => {
+            let name = (input.files.length === 1 && nameInput.value.trim()) ? nameInput.value.trim() : file.name;
+            name = name.replace(/^_savedata\//, '').replace(/^\//, '');
+            if (!name) return;
+            return saveSaveFile(`/_savedata/${name}`, { timestamp: new Date(), mode: 33206, contents: new Uint8Array(await file.arrayBuffer()) });
+          });
+          await Promise.all(promises);
+          showMessageBox(`${input.files.length} file(s) uploaded.`);
+          input.value = ''; nameInput.value = '';
+          displaySaveFiles();
+        } catch (e) { showMessageBox("Upload failed: " + e.message); }
+      }
+
+      async function exportAllToZip() {
+        try {
+          const files = await getSaveFiles();
+          if (!files.length) { showMessageBox("No saves to export."); return; }
+          const zip = new JSZip();
+          files.forEach(({ name, data }) => {
+            if (!data.contents) return;
+            zip.file(name.replace(/^\/_savedata\//, ''), data.contents instanceof Int8Array ? new Uint8Array(data.contents.buffer) : data.contents);
+          });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(await zip.generateAsync({ type: 'blob' }));
+          a.download = 'UNDERTALEWeb_SAVEs.zip'; document.body.appendChild(a); a.click(); a.remove();
+          showMessageBox("Exported to UNDERTALEWeb_SAVEs.zip.");
+        } catch (e) { showMessageBox("Export failed: " + e.message); }
+      }
+
+      async function openSAVEManager() {
+        document.getElementById('saveManagerModal').style.display = 'flex';
+        await displaySaveFiles();
+        GM_pause();
+      }
+
+      function closeSAVEManager() { window.location.reload(); }
+      function closeSMnoreload() { document.getElementById('saveManagerModal').style.display = 'none'; GM_unpause(); }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const nameInput = document.getElementById('uploadFileNameInput');
+        const fileInput = document.getElementById('uploadFileInput');
+        fileInput?.addEventListener('change', () => {
+          if (fileInput.files.length === 1) { nameInput.disabled = false; nameInput.value = fileInput.files[0].name; }
+          else { nameInput.disabled = true; nameInput.value = ''; nameInput.placeholder = 'Custom filenames only for single file!'; }
+        });
+        if (nameInput) {
+          const guard = (e) => { if (document.activeElement === nameInput) e.stopImmediatePropagation(); };
+          ['keydown', 'keyup', 'keypress'].forEach(ev => window.addEventListener(ev, guard, true));
+        }
+      });
+
+      return { openSAVEManager, closeSAVEManager, closeSMnoreload, handleUpload, showMessageBox, confirmBox, openIndexedDB, exportAllToZip };
+    })();
+
+    window.addEventListener('load', async () => { try { await window.SAVEManager.openIndexedDB(); } catch (e) {} });
+
+
+  </script>
+
+  <script async src="runner.js"></script>
+  <script src="joy.js"></script>
+  <script src="mobile.js"></script>
+  <script src="cooker.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Fuelled By Hotdogs</title>
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/fueledbyhotdogs/TemplateData/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/fueledbyhotdogs/TemplateData/style.css">
+  <style>
+    /* Force the body to have no scrollbars and fill the screen */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+    }
+    /* Ensure the container is exactly the size of the window */
+    #unity-container {
+      width: 100vw !important;
+      height: 100vh !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    /* Force the canvas to fill the container */
+    #unity-canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    #unity-loading-bar {
+      position: absolute;  
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+  </style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-PXHK7Q7G3Z");
+</script>
+</head>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+    <div id="unity-loading-bar">
+      <div id="background"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+    <div id="unity-warning"></div>
+  </div>
+
+  <script>
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var warningBanner = document.querySelector("#unity-warning");
+
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+      }
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        setTimeout(function() {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
+      }
+      updateBannerVisibility();
+    }
+
+    var buildUrl = "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/fueledbyhotdogs/Build";
+    var loaderUrl = "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/fueledbyhotdogs/Build/WbglBuild.loader.js";
+    
+    var config = {
+      dataUrl: buildUrl + "/WbglBuild.data",
+      frameworkUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/fueledbyhotdogs/Build/WbglBuild.framework.js",
+      codeUrl: buildUrl + "/WbglBuild.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "no company yet",
+      productName: "Fuelled By HotDogs",
+      productVersion: "0.11",
+      showBanner: unityShowBanner,
+      // FIX: Setting devicePixelRatio to 1 prevents the "top-left corner" bug on high-DPI screens
+      devicePixelRatio: 1, 
+      matchWebGLToCanvasSize: true, 
+    };
+
+    // Mobile handling
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      container.className = "unity-mobile";
+    }
+
+    loadingBar.style.display = "block";
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
+        loadingBar.style.display = "none";
+        
+        // Optional: ensure it stays fullscreen if the window is resized
+        window.addEventListener('resize', () => {
+             canvas.style.width = "100%";
+             canvas.style.height = "100%";
+        });
+
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

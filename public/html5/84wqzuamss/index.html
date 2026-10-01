@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <title>The Binding of Isaac: Rebirth (PSP)</title>
+    <style>
+      html,
+      body,
+      #game {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+
+      body {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        overscroll-behavior: none;
+        touch-action: none;
+      }
+
+      #game {
+        width: 480px;
+        height: 272px;
+        contain: strict;
+        transform: scale(var(--game-scale, 1));
+        transform-origin: center;
+      }
+
+      #game canvas {
+        image-rendering: auto;
+      }
+    </style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-PXHK7Q7G3Z");
+</script>
+</head>
+  <body>
+    <div id="game"></div>
+    <script>
+      "use strict";
+
+      // A separate settings ID makes sure this performance preset is not
+      // shadowed by slower PPSSPP options saved by an older version.
+      window.EJS_gameID = "tboir-performance-v3";
+      window.EJS_player = "#game";
+      window.EJS_core = "psp";
+      window.EJS_gameUrl = "tboirpsp0301.iso";
+      window.EJS_pathtodata = "/extra/data/";
+      window.EJS_threads = true;
+      window.EJS_startOnLoaded = true;
+      window.EJS_language = "en-US";
+      window.EJS_disableAutoLang = false;
+
+      function fitNativePspSurface() {
+        const scale = Math.min(window.innerWidth / 480, window.innerHeight / 272);
+        document.documentElement.style.setProperty("--game-scale", String(scale));
+      }
+
+      fitNativePspSurface();
+      window.addEventListener("resize", fitNativePspSurface, { passive: true });
+
+      // EmulatorJS passes these Libretro option names directly to its PPSSPP
+      // core. Native 1x is 480x272; CSS/WebGL scales that single render to the
+      // viewport instead of redrawing a desktop-sized framebuffer every frame.
+      window.EJS_defaultOptions = {
+        ppsspp_cpu_core: "JIT",
+        ppsspp_fast_memory: "enabled",
+        ppsspp_internal_resolution: "480x272",
+        ppsspp_software_rendering: "disabled",
+        ppsspp_frameskip: "1",
+        ppsspp_frameskiptype: "Number of frames",
+        ppsspp_auto_frameskip: "enabled",
+        ppsspp_frame_duplication: "disabled",
+        ppsspp_gpu_hardware_transform: "enabled",
+        ppsspp_texture_scaling_level: "disabled",
+        ppsspp_texture_anisotropic_filtering: "disabled",
+        ppsspp_spline_quality: "Low",
+        ppsspp_texture_replacement: "disabled",
+      };
+    </script>
+    <script src="loader.js"></script>
+  </body>
+</html>

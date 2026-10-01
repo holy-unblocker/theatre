@@ -1,0 +1,71 @@
+{
+    "name": "Football Bros",
+    "short_name": "Football Bros",
+    "start_url": "index.php?ms=1",
+    "id": "com.bluewizard.footballbros",
+    "description": "Football Bros is a  simple, fast-paced football game with all kinds of crazy action! With online multiplayer gameplay, lots of plays, and all kinds of crazy football action!",
+    "background": {
+      "service_worker": "sw.js"
+    },
+    "scope": "./",
+    "icons": [
+      {
+        "src": "icon.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "superhero.png",
+        "sizes": "1920x1080",
+        "type": "image/png",
+        "purpose": "any"
+      }
+    ],
+    "images": [
+      {
+        "src": "superhero.png",
+        "sizes": "1920x1080",
+        "type": "image/png",
+        "purpose": "any"
+      }
+    ],
+    "theme_color": "#33BB33",
+    "background_color": "#686868",
+    "display": "standalone",
+    "ms_start_compatible": true,
+    "screenshots": [
+      {
+        "src": "/ss3.jpg",
+        "type": "image/jpg",
+        "sizes": "1920x1080",
+        "form_factor": "wide"
+      },
+      {
+        "src": "/ss2.jpg",
+        "type": "image/jpg",
+        "sizes": "1920x1080",
+        "form_factor": "wide"
+      }
+    ],
+    "display_override": [
+      "standalone",
+      "fullscreen",
+      "browser",
+      "minimal-ui",
+      "window-controls-overlay"
+    ],
+    "categories": [
+      "games"
+    ],
+    "lang": "en",
+    "dir": "auto",
+    "orientation": "landscape",
+    "edge_side_panel": {
+      "preferred_width": 0
+    },
+    "handle_links": "preferred",
+    "launch_handler": {
+      "client_mode": ["focus-existing", "auto"]
+    }
+  }

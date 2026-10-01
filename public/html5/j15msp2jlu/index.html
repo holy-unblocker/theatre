@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7FN7LEVWXD"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-7FN7LEVWXD');
+        </script>
+
+    <title>Rooftop Snipers | Seraph</title>
+
+        <link rel="stylesheet" href="TemplateData/style.css" />
+        <script src="TemplateData/UnityProgress.js"></script>
+        <script type="application/javascript" src="/js/tab_cloak.js"></script>
+        <script src="TemplateData/UnityLoader.js"></script>
+        <script>
+            var gameInstance = UnityLoader.instantiate("gameContainer", "Build/rooftop-snipers.json", {
+                onProgress: UnityProgress,
+                Module: {
+                    onRuntimeInitialized: function () {
+                        UnityProgress(gameInstance, "complete");
+                    },
+                },
+            });
+        </script>
+                    <script src="../../storage/js/cloak.js"></script>
+    </head>
+    <body style="margin: 0; overflow: hidden;">
+        <div class="webgl-content">
+            <div id="gameContainer" style="width: 100%; height: 100%; margin: 0;"></div>
+        </div>
+    </body>
+</html>

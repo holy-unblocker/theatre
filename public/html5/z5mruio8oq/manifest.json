@@ -1,0 +1,18 @@
+{
+    "name": "Minecraft Web",
+    "short_name": "Minecraft",
+    "description": "Minecraft in the browser, powered by Emscripten",
+    "start_url": "./index.html",
+    "display": "fullscreen",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "orientation": "landscape",
+    "icons": [
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9IiM4YjU3MmEiLz48cmVjdCB4PSI2NCIgeT0iNjQiIHdpZHRoPSIzODQiIGhlaWdodD0iMzg0IiBmaWxsPSIjNmM5YjM5Ii8+PC9zdmc+",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}

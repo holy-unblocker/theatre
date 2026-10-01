@@ -1,0 +1,125 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+body {
+  font-family: "Courier New", monospace;
+}
+.game-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+#game-canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #000;
+}
+.pause-button,
+.pixel-button {
+  border: 0;
+  color: #f4f4f4;
+  background: #232323;
+  font: 700 18px/1 "Courier New", monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow:
+    0 0 0 2px #0a0a0a,
+    0 0 0 4px #595959,
+    6px 6px 0 #0f0f0f;
+}
+.pause-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  min-width: 112px;
+  min-height: 52px;
+  padding: 0 16px;
+  background: #3f5f1f;
+}
+.mobile-pad {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 3;
+  grid-template-columns: auto auto;
+  gap: 22px;
+  align-items: end;
+}
+.pixel-dpad {
+  display: grid;
+  grid-template-columns: 64px 64px 64px;
+  grid-template-rows: 64px 64px 64px;
+  grid-template-areas:
+    ". up ."
+    "left center right"
+    ". down .";
+  gap: 8px;
+}
+.pixel-button {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+}
+.pixel-button.up {
+  grid-area: up;
+}
+.pixel-button.left {
+  grid-area: left;
+}
+.pixel-button.center {
+  grid-area: center;
+  visibility: hidden;
+  pointer-events: none;
+}
+.pixel-button.right {
+  grid-area: right;
+}
+.pixel-button.down {
+  grid-area: down;
+}
+.action-pad {
+  display: grid;
+  gap: 14px;
+}
+.pixel-button.jump,
+.pixel-button.pause-mobile {
+  width: 108px;
+  height: 64px;
+}
+.pixel-button.jump {
+  background: #866b1b;
+}
+.pixel-button.pause-mobile {
+  background: #4b2d17;
+}
+.pause-button:active,
+.pixel-button:active {
+  transform: translate(4px, 4px);
+  box-shadow:
+    0 0 0 2px #0a0a0a,
+    0 0 0 4px #595959,
+    2px 2px 0 #0f0f0f;
+}
+@media (max-width: 900px) {
+  .pause-button {
+    display: none;
+  }
+  .mobile-pad {
+    display: grid;
+  }
+}

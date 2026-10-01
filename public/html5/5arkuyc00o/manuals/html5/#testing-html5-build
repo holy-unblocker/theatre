@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-09BQGLZ20Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-09BQGLZ20Q');
+</script><!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK7DKT73');</script>
+<!-- End Google Tag Manager --><title>Defold development for the HTML5 platform</title>
+
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"@id": "https://www.defold.com/#organization",
+	"name": "Defold Foundation",
+	"url": "https://www.defold.com",
+	"email": "info@defold.se",
+	"address": {
+		"@type": "PostalAddress",
+		"streetAddress": "Postbox 6034",
+		"addressLocality": "Hagersten",
+		"addressRegion": "Stockholm",
+		"addressCountry": "SE",
+		"postalCode": "12906"
+	},
+	"foundingDate": "2020",
+	"sameAs": [
+		"https://www.facebook.com/Defold",
+		"https://www.twitter.com/defold",
+		"https://www.x.com/defold",
+		"https://www.github.com/defold",
+		"https://www.youtube.com/channel/UCrEYXG15n3V0Y8eK0RbCaLQ",
+		"https://www.linkedin.com/company/defold-foundation",
+		"https://bsky.app/profile/defold.com"
+	]
+}
+</script>
+
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"@id": "https://www.defold.com/#website",
+	"url": "https://www.defold.com",
+	"name": "Defold",
+	"description": "Defold is a free, cross-platform game engine for building 2D and 3D games for desktop, web, mobile, and consoles.",
+	"publisher": {
+		"@id": "https://www.defold.com/#organization"
+	},
+	"inLanguage": "en"
+}
+</script>
+
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "WebPage",
+	"@id": "https://www.defold.com/manuals/html5/#webpage",
+	"url": "https://www.defold.com/manuals/html5/",
+	"name": "Defold development for the HTML5 platform",
+	"description": "This manual describes the process of creating HTML5 game, along with known issues and limitations.",
+	"isPartOf": {
+		"@id": "https://www.defold.com/#website"
+	},
+	"inLanguage": "en",
+	"publisher": {
+		"@id": "https://www.defold.com/#organization"
+	},
+	"image": "https://www.defold.com/images/social/facebook-share.jpg"}
+</script>
+
+<!-- META DATA -->
+<meta name="description" content="This manual describes the process of creating HTML5 game, along with known issues and limitations.">
+<meta name="author" content="Defold Foundation">
+<meta name="keywords" content="defold, gameengine, game-engine, game-development, game-dev, gamedev, open-source, opensource, crossplatform, cross-platform, free, nintendo-switch, console, html5, web, android, ios, desktop">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#14181c">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)"><meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"><link rel="canonical" href="https://www.defold.com/manuals/html5/">
+
+<!-- RSS FEED -->
+<link rel="alternate" type="application/rss+xml" title="Defold" href="/feed.xml">
+
+<!-- OPEN GRAPH -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.defold.com/manuals/html5/">
+<meta property="og:site_name" content="Defold">
+<meta property="og:title" content="Defold development for the HTML5 platform">
+<meta property="og:description" content="This manual describes the process of creating HTML5 game, along with known issues and limitations.">
+<meta property="og:image" content="https://www.defold.com/images/social/facebook-share.jpg">
+<meta property="og:image:alt" content="Defold development for the HTML5 platform"><!-- end OPEN GRAPH -->
+
+<!-- TWITTER -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@defold">
+<meta name="twitter:title" content="Defold development for the HTML5 platform">
+<meta name="twitter:description" content="This manual describes the process of creating HTML5 game, along with known issues and limitations.">
+<meta name="twitter:image" content="https://www.defold.com/images/social/twitter-share.jpg">
+<meta name="twitter:image:alt" content="Defold development for the HTML5 platform">
+<!-- end TWITTER -->
+
+<!-- web monetization -->
+<meta name="monetization" content="$ilp.uphold.com/QkG86UgXzKq8">
+
+<!-- Analytics preconnect -->
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin><!-- FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,400..700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,400..700&display=swap"></noscript>
+
+<!-- favicon -->
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+
+<!-- CSS --><link rel="stylesheet" type="text/css" href="/css/main.css"><link rel="stylesheet" type="text/css" href="/css/learn.css"><link rel="stylesheet" type="text/css" href="/css/code.css"><link rel="stylesheet" href="/_pagefind/pagefind-component-ui.css"><!-- end CSS --><script src="/_pagefind/pagefind-component-ui.js" type="module"></script>
+<script src="/js/learnnav-pagefind-search.js" type="module"></script><script>
+(function() {
+	function enhanceImageLoading(img) {
+		if (!img || img.nodeType !== 1) {
+			return;
+		}
+		if (!img.hasAttribute("loading")) {
+			var className = img.getAttribute("class") || "";
+			var eager = /\b(page-hero-graphic|frontpage-hero-logo-image|topnav-brand-image)\b/.test(className);
+			img.setAttribute("loading", eager ? "eager" : "lazy");
+		}
+		if (!img.hasAttribute("decoding")) {
+			img.setAttribute("decoding", "async");
+		}
+	}
+
+	function scanImages(root) {
+		var images = root.getElementsByTagName ? root.getElementsByTagName("img") : [];
+		for (var index = 0; index < images.length; index += 1) {
+			enhanceImageLoading(images[index]);
+		}
+	}
+
+	if ("MutationObserver" in window) {
+		new MutationObserver(function(mutations) {
+			for (var index = 0; index < mutations.length; index += 1) {
+				var nodes = mutations[index].addedNodes;
+				for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+					var node = nodes[nodeIndex];
+					if (node.nodeType !== 1) {
+						continue;
+					}
+					if (node.tagName === "IMG") {
+						enhanceImageLoading(node);
+					}
+					else {
+						scanImages(node);
+					}
+				}
+			}
+		}).observe(document.documentElement, { childList: true, subtree: true });
+	}
+
+	if (document.addEventListener) {
+		document.addEventListener("DOMContentLoaded", function() {
+			scanImages(document);
+		});
+	}
+}());
+</script>
+
+
+	<script>
+		(function() {
+			var root = document.documentElement;
+			var storageKey = 'defold-theme';
+			var systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+			var themeColorMeta = document.querySelector('meta[name="theme-color"]:not([media])');
+
+			function getStoredTheme() {
+				try {
+					var storedTheme = localStorage.getItem(storageKey);
+					if (storedTheme === 'light' || storedTheme === 'dark') {
+						return storedTheme;
+					}
+				} catch (error) {
+				}
+				return null;
+			}
+
+			function resolveTheme(preferredTheme) {
+				if (preferredTheme === 'light' || preferredTheme === 'dark') {
+					return preferredTheme;
+				}
+				return systemTheme.matches ? 'dark' : 'light';
+			}
+
+			function emitThemeChange(theme, preference) {
+				document.dispatchEvent(new CustomEvent('defoldthemechange', {
+					detail: {
+						theme: theme,
+						preference: preference
+					}
+				}));
+			}
+
+			function applyTheme(preferredTheme) {
+				var resolvedTheme = resolveTheme(preferredTheme);
+				root.classList.add('js');
+				root.classList.toggle('theme-light', resolvedTheme === 'light');
+				root.classList.toggle('theme-dark', resolvedTheme === 'dark');
+				root.dataset.theme = resolvedTheme;
+				root.dataset.themePreference = preferredTheme || 'system';
+				if (themeColorMeta) {
+					themeColorMeta.setAttribute('content', resolvedTheme === 'dark' ? '#14181c' : '#fafafa');
+				}
+				return resolvedTheme;
+			}
+
+			function persistTheme(theme) {
+				try {
+					localStorage.setItem(storageKey, theme);
+				} catch (error) {
+				}
+			}
+
+			function clearTheme() {
+				try {
+					localStorage.removeItem(storageKey);
+				} catch (error) {
+				}
+			}
+
+			function updateToggleButtons() {
+				var theme = root.dataset.theme || resolveTheme(getStoredTheme());
+				var nextTheme = theme === 'dark' ? 'light' : 'dark';
+				var buttons = document.querySelectorAll('[data-theme-toggle]');
+				for (var i = 0; i < buttons.length; i += 1) {
+					var button = buttons[i];
+					button.dataset.theme = theme;
+					button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+					button.setAttribute('aria-label', nextTheme === 'dark' ? 'Switch to dark mode' : 'Switch to light mode');
+					button.title = nextTheme === 'dark' ? 'Switch to dark mode' : 'Switch to light mode';
+				}
+			}
+
+			function setTheme(theme) {
+				if (theme !== 'light' && theme !== 'dark') {
+					return root.dataset.theme || resolveTheme(getStoredTheme());
+				}
+				persistTheme(theme);
+				applyTheme(theme);
+				updateToggleButtons();
+				emitThemeChange(theme, theme);
+				return theme;
+			}
+
+			function handleSystemThemeChange() {
+				if (getStoredTheme()) {
+					return;
+				}
+				var resolvedTheme = applyTheme(null);
+				updateToggleButtons();
+				emitThemeChange(resolvedTheme, 'system');
+			}
+
+			applyTheme(getStoredTheme());
+
+			if (typeof systemTheme.addEventListener === 'function') {
+				systemTheme.addEventListener('change', handleSystemThemeChange);
+			} else if (typeof systemTheme.addListener === 'function') {
+				systemTheme.addListener(handleSystemThemeChange);
+			}
+
+			window.DefoldTheme = {
+				getTheme: function() {
+					return root.dataset.theme || resolveTheme(getStoredTheme());
+				},
+				getPreference: function() {
+					return root.dataset.themePreference || (getStoredTheme() || 'system');
+				},
+				setTheme: setTheme,
+				toggle: function() {
+					return setTheme((root.dataset.theme || resolveTheme(getStoredTheme())) === 'dark' ? 'light' : 'dark');
+				},
+				reset: function() {
+					clearTheme();
+					var resolvedTheme = applyTheme(null);
+					updateToggleButtons();
+					emitThemeChange(resolvedTheme, 'system');
+					return resolvedTheme;
+				},
+				syncButtons: updateToggleButtons
+			};
+
+			document.addEventListener('DOMContentLoaded', function() {
+				updateToggleButtons();
+				var buttons = document.querySelectorAll('[data-theme-toggle]');
+				for (var i = 0; i < buttons.length; i += 1) {
+					buttons[i].addEventListener('click', function() {
+						window.DefoldTheme.toggle();
+					});
+				}
+			});
+		})();
+	</script>	
+</head>
+<body><!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK7DKT73"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><div id="page">
+	<div class="nav nav-solid">
+	<div class="container">
+		<div class="topnav-shell">
+			<a href="/" class="topnav-brand" aria-label="Defold home">
+				<span class="topnav-brand-mark">
+					<img class="topnav-brand-image topnav-brand-image-dark" src="/images/logo/defold/logo/logo-ver-outline-bright.svg" alt="Defold home page" aria-hidden="true" loading="eager" fetchpriority="high" decoding="async"/>
+					<img class="topnav-brand-image topnav-brand-image-light" src="/images/logo/defold/logo/logo-ver-outline-dark.svg" alt="Defold home page" aria-hidden="true" loading="eager" fetchpriority="low" decoding="async"/>
+				</span>
+			</a>
+
+			<nav class="topnav-main-links" aria-label="Primary">
+				<ul>
+					<li><a href="/product">Features</a></li>
+					<li><a href="/showcase">Showcase</a></li>
+					<li><a href="/learn">Learn</a></li>
+					<li><a href="/assets">Assets</a></li>
+					<li><a href="/community">Community</a></li>
+					<li><a href="/support">Support</a></li>
+				</ul>
+			</nav>
+
+			<div class="topnav-actions" aria-label="Quick links">
+				<ul>
+					<li><a href="/ref/overview_defoldlua">API</a></li>
+					<li><a href="/open">Free</a></li>
+					<li><a href="/download">Download</a></li>
+					<li><a href="/donate" class="nav-donate-link">Donate&nbsp;&nbsp;<span class="nav-donate-heart" aria-hidden="true">❤️</span></a></li>
+					<li class="topnav-actions-theme">
+						<button class="theme-toggle-button" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to light mode">
+							<span class="theme-toggle-button-track" aria-hidden="true">
+								<span class="theme-toggle-button-thumb"></span>
+							</span>
+						</button>
+					</li>
+				</ul>
+			</div>
+
+			<div class="topnav-mobile">
+				<details class="topnav-mobile-menu">
+					<summary class="topnav-mobile-trigger">
+						<span class="topnav-mobile-trigger-label">DEFOLD</span>
+					</summary>
+					<div class="topnav-mobile-panel">
+						<a href="/" class="topnav-mobile-link">Home</a>
+						<a href="/product" class="topnav-mobile-link">Features</a>
+						<a href="/showcase" class="topnav-mobile-link">Showcase</a>
+						<a href="/learn" class="topnav-mobile-link">Learn</a>
+						<a href="/assets" class="topnav-mobile-link">Asset Portal</a>
+						<a href="/community" class="topnav-mobile-link">Community</a>
+						<a href="/support" class="topnav-mobile-link">Support</a>
+						<a href="/ref/overview_defoldlua" class="topnav-mobile-link">API</a>
+						<a href="/open" class="topnav-mobile-link">Free</a>
+						<a href="/download" class="topnav-mobile-link">Download</a>
+						<a href="/donate" class="topnav-mobile-link topnav-mobile-link-donate">Donate&nbsp;&nbsp;<span class="nav-donate-heart" aria-hidden="true">❤️</span></a>
+					</div>
+				</details>
+				<button class="theme-toggle-button topnav-mobile-theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to light mode">
+					<span class="theme-toggle-button-track" aria-hidden="true">
+						<span class="theme-toggle-button-thumb"></span>
+					</span>
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+	<div class="nav learn learn-nav-dark">
+	<div class="container">
+		<div class="learnnav-desktop">
+			<div class="row">
+				<div class="nine columns"><ul class="sidemenu">
+						<li><a href="/manuals" class="bold">Manuals</a></li>
+						<li><a href="/tutorials" class="">Tutorials</a></li>
+						<li><a href="/examples" class="">Examples </a></li>
+						<li><a href="/videos" class="">Videos</a></li>
+						<li><a href="/courses" class="">Courses</a></li>
+						<li><a href="/faq/faq" class="">FAQ</a></li>
+						<li><a href="/codepad/" class="">Codepad</a></li>
+					</ul></div>
+				<div class="three columns">
+					<div class="right sidemenu compact">
+						<form action="/search" class="learnnav-search-form pagefind-nav-search" data-pagefind-nav-search data-pagefind-search-instance="learnnav-search-desktop" data-pagefind-fixed-panel data-pagefind-panel-align="right" data-pagefind-ignore role="search">
+							<div class="page-search-field learnnav-search-field">
+	<span class="site-icon page-search-field-icon" aria-hidden="true">
+	<span class="octicon" style="fill: currentColor; zoom: 1; vertical-align: middle;">
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z"/></svg>
+</span>
+
+</span>
+
+	<input
+		id="learnnav-search-desktop"
+		name="q"
+		
+		data-pagefind-nav-search-input="true"
+		type="text"
+		placeholder="Search..."
+		aria-label="Search the learn section"/>
+</div>
+
+							<div id="learnnav-search-desktop-results" class="pagefind-nav-results-panel" data-pagefind-nav-search-panel hidden>
+								<pagefind-config instance="learnnav-search-desktop" bundle-path="/_pagefind/" excerpt-length="18"></pagefind-config>
+								<pagefind-summary instance="learnnav-search-desktop"></pagefind-summary>
+								<pagefind-results instance="learnnav-search-desktop" max-results="6" max-sub-results="3"></pagefind-results>
+								<a class="pagefind-nav-search-all-results" href="/search" data-pagefind-nav-search-all-results>View all results</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div><div class="learnnav-mobile">
+			<details class="topnav-mobile-menu">
+				<summary class="topnav-mobile-trigger">
+					<span class="topnav-mobile-trigger-label">LEARN</span>
+				</summary>
+				<div class="topnav-mobile-panel">
+					<a href="/manuals" class="topnav-mobile-link active">Manuals</a>
+					<a href="/tutorials" class="topnav-mobile-link">Tutorials</a>
+					<a href="/examples" class="topnav-mobile-link">Examples</a>
+					<a href="/videos" class="topnav-mobile-link">Videos</a>
+					<a href="/courses" class="topnav-mobile-link">Courses</a>
+					<a href="/faq/faq" class="topnav-mobile-link">FAQ</a>
+					<a href="/codepad/" class="topnav-mobile-link">Codepad ↗</a>
+					<form action="/search" class="learnnav-mobile-search learnnav-search-form pagefind-nav-search" data-pagefind-nav-search data-pagefind-search-instance="learnnav-search-mobile" data-pagefind-ignore role="search">
+						<div class="page-search-field learnnav-search-field">
+	<span class="site-icon page-search-field-icon" aria-hidden="true">
+	<span class="octicon" style="fill: currentColor; zoom: 1; vertical-align: middle;">
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z"/></svg>
+</span>
+
+</span>
+
+	<input
+		id="learnnav-search-mobile"
+		name="q"
+		
+		data-pagefind-nav-search-input="true"
+		type="text"
+		placeholder="Search..."
+		aria-label="Search the learn section"/>
+</div>
+
+						<div id="learnnav-search-mobile-results" class="pagefind-nav-results-panel pagefind-nav-results-panel-mobile" data-pagefind-nav-search-panel hidden>
+							<pagefind-config instance="learnnav-search-mobile" bundle-path="/_pagefind/" excerpt-length="18"></pagefind-config>
+							<pagefind-summary instance="learnnav-search-mobile"></pagefind-summary>
+							<pagefind-results instance="learnnav-search-mobile" max-results="6" max-sub-results="3"></pagefind-results>
+							<a class="pagefind-nav-search-all-results" href="/search" data-pagefind-nav-search-all-results>View all results</a>
+						</div>
+					</form>
+				</div>
+			</details>
+		</div></div>
+</div>
+
+
+	<div id="pagecontent">
+	
+	<!-- Pagefind metadata and filters for manuals -->
+<div class="pagefind-hidden-meta" data-pagefind-filter="section">Manuals</div>
+<div class="pagefind-hidden-meta" data-pagefind-meta="section">Manuals</div><div class="section learn-detail-shell manual-layout-shell has-left-nav">
+	<div class="container">
+		<div class="row">
+			<div class="columns three learn-detail-nav">
+				<div class="sidemenu learn-sidebar-panel page-surface-panel page-text-panel"><input id="learn_sidebar_manuals_getting-started" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_getting-started" class="togglelabel">Getting Started</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/introduction" class="learn-sidebar-link">Introduction</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/install" class="learn-sidebar-link">Installing Defold</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/glossary" class="learn-sidebar-link">Glossary</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/unity" class="learn-sidebar-link">Defold for Unity users</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/flash" class="learn-sidebar-link">Defold for Flash users</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/getting-help" class="learn-sidebar-link">Getting help</a>
+			</li></ul><input id="learn_sidebar_manuals_project-setup" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_project-setup" class="togglelabel">Project Setup</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/project-setup" class="learn-sidebar-link">Creating a project</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/project-settings" class="learn-sidebar-link">Project settings</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/libraries" class="learn-sidebar-link">Sharing projects</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/project-defignore" class="learn-sidebar-link">Ignoring files</a>
+			</li></ul><input id="learn_sidebar_manuals_editor" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_editor" class="togglelabel">Editor</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/editor" class="learn-sidebar-link">Overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/scene-editing" class="learn-sidebar-link">Scene Editing</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/writing-code" class="learn-sidebar-link">Code editor</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/editor-templates" class="learn-sidebar-link">Custom project templates</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/editor-scripts" class="learn-sidebar-link">Editor scripts</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/editor-scripts-ui" class="learn-sidebar-link">Editor scripts: UI</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-game-logic/#running-the-debugger" class="learn-sidebar-link">Debugger</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/editor-preferences" class="learn-sidebar-link">Preferences</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/refactoring" class="learn-sidebar-link">Refactoring</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/editor-styling" class="learn-sidebar-link">Styling</a>
+			</li></ul><input id="learn_sidebar_manuals_core-concepts" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_core-concepts" class="togglelabel">Core Concepts</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/building-blocks" class="learn-sidebar-link">Building blocks</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/addressing" class="learn-sidebar-link">Addressing</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/message-passing" class="learn-sidebar-link">Message passing</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/application-lifecycle" class="learn-sidebar-link">Application lifecycle</a>
+			</li></ul><hr><input id="learn_sidebar_manuals_assets-and-resources" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_assets-and-resources" class="togglelabel">Assets and Resources</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/importing-assets" class="learn-sidebar-link">Importing assets</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/caching-assets" class="learn-sidebar-link">Caching assets</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/importing-graphics" class="learn-sidebar-link">Importing 2D graphics</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/importing-models" class="learn-sidebar-link">Importing 3D models</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/adapting-graphics-to-screen-size" class="learn-sidebar-link">Adapting to different screen sizes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/live-update" class="learn-sidebar-link">Live update</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/atlas" class="learn-sidebar-link">Atlas</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/buffer" class="learn-sidebar-link">Buffer</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/font" class="learn-sidebar-link">Font</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/resource" class="learn-sidebar-link">Resource management</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/tilesource" class="learn-sidebar-link">Tile source</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/texture-filtering" class="learn-sidebar-link">Texture filtering</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/texture-profiles" class="learn-sidebar-link">Texture compression</a>
+			</li></ul><input id="learn_sidebar_manuals_animations" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_animations" class="togglelabel">Animations</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/animation" class="learn-sidebar-link">Overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/flipbook-animation" class="learn-sidebar-link">Flipbook Animation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/model-animation" class="learn-sidebar-link">Model animation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/property-animation" class="learn-sidebar-link">Property animation (tweens)</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-rive" class="learn-sidebar-link">Rive animation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-spine#playing-animations" class="learn-sidebar-link">Spine animation</a>
+			</li></ul><input id="learn_sidebar_manuals_components" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_components" class="togglelabel">Components</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/components" class="learn-sidebar-link">Overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/collection-factory" class="learn-sidebar-link">Collection factory</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/collection-proxy" class="learn-sidebar-link">Collection proxy</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-objects" class="learn-sidebar-link">Collision object</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/camera" class="learn-sidebar-link">Camera</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/factory" class="learn-sidebar-link">Factory</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/label" class="learn-sidebar-link">Label</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/mesh" class="learn-sidebar-link">Mesh</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/model" class="learn-sidebar-link">Model</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/particlefx" class="learn-sidebar-link">Particle FX</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-rive/#creating-rive-model-components" class="learn-sidebar-link">Rive</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/sound" class="learn-sidebar-link">Sound</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-spine#creating-spine-model-components" class="learn-sidebar-link">Spine</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/sprite" class="learn-sidebar-link">Sprite</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/tilemap" class="learn-sidebar-link">Tilemap</a>
+			</li></ul><input id="learn_sidebar_manuals_gui" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_gui" class="togglelabel">GUI</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/gui" class="learn-sidebar-link">GUI overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-box" class="learn-sidebar-link">Box nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-text" class="learn-sidebar-link">Text nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-pie" class="learn-sidebar-link">Pie nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-spine#creating-spine-gui-nodes" class="learn-sidebar-link">Spine nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-particlefx" class="learn-sidebar-link">ParticleFX nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-template" class="learn-sidebar-link">Template nodes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-script" class="learn-sidebar-link">Scripts</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-clipping" class="learn-sidebar-link">Clipping</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/gui-layouts" class="learn-sidebar-link">Layouts</a>
+			</li></ul><input id="learn_sidebar_manuals_physics" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_physics" class="togglelabel">Physics</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/physics" class="learn-sidebar-link">Physics overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-objects" class="learn-sidebar-link">Collision objects</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-shapes" class="learn-sidebar-link">Collision shapes</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-groups" class="learn-sidebar-link">Collision groups</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-messages" class="learn-sidebar-link">Collision messages</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-events" class="learn-sidebar-link">Collision events listener</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-resolving-collisions" class="learn-sidebar-link">Resolving collisions</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-ray-casts" class="learn-sidebar-link">Ray casts</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physics-joints" class="learn-sidebar-link">Joints and constraints</a>
+			</li></ul><input id="learn_sidebar_manuals_sound" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_sound" class="togglelabel">Sound</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/sound" class="learn-sidebar-link">Sound</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/sound-streaming" class="learn-sidebar-link">Sound Streaming</a>
+			</li><li class="learn-sidebar-list-item"><a href="https://defold.com/assets/fmod/" class="learn-sidebar-link">FMOD</a>
+			</li></ul><input id="learn_sidebar_manuals_input" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_input" class="togglelabel">Input</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/input" class="learn-sidebar-link">Overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/input-key-and-text" class="learn-sidebar-link">Key and text input</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/input-mouse-and-touch" class="learn-sidebar-link">Mouse and touch</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/input-gamepads" class="learn-sidebar-link">Gamepads</a>
+			</li></ul><input id="learn_sidebar_manuals_game-logic" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_game-logic" class="togglelabel">Game logic</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/script" class="learn-sidebar-link">Scripts</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/properties" class="learn-sidebar-link">Properties</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/script-properties" class="learn-sidebar-link">Script properties</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/lua" class="learn-sidebar-link">Lua in Defold</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/application-security/#source-code-obfuscation" class="learn-sidebar-link">Source code obfuscation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/modules" class="learn-sidebar-link">Modules</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-game-logic" class="learn-sidebar-link">Debugging</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/writing-code" class="learn-sidebar-link">Writing code</a>
+			</li></ul><input id="learn_sidebar_manuals_files" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_files" class="togglelabel">Files</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/file-access" class="learn-sidebar-link">Working with files</a>
+			</li></ul><input id="learn_sidebar_manuals_network-connections" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_network-connections" class="togglelabel">Network Connections</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/networking" class="learn-sidebar-link">Overview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/http-requests" class="learn-sidebar-link">HTTP Requests</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/socket-connections" class="learn-sidebar-link">Socket connections</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-websocket" class="learn-sidebar-link">WebSocket connections</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/online-services" class="learn-sidebar-link">Online services</a>
+			</li></ul><input id="learn_sidebar_manuals_rendering" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_rendering" class="togglelabel">Rendering</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/render" class="learn-sidebar-link">Render</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/material" class="learn-sidebar-link">Material</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/compute" class="learn-sidebar-link">Compute</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/shader" class="learn-sidebar-link">Shader</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/texture-filtering" class="learn-sidebar-link">Texture filtering</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/physically-based-rendering" class="learn-sidebar-link">Physically Based Rendering</a>
+			</li></ul><hr><input id="learn_sidebar_manuals_workflow" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_workflow" class="togglelabel">Workflow</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/application-security" class="learn-sidebar-link">Application security</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/bundling" class="learn-sidebar-link">Bundling an application</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/caching-assets" class="learn-sidebar-link">Caching assets</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/bob" class="learn-sidebar-link">Command line tools</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/hot-reload" class="learn-sidebar-link">Hot reloading</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/porting-guidelines" class="learn-sidebar-link">Porting guidelines</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/refactoring" class="learn-sidebar-link">Refactoring</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/dev-app" class="learn-sidebar-link">The mobile dev app</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/version-control" class="learn-sidebar-link">Version control</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/writing-code" class="learn-sidebar-link">Writing code</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/working-offline" class="learn-sidebar-link">Working offline</a>
+			</li></ul><input id="learn_sidebar_manuals_debugging" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_debugging" class="togglelabel">Debugging</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/debugging-game-logic" class="learn-sidebar-link">Debugging game logic</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-native-code" class="learn-sidebar-link">Debugging native code</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-native-code-android" class="learn-sidebar-link">Debugging native code on Android</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-native-code-ios" class="learn-sidebar-link">Debugging native code on iOS</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-game-and-system-logs" class="learn-sidebar-link">Reading game and system logs</a>
+			</li></ul><input id="learn_sidebar_manuals_optimization" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_optimization" class="togglelabel">Optimization</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/optimization" class="learn-sidebar-link">Optimizing an application</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/optimization-size" class="learn-sidebar-link">Optimize game size</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/optimization-speed" class="learn-sidebar-link">Optimize runtime performance</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/optimization-battery" class="learn-sidebar-link">Optimize battery usage</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/optimization-memory" class="learn-sidebar-link">Optimize memory usage</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/profiling" class="learn-sidebar-link">Profiling</a>
+			</li></ul><input id="learn_sidebar_manuals_monetization" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_monetization" class="togglelabel">Monetization</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/ads" class="learn-sidebar-link">Ads</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-iap" class="learn-sidebar-link">In-app purchases</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-xsolla" class="learn-sidebar-link">Xsolla</a>
+			</li></ul><hr><input id="learn_sidebar_manuals_android" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_android" class="togglelabel">Android</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/android" class="learn-sidebar-link">Introduction</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-adinfo" class="learn-sidebar-link">Advertising Info</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-admob" class="learn-sidebar-link">AdMob ads</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-adpf" class="learn-sidebar-link">Android Device Performance Framework</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-review" class="learn-sidebar-link">App review and ratings</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-camera" class="learn-sidebar-link">Camera</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-facebook" class="learn-sidebar-link">Facebook</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-firebase-analytics" class="learn-sidebar-link">Firebase Analytics</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-firebase-remoteconfig" class="learn-sidebar-link">Firebase Remote Config</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-gpgs" class="learn-sidebar-link">Google Play Game Services</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-googleplayinstant" class="learn-sidebar-link">Google Play Instant</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/iac" class="learn-sidebar-link">Inter-app communication</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-ironsource" class="learn-sidebar-link">IronSource ad mediation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-push" class="learn-sidebar-link">Push notifications</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-pad/" class="learn-sidebar-link">Play Asset Delivery</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-safearea" class="learn-sidebar-link">Safe Area</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-webview" class="learn-sidebar-link">Webview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/dev-app" class="learn-sidebar-link">The mobile dev app</a>
+			</li></ul><input id="learn_sidebar_manuals_ios" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_ios" class="togglelabel">iOS</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/ios" class="learn-sidebar-link">Introduction</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-adinfo" class="learn-sidebar-link">Advertising Info</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-admob" class="learn-sidebar-link">AdMob ads</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-review" class="learn-sidebar-link">App review and ratings</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-camera" class="learn-sidebar-link">Camera</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-facebook" class="learn-sidebar-link">Facebook</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-firebase-analytics" class="learn-sidebar-link">Firebase Analytics</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-firebase-remoteconfig" class="learn-sidebar-link">Firebase Remote Config</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/iac" class="learn-sidebar-link">Inter-app communication</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-ironsource" class="learn-sidebar-link">IronSource ad mediation</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-push" class="learn-sidebar-link">Push notifications</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-safearea" class="learn-sidebar-link">Safe Area</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-webview" class="learn-sidebar-link">Webview</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/dev-app" class="learn-sidebar-link">The mobile dev app</a>
+			</li></ul><input id="learn_sidebar_manuals_consoles" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_consoles" class="togglelabel">Consoles</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/nintendo-switch" class="learn-sidebar-link">Nintendo Switch</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/sony-playstation" class="learn-sidebar-link">PlayStation®4</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/sony-playstation" class="learn-sidebar-link">PlayStation®5</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/microsoft-xbox" class="learn-sidebar-link">Microsoft Xbox</a>
+			</li></ul><input id="learn_sidebar_manuals_html5" class="toggle" type="checkbox" checked/>
+		<label for="learn_sidebar_manuals_html5" class="togglelabel">HTML5</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/html5" class="learn-sidebar-link is-current" aria-current="page">Introduction</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-crazygames" class="learn-sidebar-link">CrazyGames</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-facebook" class="learn-sidebar-link">Facebook</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-fbinstant" class="learn-sidebar-link">Facebook Instant Games</a>
+			</li><li class="learn-sidebar-list-item"><a href="/extension-poki-sdk" class="learn-sidebar-link">Poki</a>
+			</li></ul><input id="learn_sidebar_manuals_desktop" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_desktop" class="togglelabel">Desktop</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/linux" class="learn-sidebar-link">Linux</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/macos" class="learn-sidebar-link">macOS</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/windows" class="learn-sidebar-link">Windows</a>
+			</li></ul><hr><input id="learn_sidebar_manuals_engine-extensions" class="toggle" type="checkbox" />
+		<label for="learn_sidebar_manuals_engine-extensions" class="togglelabel">Engine extensions</label>
+		<ul class="nobullet"><li class="learn-sidebar-list-item"><a href="/manuals/extensions" class="learn-sidebar-link">Introduction</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-defold-sdk" class="learn-sidebar-link">Defold SDK</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-gradle" class="learn-sidebar-link">Gradle dependencies</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-cocoapods" class="learn-sidebar-link">Cocoapod dependencies</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-script-api" class="learn-sidebar-link">Adding auto-complete definition</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-best-practices" class="learn-sidebar-link">Best Practices</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/debugging-native-code" class="learn-sidebar-link">Debugging</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-ext-manifests" class="learn-sidebar-link">Extension Manifests</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/app-manifest" class="learn-sidebar-link">App Manifests</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extensions-manifest-merge-tool" class="learn-sidebar-link">Manifest Merging</a>
+			</li><li class="learn-sidebar-list-item"><a href="https://www.lua.org/pil/contents.html#P4" class="learn-sidebar-link">The Lua C API (external)</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extender-local-setup" class="learn-sidebar-link">Setup local build server</a>
+			</li><li class="learn-sidebar-list-item"><a href="/manuals/extender-docker-images" class="learn-sidebar-link">Available Docker images to run Extender</a>
+			</li></ul></div>
+
+<div class="dropdownmenu learn-sidebar-mobile page-surface-panel">
+	<details class="learn-mobile-nav">
+		<summary class="learn-mobile-nav-summary">
+			<span class="learn-mobile-nav-summary-copy">
+				<span class="learn-mobile-nav-summary-label">Browse manuals</span>
+				<span class="learn-mobile-nav-summary-current">Defold development for the HTML5 platform</span>
+			</span>
+		</summary>
+		<div class="learn-mobile-nav-list"><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Getting Started</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/introduction" class="learn-mobile-link">Introduction</a>
+						</li><li>
+							<a href="/manuals/install" class="learn-mobile-link">Installing Defold</a>
+						</li><li>
+							<a href="/manuals/glossary" class="learn-mobile-link">Glossary</a>
+						</li><li>
+							<a href="/manuals/unity" class="learn-mobile-link">Defold for Unity users</a>
+						</li><li>
+							<a href="/manuals/flash" class="learn-mobile-link">Defold for Flash users</a>
+						</li><li>
+							<a href="/manuals/getting-help" class="learn-mobile-link">Getting help</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Project Setup</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/project-setup" class="learn-mobile-link">Creating a project</a>
+						</li><li>
+							<a href="/manuals/project-settings" class="learn-mobile-link">Project settings</a>
+						</li><li>
+							<a href="/manuals/libraries" class="learn-mobile-link">Sharing projects</a>
+						</li><li>
+							<a href="/manuals/project-defignore" class="learn-mobile-link">Ignoring files</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Editor</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/editor" class="learn-mobile-link">Overview</a>
+						</li><li>
+							<a href="/manuals/scene-editing" class="learn-mobile-link">Scene Editing</a>
+						</li><li>
+							<a href="/manuals/writing-code" class="learn-mobile-link">Code editor</a>
+						</li><li>
+							<a href="/manuals/editor-templates" class="learn-mobile-link">Custom project templates</a>
+						</li><li>
+							<a href="/manuals/editor-scripts" class="learn-mobile-link">Editor scripts</a>
+						</li><li>
+							<a href="/manuals/editor-scripts-ui" class="learn-mobile-link">Editor scripts: UI</a>
+						</li><li>
+							<a href="/manuals/debugging-game-logic/#running-the-debugger" class="learn-mobile-link">Debugger</a>
+						</li><li>
+							<a href="/manuals/editor-preferences" class="learn-mobile-link">Preferences</a>
+						</li><li>
+							<a href="/manuals/refactoring" class="learn-mobile-link">Refactoring</a>
+						</li><li>
+							<a href="/manuals/editor-styling" class="learn-mobile-link">Styling</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Core Concepts</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/building-blocks" class="learn-mobile-link">Building blocks</a>
+						</li><li>
+							<a href="/manuals/addressing" class="learn-mobile-link">Addressing</a>
+						</li><li>
+							<a href="/manuals/message-passing" class="learn-mobile-link">Message passing</a>
+						</li><li>
+							<a href="/manuals/application-lifecycle" class="learn-mobile-link">Application lifecycle</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Assets and Resources</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/importing-assets" class="learn-mobile-link">Importing assets</a>
+						</li><li>
+							<a href="/manuals/caching-assets" class="learn-mobile-link">Caching assets</a>
+						</li><li>
+							<a href="/manuals/importing-graphics" class="learn-mobile-link">Importing 2D graphics</a>
+						</li><li>
+							<a href="/manuals/importing-models" class="learn-mobile-link">Importing 3D models</a>
+						</li><li>
+							<a href="/manuals/adapting-graphics-to-screen-size" class="learn-mobile-link">Adapting to different screen sizes</a>
+						</li><li>
+							<a href="/manuals/live-update" class="learn-mobile-link">Live update</a>
+						</li><li>
+							<a href="/manuals/atlas" class="learn-mobile-link">Atlas</a>
+						</li><li>
+							<a href="/manuals/buffer" class="learn-mobile-link">Buffer</a>
+						</li><li>
+							<a href="/manuals/font" class="learn-mobile-link">Font</a>
+						</li><li>
+							<a href="/manuals/resource" class="learn-mobile-link">Resource management</a>
+						</li><li>
+							<a href="/manuals/tilesource" class="learn-mobile-link">Tile source</a>
+						</li><li>
+							<a href="/manuals/texture-filtering" class="learn-mobile-link">Texture filtering</a>
+						</li><li>
+							<a href="/manuals/texture-profiles" class="learn-mobile-link">Texture compression</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Animations</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/animation" class="learn-mobile-link">Overview</a>
+						</li><li>
+							<a href="/manuals/flipbook-animation" class="learn-mobile-link">Flipbook Animation</a>
+						</li><li>
+							<a href="/manuals/model-animation" class="learn-mobile-link">Model animation</a>
+						</li><li>
+							<a href="/manuals/property-animation" class="learn-mobile-link">Property animation (tweens)</a>
+						</li><li>
+							<a href="/extension-rive" class="learn-mobile-link">Rive animation</a>
+						</li><li>
+							<a href="/extension-spine#playing-animations" class="learn-mobile-link">Spine animation</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Components</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/components" class="learn-mobile-link">Overview</a>
+						</li><li>
+							<a href="/manuals/collection-factory" class="learn-mobile-link">Collection factory</a>
+						</li><li>
+							<a href="/manuals/collection-proxy" class="learn-mobile-link">Collection proxy</a>
+						</li><li>
+							<a href="/manuals/physics-objects" class="learn-mobile-link">Collision object</a>
+						</li><li>
+							<a href="/manuals/camera" class="learn-mobile-link">Camera</a>
+						</li><li>
+							<a href="/manuals/factory" class="learn-mobile-link">Factory</a>
+						</li><li>
+							<a href="/manuals/label" class="learn-mobile-link">Label</a>
+						</li><li>
+							<a href="/manuals/mesh" class="learn-mobile-link">Mesh</a>
+						</li><li>
+							<a href="/manuals/model" class="learn-mobile-link">Model</a>
+						</li><li>
+							<a href="/manuals/particlefx" class="learn-mobile-link">Particle FX</a>
+						</li><li>
+							<a href="/extension-rive/#creating-rive-model-components" class="learn-mobile-link">Rive</a>
+						</li><li>
+							<a href="/manuals/sound" class="learn-mobile-link">Sound</a>
+						</li><li>
+							<a href="/extension-spine#creating-spine-model-components" class="learn-mobile-link">Spine</a>
+						</li><li>
+							<a href="/manuals/sprite" class="learn-mobile-link">Sprite</a>
+						</li><li>
+							<a href="/manuals/tilemap" class="learn-mobile-link">Tilemap</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">GUI</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/gui" class="learn-mobile-link">GUI overview</a>
+						</li><li>
+							<a href="/manuals/gui-box" class="learn-mobile-link">Box nodes</a>
+						</li><li>
+							<a href="/manuals/gui-text" class="learn-mobile-link">Text nodes</a>
+						</li><li>
+							<a href="/manuals/gui-pie" class="learn-mobile-link">Pie nodes</a>
+						</li><li>
+							<a href="/extension-spine#creating-spine-gui-nodes" class="learn-mobile-link">Spine nodes</a>
+						</li><li>
+							<a href="/manuals/gui-particlefx" class="learn-mobile-link">ParticleFX nodes</a>
+						</li><li>
+							<a href="/manuals/gui-template" class="learn-mobile-link">Template nodes</a>
+						</li><li>
+							<a href="/manuals/gui-script" class="learn-mobile-link">Scripts</a>
+						</li><li>
+							<a href="/manuals/gui-clipping" class="learn-mobile-link">Clipping</a>
+						</li><li>
+							<a href="/manuals/gui-layouts" class="learn-mobile-link">Layouts</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Physics</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/physics" class="learn-mobile-link">Physics overview</a>
+						</li><li>
+							<a href="/manuals/physics-objects" class="learn-mobile-link">Collision objects</a>
+						</li><li>
+							<a href="/manuals/physics-shapes" class="learn-mobile-link">Collision shapes</a>
+						</li><li>
+							<a href="/manuals/physics-groups" class="learn-mobile-link">Collision groups</a>
+						</li><li>
+							<a href="/manuals/physics-messages" class="learn-mobile-link">Collision messages</a>
+						</li><li>
+							<a href="/manuals/physics-events" class="learn-mobile-link">Collision events listener</a>
+						</li><li>
+							<a href="/manuals/physics-resolving-collisions" class="learn-mobile-link">Resolving collisions</a>
+						</li><li>
+							<a href="/manuals/physics-ray-casts" class="learn-mobile-link">Ray casts</a>
+						</li><li>
+							<a href="/manuals/physics-joints" class="learn-mobile-link">Joints and constraints</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Sound</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/sound" class="learn-mobile-link">Sound</a>
+						</li><li>
+							<a href="/manuals/sound-streaming" class="learn-mobile-link">Sound Streaming</a>
+						</li><li>
+							<a href="https://defold.com/assets/fmod/" class="learn-mobile-link">FMOD</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Input</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/input" class="learn-mobile-link">Overview</a>
+						</li><li>
+							<a href="/manuals/input-key-and-text" class="learn-mobile-link">Key and text input</a>
+						</li><li>
+							<a href="/manuals/input-mouse-and-touch" class="learn-mobile-link">Mouse and touch</a>
+						</li><li>
+							<a href="/manuals/input-gamepads" class="learn-mobile-link">Gamepads</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Game logic</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/script" class="learn-mobile-link">Scripts</a>
+						</li><li>
+							<a href="/manuals/properties" class="learn-mobile-link">Properties</a>
+						</li><li>
+							<a href="/manuals/script-properties" class="learn-mobile-link">Script properties</a>
+						</li><li>
+							<a href="/manuals/lua" class="learn-mobile-link">Lua in Defold</a>
+						</li><li>
+							<a href="/manuals/application-security/#source-code-obfuscation" class="learn-mobile-link">Source code obfuscation</a>
+						</li><li>
+							<a href="/manuals/modules" class="learn-mobile-link">Modules</a>
+						</li><li>
+							<a href="/manuals/debugging-game-logic" class="learn-mobile-link">Debugging</a>
+						</li><li>
+							<a href="/manuals/writing-code" class="learn-mobile-link">Writing code</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Files</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/file-access" class="learn-mobile-link">Working with files</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Network Connections</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/networking" class="learn-mobile-link">Overview</a>
+						</li><li>
+							<a href="/manuals/http-requests" class="learn-mobile-link">HTTP Requests</a>
+						</li><li>
+							<a href="/manuals/socket-connections" class="learn-mobile-link">Socket connections</a>
+						</li><li>
+							<a href="/extension-websocket" class="learn-mobile-link">WebSocket connections</a>
+						</li><li>
+							<a href="/manuals/online-services" class="learn-mobile-link">Online services</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Rendering</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/render" class="learn-mobile-link">Render</a>
+						</li><li>
+							<a href="/manuals/material" class="learn-mobile-link">Material</a>
+						</li><li>
+							<a href="/manuals/compute" class="learn-mobile-link">Compute</a>
+						</li><li>
+							<a href="/manuals/shader" class="learn-mobile-link">Shader</a>
+						</li><li>
+							<a href="/manuals/texture-filtering" class="learn-mobile-link">Texture filtering</a>
+						</li><li>
+							<a href="/manuals/physically-based-rendering" class="learn-mobile-link">Physically Based Rendering</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Workflow</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/application-security" class="learn-mobile-link">Application security</a>
+						</li><li>
+							<a href="/manuals/bundling" class="learn-mobile-link">Bundling an application</a>
+						</li><li>
+							<a href="/manuals/caching-assets" class="learn-mobile-link">Caching assets</a>
+						</li><li>
+							<a href="/manuals/bob" class="learn-mobile-link">Command line tools</a>
+						</li><li>
+							<a href="/manuals/hot-reload" class="learn-mobile-link">Hot reloading</a>
+						</li><li>
+							<a href="/manuals/porting-guidelines" class="learn-mobile-link">Porting guidelines</a>
+						</li><li>
+							<a href="/manuals/refactoring" class="learn-mobile-link">Refactoring</a>
+						</li><li>
+							<a href="/manuals/dev-app" class="learn-mobile-link">The mobile dev app</a>
+						</li><li>
+							<a href="/manuals/version-control" class="learn-mobile-link">Version control</a>
+						</li><li>
+							<a href="/manuals/writing-code" class="learn-mobile-link">Writing code</a>
+						</li><li>
+							<a href="/manuals/working-offline" class="learn-mobile-link">Working offline</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Debugging</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/debugging-game-logic" class="learn-mobile-link">Debugging game logic</a>
+						</li><li>
+							<a href="/manuals/debugging-native-code" class="learn-mobile-link">Debugging native code</a>
+						</li><li>
+							<a href="/manuals/debugging-native-code-android" class="learn-mobile-link">Debugging native code on Android</a>
+						</li><li>
+							<a href="/manuals/debugging-native-code-ios" class="learn-mobile-link">Debugging native code on iOS</a>
+						</li><li>
+							<a href="/manuals/debugging-game-and-system-logs" class="learn-mobile-link">Reading game and system logs</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Optimization</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/optimization" class="learn-mobile-link">Optimizing an application</a>
+						</li><li>
+							<a href="/manuals/optimization-size" class="learn-mobile-link">Optimize game size</a>
+						</li><li>
+							<a href="/manuals/optimization-speed" class="learn-mobile-link">Optimize runtime performance</a>
+						</li><li>
+							<a href="/manuals/optimization-battery" class="learn-mobile-link">Optimize battery usage</a>
+						</li><li>
+							<a href="/manuals/optimization-memory" class="learn-mobile-link">Optimize memory usage</a>
+						</li><li>
+							<a href="/manuals/profiling" class="learn-mobile-link">Profiling</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Monetization</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/ads" class="learn-mobile-link">Ads</a>
+						</li><li>
+							<a href="/extension-iap" class="learn-mobile-link">In-app purchases</a>
+						</li><li>
+							<a href="/extension-xsolla" class="learn-mobile-link">Xsolla</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Android</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/android" class="learn-mobile-link">Introduction</a>
+						</li><li>
+							<a href="/extension-adinfo" class="learn-mobile-link">Advertising Info</a>
+						</li><li>
+							<a href="/extension-admob" class="learn-mobile-link">AdMob ads</a>
+						</li><li>
+							<a href="/extension-adpf" class="learn-mobile-link">Android Device Performance Framework</a>
+						</li><li>
+							<a href="/extension-review" class="learn-mobile-link">App review and ratings</a>
+						</li><li>
+							<a href="/extension-camera" class="learn-mobile-link">Camera</a>
+						</li><li>
+							<a href="/extension-facebook" class="learn-mobile-link">Facebook</a>
+						</li><li>
+							<a href="/extension-firebase-analytics" class="learn-mobile-link">Firebase Analytics</a>
+						</li><li>
+							<a href="/extension-firebase-remoteconfig" class="learn-mobile-link">Firebase Remote Config</a>
+						</li><li>
+							<a href="/extension-gpgs" class="learn-mobile-link">Google Play Game Services</a>
+						</li><li>
+							<a href="/extension-googleplayinstant" class="learn-mobile-link">Google Play Instant</a>
+						</li><li>
+							<a href="/manuals/iac" class="learn-mobile-link">Inter-app communication</a>
+						</li><li>
+							<a href="/extension-ironsource" class="learn-mobile-link">IronSource ad mediation</a>
+						</li><li>
+							<a href="/extension-push" class="learn-mobile-link">Push notifications</a>
+						</li><li>
+							<a href="/extension-pad/" class="learn-mobile-link">Play Asset Delivery</a>
+						</li><li>
+							<a href="/extension-safearea" class="learn-mobile-link">Safe Area</a>
+						</li><li>
+							<a href="/extension-webview" class="learn-mobile-link">Webview</a>
+						</li><li>
+							<a href="/manuals/dev-app" class="learn-mobile-link">The mobile dev app</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">iOS</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/ios" class="learn-mobile-link">Introduction</a>
+						</li><li>
+							<a href="/extension-adinfo" class="learn-mobile-link">Advertising Info</a>
+						</li><li>
+							<a href="/extension-admob" class="learn-mobile-link">AdMob ads</a>
+						</li><li>
+							<a href="/extension-review" class="learn-mobile-link">App review and ratings</a>
+						</li><li>
+							<a href="/extension-camera" class="learn-mobile-link">Camera</a>
+						</li><li>
+							<a href="/extension-facebook" class="learn-mobile-link">Facebook</a>
+						</li><li>
+							<a href="/extension-firebase-analytics" class="learn-mobile-link">Firebase Analytics</a>
+						</li><li>
+							<a href="/extension-firebase-remoteconfig" class="learn-mobile-link">Firebase Remote Config</a>
+						</li><li>
+							<a href="/manuals/iac" class="learn-mobile-link">Inter-app communication</a>
+						</li><li>
+							<a href="/extension-ironsource" class="learn-mobile-link">IronSource ad mediation</a>
+						</li><li>
+							<a href="/extension-push" class="learn-mobile-link">Push notifications</a>
+						</li><li>
+							<a href="/extension-safearea" class="learn-mobile-link">Safe Area</a>
+						</li><li>
+							<a href="/extension-webview" class="learn-mobile-link">Webview</a>
+						</li><li>
+							<a href="/manuals/dev-app" class="learn-mobile-link">The mobile dev app</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Consoles</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/nintendo-switch" class="learn-mobile-link">Nintendo Switch</a>
+						</li><li>
+							<a href="/manuals/sony-playstation" class="learn-mobile-link">PlayStation®4</a>
+						</li><li>
+							<a href="/manuals/sony-playstation" class="learn-mobile-link">PlayStation®5</a>
+						</li><li>
+							<a href="/manuals/microsoft-xbox" class="learn-mobile-link">Microsoft Xbox</a>
+						</li></ul>
+				</details><details class="learn-mobile-category" open>
+					<summary class="learn-mobile-category-summary">HTML5</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/html5" class="learn-mobile-link is-current" aria-current="page">Introduction</a>
+						</li><li>
+							<a href="/extension-crazygames" class="learn-mobile-link">CrazyGames</a>
+						</li><li>
+							<a href="/extension-facebook" class="learn-mobile-link">Facebook</a>
+						</li><li>
+							<a href="/extension-fbinstant" class="learn-mobile-link">Facebook Instant Games</a>
+						</li><li>
+							<a href="/extension-poki-sdk" class="learn-mobile-link">Poki</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Desktop</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/linux" class="learn-mobile-link">Linux</a>
+						</li><li>
+							<a href="/manuals/macos" class="learn-mobile-link">macOS</a>
+						</li><li>
+							<a href="/manuals/windows" class="learn-mobile-link">Windows</a>
+						</li></ul>
+				</details><details class="learn-mobile-category">
+					<summary class="learn-mobile-category-summary">Engine extensions</summary>
+					<ul class="learn-mobile-links nobullet"><li>
+							<a href="/manuals/extensions" class="learn-mobile-link">Introduction</a>
+						</li><li>
+							<a href="/manuals/extensions-defold-sdk" class="learn-mobile-link">Defold SDK</a>
+						</li><li>
+							<a href="/manuals/extensions-gradle" class="learn-mobile-link">Gradle dependencies</a>
+						</li><li>
+							<a href="/manuals/extensions-cocoapods" class="learn-mobile-link">Cocoapod dependencies</a>
+						</li><li>
+							<a href="/manuals/extensions-script-api" class="learn-mobile-link">Adding auto-complete definition</a>
+						</li><li>
+							<a href="/manuals/extensions-best-practices" class="learn-mobile-link">Best Practices</a>
+						</li><li>
+							<a href="/manuals/debugging-native-code" class="learn-mobile-link">Debugging</a>
+						</li><li>
+							<a href="/manuals/extensions-ext-manifests" class="learn-mobile-link">Extension Manifests</a>
+						</li><li>
+							<a href="/manuals/app-manifest" class="learn-mobile-link">App Manifests</a>
+						</li><li>
+							<a href="/manuals/extensions-manifest-merge-tool" class="learn-mobile-link">Manifest Merging</a>
+						</li><li>
+							<a href="https://www.lua.org/pil/contents.html#P4" class="learn-mobile-link">The Lua C API (external)</a>
+						</li><li>
+							<a href="/manuals/extender-local-setup" class="learn-mobile-link">Setup local build server</a>
+						</li><li>
+							<a href="/manuals/extender-docker-images" class="learn-mobile-link">Available Docker images to run Extender</a>
+						</li></ul>
+				</details></div>
+	</details>
+</div>
+
+			</div>
+			<div class="columns six learn-detail-main manual">
+				<div class="learn-detail-backbar">
+	<a class="learn-detail-backlink" href="/manuals">← Back to Manuals</a>
+</div>
+<div class="content-flow" data-pagefind-body>
+					<h1 id="html5-development">
+        
+        
+          HTML5 development <a href="#html5-development" class="anchor-link"></a>
+        
+        
+      </h1>
+
+<p>Defold supports building games for the HTML5 platform through the regular bundling menu, as well as for other platforms. In addition, the resulting game is embedded on a regular HTML page that can be styled through a simple template system.</p>
+
+<p>The <em>game.project</em> file contains the HTML5 specific settings:</p>
+
+<p><img src="../images/html5/html5_project_settings.png" alt="Project settings" /></p>
+    
+      
+      <h2 id="heap-size">
+        
+        
+          Heap size <a href="#heap-size" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>Defold support for HTML5 is powered by Emscripten (See http://en.wikipedia.org/wiki/Emscripten). In short, it creates a sandbox of memory for the heap in which the application operates. By default, the engine allocates a generous amount of memory (256MB). This should be more than sufficient for the typical game. As part of your optimization process, you may choose to use a smaller value. To do this, follow these steps:</p>
+
+<ol>
+  <li>Set <em>heap_size</em> to a preferred value. It should be expressed in megabytes.</li>
+  <li>Create your HTML5 bundle (see below)</li>
+</ol>
+    
+      
+      <h2 id="testing-html5-build">
+        
+        
+          Testing HTML5 build <a href="#testing-html5-build" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>For testing, HTML5 build needs an HTTP server. Defold creates one for you if you choose <kbd>Project ▸ Build HTML5</kbd>.</p>
+
+<p><img src="../images/html5/html5_build_launch.png" alt="Build HTML5" /></p>
+
+<p>If you want to test your bundle, just upload it to your remote HTTP server or create a local server, for example, using python in the bundle folder.
+Python 2:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> SimpleHTTPServer
+</code></pre></div></div>
+
+<p>Python 3:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> http.server
+</code></pre></div></div>
+
+<p>or</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> http.server
+</code></pre></div></div>
+
+<div class="important">
+  <p>You can’t test the HTML5 bundle by opening <code class="language-plaintext highlighter-rouge">index.html</code> file in a browser. This requires HTTP server.</p>
+</div>
+
+<div class="important">
+  <p>If you see a <code class="language-plaintext highlighter-rouge">"wasm streaming compile failed: TypeError: Failed to execute ‘compile’ on ‘WebAssembly’: Incorrect response MIME type. Expected ‘application/wasm’."</code> error in the console you must make sure that your server uses the <code class="language-plaintext highlighter-rouge">application/wasm</code> MIME type for <code class="language-plaintext highlighter-rouge">.wasm</code> files.</p>
+</div>
+    
+      
+      <h2 id="creating-html5-bundle">
+        
+        
+          Creating HTML5 bundle <a href="#creating-html5-bundle" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>Creating HTML5 content with Defold is simple and follows the same pattern as all other supported platforms: select <kbd>Project ▸ Bundle... ▸ HTML5 Application...</kbd> from the menu:</p>
+
+<p><img src="../images/html5/html5_bundle.png" alt="Create HTML5 bundle" /></p>
+
+<p>You can chose to include both an <code class="language-plaintext highlighter-rouge">asm.js</code> and a WebAssembly (wasm) version of the Defold engine in HTML5 bundle. In most cases it is enough to chose WebAssembly since <a href="https://caniuse.com/wasm">all modern browsers support WebAssembly</a>.</p>
+
+<div class="important">
+  <p>Even if you include both <code class="language-plaintext highlighter-rouge">asm.js</code> and <code class="language-plaintext highlighter-rouge">wasm</code> versions of the engine only one of them will be downloaded by the browser when launching the game. The WebAssembly version will be downloaded if the browser supports WebAssembly and the <code class="language-plaintext highlighter-rouge">asm.js</code> version will be used as a fallback in the rare case that WebAssembly is not supported.</p>
+</div>
+
+<p>When you click on the <kbd>Create bundle</kbd> button you will be prompted to select a folder in which to create your application. After the export process completes, you will find all of the files needed to run the application.</p>
+    
+      
+      <h2 id="known-issues-and-limitations">
+        
+        
+          Known issues and limitations <a href="#known-issues-and-limitations" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<ul>
+  <li>Hot Reload - Hot Reload doesn’t work in HTML5 builds. Defold applications must run their own miniature web server in order to receive updates from the editor, which isn’t possible in a HTML5 build.</li>
+  <li>Internet Explorer 11
+    <ul>
+      <li>Audio - Defold handles audio playback using HTML5 <em>WebAudio</em> (see http://www.w3.org/TR/webaudio), which is not currently supported by Internet Explorer 11. Applications will fall back to a null audio implementation when using this browser.</li>
+      <li>WebGL - Microsoft has not completed work implementing the <em>WebGL</em> API (see https://www.khronos.org/registry/webgl/specs/latest/). Therefore, it does not perform as well as other browsers.</li>
+      <li>Full screen - Full screen mode is unreliable in the browser.</li>
+    </ul>
+  </li>
+  <li>Chrome
+    <ul>
+      <li>Slow debug builds - In debug builds on HTML5 we verify all WebGL graphics calls to detect errors. This is unfortunately very slow when testing on Chrome. It is possible to disable this by setting the <em>Engine Arguments</em> field of <em>game.project</em> to <code class="language-plaintext highlighter-rouge">--verify-graphics-calls=false</code>.</li>
+    </ul>
+  </li>
+  <li>Gamepad support - <a href="/manuals/input-gamepads/#gamepads-in-html5">Refer to the Gamepad documentation</a> for special considerations and steps you may need to take on HTML5.</li>
+</ul>
+    
+      
+      <h2 id="customizing-html5-bundle">
+        
+        
+          Customizing HTML5 bundle <a href="#customizing-html5-bundle" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>When generating an HTML5 version of your game, Defold provides a default web page. It references style and script resources that dictate how your game is presented.</p>
+
+<p>Each time the application is exported, this content is created afresh. If you wish to customize any of these elements you must make modifications to your project settings. To do so, open the <em>game.project</em> in the Defold editor and scroll to the <em>html5</em> section:</p>
+
+<p><img src="../images/html5/html5_section.png" alt="HTML5 Section" /></p>
+
+<p>More information about every option is available in <a href="/manuals/project-settings/#html5">project settings manual</a>.</p>
+
+<div class="important">
+  <p>You can’t modify files of the default html/css template in <code class="language-plaintext highlighter-rouge">builtins</code> folder. For applying your modifications copy/paste needed file from <code class="language-plaintext highlighter-rouge">builtins</code> and set this file in <em>game.project</em>.</p>
+</div>
+
+<div class="important">
+  <p>The canvas shouldn’t be styled with any border or padding. If you do, mouse input coordinates will be wrong.</p>
+</div>
+
+<p>In <em>game.project</em> it is possible to turn-off the <code class="language-plaintext highlighter-rouge">Fullscreen</code> button and the <code class="language-plaintext highlighter-rouge">Made with Defold</code> link.
+Defold provides a dark and light theme for the index.html. The light theme is set by default but it is possible to change by changing <code class="language-plaintext highlighter-rouge">Custom CSS</code> file. There is also four predefined scale modes to chose from in the <code class="language-plaintext highlighter-rouge">Scale Mode</code> field.</p>
+
+<div class="important">
+  <p>The calculations for all scale modes include current screen DPI in case if you turn on <code class="language-plaintext highlighter-rouge">High Dpi</code> option in <em>game.project</em> (<code class="language-plaintext highlighter-rouge">Display</code> section)</p>
+</div>
+    
+      
+      <h3 id="downscale-fit-and-fit">
+        
+        
+          Downscale Fit and Fit <a href="#downscale-fit-and-fit" class="anchor-link"></a>
+        
+        
+      </h3>
+
+<p>For the <code class="language-plaintext highlighter-rouge">Fit</code> mode canvas size will be changed to show full game canvas on the screen with original proportions. The only difference in <code class="language-plaintext highlighter-rouge">Downscale Fit</code> is changing size only if the inner size of the webpage is smaller than the original canvas of the game, but doesn’t scale-up when a webpage is bigger than the original game canvas.</p>
+
+<p><img src="../images/html5/html5_fit.png" alt="HTML5 Section" /></p>
+    
+      
+      <h3 id="stretch">
+        
+        
+          Stretch <a href="#stretch" class="anchor-link"></a>
+        
+        
+      </h3>
+
+<p>For the <code class="language-plaintext highlighter-rouge">Stretch</code> mode canvas size will be changed to fully fill the inner size of the webpage.</p>
+
+<p><img src="../images/html5/html5_stretch.png" alt="HTML5 Section" /></p>
+    
+      
+      <h3 id="no-scale">
+        
+        
+          No Scale <a href="#no-scale" class="anchor-link"></a>
+        
+        
+      </h3>
+<p>With <code class="language-plaintext highlighter-rouge">No Scale</code> mode the canvas size is exactly the same as you predefined in <em>game.project</em> file, <code class="language-plaintext highlighter-rouge">[display]</code> section.</p>
+
+<p><img src="../images/html5/html5_no_scale.png" alt="HTML5 Section" /></p>
+    
+      
+      <h2 id="tokens">
+        
+        
+          Tokens <a href="#tokens" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>We use <a href="https://mustache.github.io/mustache.5.html">Mustache template language</a> for creation of the <code class="language-plaintext highlighter-rouge">index.html</code> file. When your are building or bundling, the HTML and CSS files are passed through a compiler that is capable of replacing certain tokens with values that depend upon your project settings. These tokens are always encased in either double or triple curly braces (<code class="language-plaintext highlighter-rouge">{{TOKEN}}</code> or <code class="language-plaintext highlighter-rouge">{{{TOKEN}}}</code>), depending on whether character sequences should be escaped or not. This feature can be useful if you either make frequent changes to your project settings or intend for material to be reused in other projects.</p>
+
+<div class="sidenote">
+  <p>More information about Mustache template language is available in <a href="https://mustache.github.io/mustache.5.html">manual</a>.</p>
+</div>
+
+<p>Any <em>game.project</em> can be a token. For example, if you want to use <code class="language-plaintext highlighter-rouge">Width</code> value from <code class="language-plaintext highlighter-rouge">Display</code> section:</p>
+
+<p><img src="../images/html5/html5_display.png" alt="Display section" /></p>
+
+<p>Open <em>game.project</em> as a text and check <code class="language-plaintext highlighter-rouge">[section_name]</code> and name of the field you want to use. Then you can use it as a token: <code class="language-plaintext highlighter-rouge">{{section_name.field}}</code> or <code class="language-plaintext highlighter-rouge">{{{section_name.field}}}</code>.</p>
+
+<p><img src="../images/html5/html5_game_project.png" alt="Display section" /></p>
+
+<p>For example, in HTML template in JavaScript:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doSomething</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="p">{{</span><span class="nx">display</span><span class="p">.</span><span class="nx">width</span><span class="p">}};</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Also, we have the following custom tokens:</p>
+
+<dl>
+  <dt>DEFOLD_SPLASH_IMAGE</dt>
+  <dd>Writes the filename of the splash image file or <code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">html5.splash_image</code> in <em>game.project</em> is empty</dd>
+</dl>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="err">{#DEFOLD_SPLASH_IMAGE</span><span class="p">}</span><span class="err">}</span>
+		<span class="nt">background-image</span><span class="o">:</span> <span class="nt">url</span><span class="o">(</span><span class="s1">"{{DEFOLD_SPLASH_IMAGE}}"</span><span class="o">);</span>
+<span class="p">{</span><span class="err">{/DEFOLD_SPLASH_IMAGE</span><span class="p">}</span><span class="err">}</span>
+</code></pre></div></div>
+
+<dl>
+  <dt>exe-name</dt>
+  <dd>The project name without unacceptable symbols</dd>
+  <dt>DEFOLD_CUSTOM_CSS_INLINE</dt>
+  <dd>This is the place when we inline of the CSS file specified in your <em>game.project</em> settings.</dd>
+</dl>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;style&gt;</span>
+<span class="p">{</span><span class="err">{{DEFOLD_CUSTOM_CSS_INLINE</span><span class="p">}</span><span class="err">}}</span>
+<span class="nt">&lt;/style&gt;</span>
+</code></pre></div></div>
+
+<div class="important">
+  <p>It is important that this inline block appear before the main application script is loaded. Since it includes HTML tags, this macro should appear in triple braces <code class="language-plaintext highlighter-rouge">{{{TOKEN}}}</code> to prevent character sequences being escaped.</p>
+</div>
+
+<dl>
+  <dt>DEFOLD_SCALE_MODE_IS_DOWNSCALE_FIT</dt>
+  <dd>This token is <code class="language-plaintext highlighter-rouge">true</code> if <code class="language-plaintext highlighter-rouge">html5.scale_mode</code> is <code class="language-plaintext highlighter-rouge">Downscale Fit</code>.</dd>
+  <dt>DEFOLD_SCALE_MODE_IS_FIT</dt>
+  <dd>This token is <code class="language-plaintext highlighter-rouge">true</code> if <code class="language-plaintext highlighter-rouge">html5.scale_mode</code> is <code class="language-plaintext highlighter-rouge">Fit</code>.</dd>
+  <dt>DEFOLD_SCALE_MODE_IS_NO_SCALE</dt>
+  <dd>This token is <code class="language-plaintext highlighter-rouge">true</code> if <code class="language-plaintext highlighter-rouge">html5.scale_mode</code> is <code class="language-plaintext highlighter-rouge">No Scale</code>.</dd>
+  <dt>DEFOLD_SCALE_MODE_IS_STRETCH</dt>
+  <dd>This token is <code class="language-plaintext highlighter-rouge">true</code> if <code class="language-plaintext highlighter-rouge">html5.scale_mode</code> is <code class="language-plaintext highlighter-rouge">Stretch</code>.</dd>
+  <dt>DEFOLD_HEAP_SIZE</dt>
+  <dd>Heap size specified in <em>game.project</em> <code class="language-plaintext highlighter-rouge">html5.heap_size</code> converted to bytes.</dd>
+  <dt>DEFOLD_ENGINE_ARGUMENTS</dt>
+  <dd>Engine arguments specified in <em>game.project</em> <code class="language-plaintext highlighter-rouge">html5.engine_arguments</code> separated by <code class="language-plaintext highlighter-rouge">,</code> symbol.</dd>
+  <dt>build-timestamp</dt>
+  <dd>Current build timestamp in seconds.</dd>
+</dl>
+    
+      
+      <h2 id="extra-parameters">
+        
+        
+          Extra parameters <a href="#extra-parameters" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>If you create your custom template, you can redefine set of parameters for the engine loader. To achieve that you need to add <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> section and redefine values inside <code class="language-plaintext highlighter-rouge">CUSTOM_PARAMETERS</code>.</p>
+<div class="important">
+  <p>Your custom <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> should be placed after <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> section with reference to <code class="language-plaintext highlighter-rouge">dmloader.js</code> but before call <code class="language-plaintext highlighter-rouge">EngineLoader.load</code> function.</p>
+</div>
+<p>For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;script id='custom_setup' type='text/javascript'&gt;
+        CUSTOM_PARAMETERS['disable_context_menu'] = false;
+        CUSTOM_PARAMETERS['unsupported_webgl_callback'] = function() {
+            console.log("Oh-oh. WebGL not supported...");
+        }
+    &lt;/script&gt;
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">CUSTOM_PARAMETERS</code> may contains following fields:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'archive_location_filter':
+    Filter function that will run for each archive path.
+
+'unsupported_webgl_callback':
+    Function that is called if WebGL is not supported.
+
+'engine_arguments':
+    List of arguments (strings) that will be passed to the engine.
+
+'custom_heap_size':
+    Number of bytes specifying the memory heap size.
+
+'disable_context_menu':
+    Disables the right-click context menu on the canvas element if true.
+
+'retry_time':
+    Pause in seconds before retry file loading after error.
+
+'retry_count':
+    How many attempts we do when trying to download a file.
+
+'can_not_download_file_callback':
+    Function that is called if you can't download file after 'retry_count' attempts.
+
+'resize_window_callback':
+    Function that is called when resize/orientationchanges/focus events happened
+
+'start_success':
+    Function that is called just before main is called upon successful load.
+
+'update_progress':
+    Function that is called as progress is updated. Parameter progress is updated 0-100.
+</code></pre></div></div>
+    
+      
+      <h2 id="file-operations-in-html5">
+        
+        
+          File operations in HTML5 <a href="#file-operations-in-html5" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>HTML5 builds support file operations such as <code class="language-plaintext highlighter-rouge">sys.save()</code>, <code class="language-plaintext highlighter-rouge">sys.load()</code> and <code class="language-plaintext highlighter-rouge">io.open()</code> but the way these operations are handled internally is different from other platforms. When Javascript is run in a browser there is no real concept of a file system and local file access is blocked for security reasons. Instead Emscripten (and thus Defold) uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB">IndexedDB</a>, an in-browser database used to persistently store data, to create a virtual filesystem in the browser. The important difference from file system access on other platforms is that there can be a slight delay between writing to a file and the change actually being stored in the database. The browser developer console usually allows you to inspect the contents of the IndexedDB.</p>
+    
+      
+      <h2 id="passing-arguments-to-an-html5-game">
+        
+        
+          Passing arguments to an HTML5 game <a href="#passing-arguments-to-an-html5-game" class="anchor-link"></a>
+        
+        
+      </h2>
+
+<p>It is sometimes necessary to provide additional arguments to a game before it or as it is started. This could for instance be a user id, session token or which level to load when the game starts. This can be achieved in a number of different ways, some of which are described here.</p>
+    
+      
+      <h3 id="engine-arguments">
+        
+        
+          Engine arguments <a href="#engine-arguments" class="anchor-link"></a>
+        
+        
+      </h3>
+
+<p>It is possible to specify additional engine arguments when the engine is configured and loaded. These extra engine arguments can at runtime be retrieved using <code class="language-plaintext highlighter-rouge">sys.get_config()</code>. To add the key-value pairs you modify the <code class="language-plaintext highlighter-rouge">engine_arguments</code> field of the <code class="language-plaintext highlighter-rouge">extra_params</code> object that is passed to the engine when loaded in <code class="language-plaintext highlighter-rouge">index.html</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;script id='engine-setup' type='text/javascript'&gt;
+    var extra_params = {
+        ...,
+        engine_arguments: ["--config=foo1=bar1","--config=foo2=bar2"],
+        ...
+    }
+</code></pre></div></div>
+
+<p>You can also add <code class="language-plaintext highlighter-rouge">--config=foo1=bar1, --config=foo2=bar2</code> to the engine arguments field in the HTML5 section of <em>game.project</em> and it will be injected into the generated index.html file.</p>
+
+<p>At runtime you get the values like this:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="n">foo1</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">get_config</span><span class="p">(</span><span class="s2">"foo1"</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">foo2</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">get_config</span><span class="p">(</span><span class="s2">"foo2"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">foo1</span><span class="p">)</span> <span class="c1">-- bar1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">foo2</span><span class="p">)</span> <span class="c1">-- bar2</span>
+</code></pre></div></div>
+    
+      
+      <h3 id="query-arguments-in-the-url">
+        
+        
+          Query arguments in the URL <a href="#query-arguments-in-the-url" class="anchor-link"></a>
+        
+        
+      </h3>
+
+<p>You can pass arguments as part of the query parameters in the page URL and read these at runtime:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.mygame.com/index.html?foo1=bar1&amp;foo2=bar2
+</code></pre></div></div>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="n">url</span> <span class="o">=</span> <span class="n">html5</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"window.location"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A full helper function to get all query parameters as a Lua table:</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="k">function</span> <span class="nf">get_query_parameters</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">url</span> <span class="o">=</span> <span class="n">html5</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"window.location"</span><span class="p">)</span>
+    <span class="c1">-- get the query part of the url (the bit after ?)</span>
+    <span class="kd">local</span> <span class="n">query</span> <span class="o">=</span> <span class="n">url</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s2">".*?(.*)"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span> <span class="k">then</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="k">end</span>
+
+    <span class="kd">local</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1">-- iterate over all key value pairs</span>
+    <span class="k">for</span> <span class="n">kvp</span> <span class="k">in</span> <span class="n">query</span><span class="p">:</span><span class="n">gmatch</span><span class="p">(</span><span class="s2">"([^&amp;]+)"</span><span class="p">)</span> <span class="k">do</span>
+        <span class="kd">local</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">kvp</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s2">"(.+)=(.+)"</span><span class="p">)</span>
+        <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">params</span>
+<span class="k">end</span>
+
+<span class="k">function</span> <span class="nf">init</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">params</span> <span class="o">=</span> <span class="n">get_query_parameters</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">.</span><span class="n">foo1</span><span class="p">)</span> <span class="c1">-- bar1</span>
+<span class="k">end</span>
+</code></pre></div></div>
+    
+      
+      <h2 id="optimizations">
+        
+        
+          Optimizations <a href="#optimizations" class="anchor-link"></a>
+        
+        
+      </h2>
+<p>HTML5 games usually have strict requirements on initial download size, startup time and memory usage to ensure that games load fast and run well on low end devices and slow internet connections. To optimize an HTML5 game it is recommended to focus on the following areas:</p>
+
+<ul>
+  <li><a href="/manuals/optimization-memory">Memory usage</a></li>
+  <li><a href="/manuals/optimization-size">Engine size</a></li>
+  <li><a href="/manuals/optimization-size">Game size</a></li>
+</ul>
+    
+      
+      <h2 id="faq">
+        
+        
+          FAQ <a href="#faq" class="anchor-link"></a>
+        
+        
+      </h2>
+    
+      
+      <h4 id="q-why-does-my-html5-app-freeze-at-the-splash-screen-in-chrome">
+        
+        
+          Q: Why does my HTML5-app freeze at the splash screen in Chrome? <a href="#q-why-does-my-html5-app-freeze-at-the-splash-screen-in-chrome" class="anchor-link"></a>
+        
+        
+      </h4>
+
+<p>A: In some cases it is not possible to run a game in the browser locally from the filesystem. Running from the editor serves the game from a local web server. You can, for instance, use <code class="language-plaintext highlighter-rouge">SimpleHTTPServer</code> in Python:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python <span class="nt">-m</span> SimpleHTTPServer <span class="o">[</span>port]
+</code></pre></div></div>
+    
+      
+      <h4 id="q-why-does-my-game-crash-with-error-unexpected-data-size-while-loading">
+        
+        
+          Q: Why does my game crash with error “Unexpected data size” while loading? <a href="#q-why-does-my-game-crash-with-error-unexpected-data-size-while-loading" class="anchor-link"></a>
+        
+        
+      </h4>
+
+<p>A: This usually happens when you are using Windows and make a build and commit it to Git. If you have the wrong line-ending configuration in Git it will change your line endings and thus also the data size. Follow these instructions to solve the problem: <a href="https://docs.github.com/en/free-pro-team@latest/github/using-git/configuring-git-to-handle-line-endings">https://docs.github.com/en/free-pro-team@latest/github/using-git/configuring-git-to-handle-line-endings</a></p>
+
+					<nav class="learn-detail-pager" aria-label="Page navigation">
+	<div class="learn-detail-pager-grid"><a class="button secondary learn-detail-pager-button" href="/manuals/microsoft-xbox">
+			<span class="learn-detail-pager-label">⟵ Previous</span>
+			<span class="learn-detail-pager-title">Defold development for Microsoft Xbox</span>
+		</a><a class="button secondary learn-detail-pager-button learn-detail-pager-button-hub" href="/manuals">
+			<span class="learn-detail-pager-label">↖ Get back to</span>
+			<span class="learn-detail-pager-title">All manuals</span>
+		</a><a class="button primary learn-detail-pager-button" href="/extension-crazygames">
+			<span class="learn-detail-pager-label">Next  ⟶</span>
+			<span class="learn-detail-pager-title">Defold CrazyGames SDK extension API documentation</span>
+		</a></div>
+</nav>
+
+				</div>
+			</div>
+			<div class="columns three learn-detail-sidebar">
+				<div class="learn-detail-sidebar-stack"><div class="learn-detail-panel learn-detail-languages learn-sidebar-panel page-surface-panel page-text-panel">
+	<input class="toggle" type="checkbox" checked/>
+	<label class="togglelabel">Languages</label>
+	<ul class="nobullet"><li class="learn-detail-list-item"><a class="learn-detail-list-link" href='/manuals/html5'>English</a></li><li class="learn-detail-list-item"><a class="learn-detail-list-link" href='/zh/manuals/html5'>中文 (Chinese)</a></li><li class="learn-detail-list-item"><a class="learn-detail-list-link" href='/pl/manuals/html5'>Język polski (Polish)</a></li><li class="learn-detail-list-item"><a class="learn-detail-list-link" href='/ru/manuals/html5'>Русский (Russian)</a></li></ul>
+</div>
+					<div class="learn-detail-panel learn-detail-sections learn-sidebar-panel page-surface-panel page-text-panel">
+						<input class="toggle" type="checkbox" checked/>
+						<label class="togglelabel">On this page</label>
+						<ul class="nobullet"><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#html5-development'>HTML5 development</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#heap-size'>Heap size</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#testing-html5-build'>Testing HTML5 build</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#creating-html5-bundle'>Creating HTML5 bundle</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#known-issues-and-limitations'>Known issues and limitations</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#customizing-html5-bundle'>Customizing HTML5 bundle</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#downscale-fit-and-fit'>Downscale Fit and Fit</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#stretch'>Stretch</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#no-scale'>No Scale</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#tokens'>Tokens</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#extra-parameters'>Extra parameters</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#file-operations-in-html5'>File operations in HTML5</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#passing-arguments-to-an-html5-game'>Passing arguments to an HTML5 game</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#engine-arguments'>Engine arguments</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#query-arguments-in-the-url'>Query arguments in the URL</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#optimizations'>Optimizations</a>
+							</li><li class="learn-detail-list-item">
+								<a class="learn-detail-list-link" href='#faq'>FAQ</a>
+							</li></ul>
+					</div>
+					<div class="learn-detail-panel learn-detail-feedback page-surface-panel page-text-panel">
+	<p>Did you spot an error or do you have a suggestion? Please let us know on GitHub!</p>
+	<a class="button secondary" href="https://github.com/defold/doc" target="">GITHUB</a>
+
+</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
+<script>
+	var query = new URLSearchParams(window.location.search).get('q');
+	if (query) {
+		var instance = new Mark("div.manual");
+		instance.mark(query);
+		var elements = document.getElementsByTagName("mark");
+		if (elements.length > 0) {
+			elements[0].scrollIntoView();
+		}
+	}
+</script>
+<script src="/js/clipboard.js" defer></script>
+<script defer>
+	(function() {
+		function ready(callback) {
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', callback, { once: true });
+			} else {
+				callback();
+			}
+		}
+		ready(function() {
+			var elementsWithCode = document.querySelectorAll([
+				'pre.highlight',
+				'div.codehilite pre',
+				'figure.highlight > pre'
+			].join(','));
+			for (var el of elementsWithCode) {
+				var container = createCopyToClipboardButtonFor(el);
+				el.parentNode.style.position = 'relative';
+				el.parentNode.appendChild(container);
+			}
+		});
+	})();
+</script>
+
+	</div>
+
+	<footer class="darkest">
+	<div class="container">
+		<div class="row">
+			<br/>
+		</div>
+		<div class="row">
+			<div class="two columns">
+				<ul>
+					<li><a href="/about">About</a></li>
+					<li><a href="/contact">Contact</a></li>
+					<li><a href="/foundation">Foundation</a></li>
+					<li><a href="/faq/faq">FAQ</a></li>
+					<li><a href="/status">Extender status</a></li>
+				</ul>
+			</div>
+			<div class="two columns">
+				<p><b>NEWS</b></p>
+				<ul>
+					<li><a href="/news">News</a></li>
+					<li><a href="/blog">Blog</a></li>
+					<li><a href="/newsletter">Newsletter</a></li>
+					<li><a href="https://forum.defold.com/c/releasenotes">Releases ↗</a></li>
+					<li><a href="/press">Press</a></li>
+				</ul>
+			</div>
+			<div class="two columns">
+				<p><b>GET INVOLVED</b></p>
+				<ul>
+					<li><a href="/open">Open&nbsp;Source</a></li>
+					<li><a href="/donate">Donate</a></li>
+					<li><a href="/contribute">Contribute</a></li>
+					<li><a href="/corporate-partnerships">Corporate Partnership</a></li>
+				</ul>
+			</div>
+			<div class="two columns">
+				<p><b>LEARN</b></p>
+				<ul>
+					<li><a href="/ref/go">API</a></li>
+					<li><a href="/examples">Examples</a></li>
+					<li><a href="/manuals">Manuals</a></li>
+					<li><a href="/tutorials">Tutorials</a></li>
+					<li><a href="/videos">Videos</a></li>
+				</ul>
+			</div>
+			<div class="two columns">
+				<p><b>COMMUNITY</b></p>
+				<ul>
+					<li><a href="/discord">Discord</a></li>
+					<!-- <li><a href="https://www.facebook.com/Defold" target="_blank">Facebook</a></li> -->
+					<li><a href="https://forum.defold.com" target="_blank">Forum ↗</a></li>
+					<li><a href="https://www.linkedin.com/company/defold-foundation" target="_blank">LinkedIn ↗</a></li>
+					<li><a href="https://mastodon.gamedev.place/@defold" target="_blank" rel="me">Mastodon ↗</a></li>
+					<li><a href="https://www.reddit.com/r/defold/" target="_blank">Reddit ↗</a></li>
+					<li><a href="https://x.com/defold" target="_blank">X (Twitter) ↗</a></li>
+				</ul>
+			</div>
+			<div class="two columns">
+				<p><b>LEGAL</b></p>
+				<ul>
+					<li><a href="/license">License</a></li>
+					<li><a href="/logo-and-trademark">Logo &amp; Trademark</a></li>
+					<li><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
+					<li><a href="/privacy-policy">Privacy Policy</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row center">
+			<p>"PlayStation Family Mark", "PlayStation", "PS4" and "PS4 logo" are registered trademarks or trademarks of Sony Interactive Entertainment Inc.</p>
+			<p>Copyright © 2026 Defold Foundation.</p>
+		</div>
+	</div>
+</footer>
+
+</div>
+
+<button class="page-scroll-top-button" type="button" data-scroll-top aria-label="Scroll to top" title="Scroll to top">
+	<span class="site-icon page-scroll-top-icon" aria-hidden="true">
+	<span class="octicon" style="fill: currentColor; zoom: 1; vertical-align: middle;">
+	<svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16"><path fill-rule="evenodd" d="M5 3L0 9h3v4h4V9h3L5 3z"/></svg>
+</span>
+
+</span>
+
+</button>
+<script src="/js/scroll-top-button.js" defer></script>
+<script src="/js/transition.js" defer></script>
+</body>
+</html>

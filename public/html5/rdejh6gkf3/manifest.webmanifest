@@ -1,0 +1,15 @@
+{
+    "name": "CoffeeTalk (WP)",
+    "short_name": "CoffeeTalk (WP)",
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "background_color": "#800026",
+    "theme_color": "#000",
+    "description": "Coffee Talk (WP)",
+    "icons": [{
+      "src": "TemplateData/icons/unity-logo-dark.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }]
+  }

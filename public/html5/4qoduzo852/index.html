@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-PXHK7Q7G3Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PXHK7Q7G3Z');
+</script>
+    <meta charset="utf-8">
+    <title>Unity WebGL Player | Bendy and the Ink Machine</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box
+      }
+
+      body {
+        background: #000;
+        overflow: hidden
+      }
+
+      #loading-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font: 24px Arial
+      }
+
+      #unity-canvas {
+        width: 100vw;
+        height: 100vh;
+        display: block
+      }
+
+      #unity-mobile-warning {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        background: rgba(0, 0, 0, .9);
+        padding: 20px;
+        border-radius: 8px;
+        font: 14px Arial
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-mobile-warning">WebGL not supported on mobile</div>
+    <div id="loading-text">Loading...</div>
+    <canvas id="unity-canvas"></canvas>
+
+    <script>
+      alert("this web port was made by slant + crackers (woahhcrackers) dont take credit for it")
+
+      const lt = document.getElementById("loading-text"),
+            cv = document.getElementById("unity-canvas"),
+            mw = document.getElementById("unity-mobile-warning");
+
+      let lb = 0;
+      const tm = '576.24';
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        const m = document.createElement('meta');
+        m.name = 'viewport';
+        m.content = 'width=device-width,height=device-height,initial-scale=1,user-scalable=no,shrink-to-fit=yes';
+        document.head.appendChild(m);
+        mw.style.display = "block";
+        setTimeout(() => mw.style.display = "none", 5000);
+      }
+
+      async function fwp(u) {
+        const r = await fetch(u),
+          rd = r.body.getReader(),
+          ch = [];
+
+        while (true) {
+          const { done, value } = await rd.read();
+          if (done) break;
+          lb += value.length;
+          ch.push(value);
+          lt.textContent = `${(lb/1048576).toFixed(2)} MB / ${tm} MB`;
+        }
+
+        return URL.createObjectURL(new Blob(ch));
+      }
+
+      async function mf(p) {
+        const b = await Promise.all(p.map(fwp)),
+              bl = await Promise.all(b.map(u => fetch(u).then(r => r.blob())));
+        return URL.createObjectURL(new Blob(bl));
+      }
+
+      function gp(base, start, end) {
+        return Array.from({ length: end - start + 1 }, (_, i) => {
+          const n = String(start + i).padStart(3, '0');
+          return `${base}.${n}`;
+        });
+      }
+
+      (async () => {
+
+        async function autoChunks(base, max = 200) {
+          const urls = [];
+          for (let i = 1; i <= max; i++) {
+            const n = String(i).padStart(3, '0');
+            const url = `${base}.${n}`;
+            const r = await fetch(url, { method: 'HEAD' });
+            if (!r.ok) break;
+            urls.push(url);
+          }
+          return urls;
+        }
+
+        const dc = await autoChunks("Build/BATIM.data");
+        const du = await mf(dc);
+        const wu = "Build/BATIM.wasm";
+
+        sc = document.createElement("script");
+        sc.src = "Build/BATIM.loader.js";
+
+        sc.onload = () => {
+          createUnityInstance(cv, {
+            dataUrl: du,
+            frameworkUrl: "Build/BATIM.framework.js",
+            codeUrl: wu,
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "crackers",
+            productName: "BATIM",
+            productVersion: "1.0"
+          }).then(() => {
+            lt.remove();
+          }).catch(alert);
+        };
+
+        document.body.appendChild(sc);
+		alert("this web port was made by slant + crackers (woahhcrackers) dont take credit for it")
+      })();
+    </script>
+  </body>
+</html>
