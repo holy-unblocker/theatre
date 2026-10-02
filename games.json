@@ -18775,11 +18775,20 @@
   },
   {
     "id": "tuffclient",
-    "name": "TuffClient (Minecraft 1.12.2)",
+    "name": "TuffClient",
     "category": "sandbox",
     "type": "embed",
     "src": "./html5/tuffclient/index.html",
-    "plays": 0,
+    "plays": 999999998,
+    "controls": "[]"
+  },
+  {
+    "id": "flyinggorilla",
+    "name": "Flying Gorilla",
+    "category": "platformer",
+    "type": "embed",
+    "src": "./html5/fg/index.html",
+    "plays": 999999999,
     "controls": "[]"
   }
 ]
