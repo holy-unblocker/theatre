@@ -18778,7 +18778,7 @@
     "name": "TuffClient (WASM)",
     "category": "sandbox",
     "type": "embed",
-    "src": "./html5/tuffclient/files/1_1UT12/WASM/index.html",
+    "src": "./html5/tuffclient-wasm/index.html",
     "plays": 999999998,
     "controls": "[]"
   },
@@ -18787,12 +18787,12 @@
     "name": "TuffClient (JS)",
     "category": "sandbox",
     "type": "embed",
-    "src": "./html5/tuffclient/files/1_1UT13/JS/index.html",
+    "src": "./html5/tuffclient-js/index.html",
     "plays": 999999997,
     "controls": "[]"
   },
   {
-    "id": "flyinggorilla",
+    "id": "fg",
     "name": "Flying Gorilla",
     "category": "platformer",
     "type": "embed",
