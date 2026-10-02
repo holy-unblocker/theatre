@@ -18774,12 +18774,21 @@
     "controls": "[]"
   },
   {
-    "id": "tuffclient",
-    "name": "TuffClient",
+    "id": "tuffclient-wasm",
+    "name": "TuffClient (WASM)",
     "category": "sandbox",
     "type": "embed",
-    "src": "./html5/tuffclient/index.html",
+    "src": "./html5/tuffclient/files/1_1UT12/WASM/index.html",
     "plays": 999999998,
+    "controls": "[]"
+  },
+  {
+    "id": "tuffclient-js",
+    "name": "TuffClient (JS)",
+    "category": "sandbox",
+    "type": "embed",
+    "src": "./html5/tuffclient/files/1_1UT13/JS/index.html",
+    "plays": 999999997,
     "controls": "[]"
   },
   {
