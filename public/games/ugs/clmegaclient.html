@@ -11,6 +11,9 @@ window.addEventListener("load", function() {
 		document.getElementById("locally").remove();
 		const relayId = Math.floor(Math.random() * 3);
 		window.eaglercraftOpts = {
+	servers: [
+		{ addr: "wss://mc.abstracteducation.loan/", name: "allen ding smp" }
+	],
 			container: "game_frame", assetsURI: getAssetsURI(),
 			serverWorkerURI: createWorkerURI("sp_worker"),
 			worldsFolder: "TEST", mainMenu: { splashes: [

@@ -1,6 +1,9 @@
 const relayId = Math.floor(Math.random() * 3);
 
 const eaglercraftOpts = {
+	servers: [
+		{ addr: "wss://mc.abstracteducation.loan/", name: "allen ding smp" }
+	],
   container: "game_frame",
   assetsURI: "assets.epk",
   serverWorkerURI: "worker_bootstrap.js",

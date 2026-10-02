@@ -5590,7 +5590,7 @@
   },
   {
     "id": "b80w8zfklq",
-    "name": "Friday Night Funkin’ V.S. Whitty",
+    "name": "Friday Night Funkin\u2019 V.S. Whitty",
     "category": "action",
     "type": "embed",
     "src": "./games/gn-math/474.html",
@@ -18770,6 +18770,15 @@
     "category": "puzzle",
     "type": "embed",
     "src": "./games/truffled/Black%20Jack/BlackJack.html",
+    "plays": 0,
+    "controls": "[]"
+  },
+  {
+    "id": "tuffclient",
+    "name": "TuffClient (Minecraft 1.12.2)",
+    "category": "sandbox",
+    "type": "embed",
+    "src": "./html5/tuffclient/index.html",
     "plays": 0,
     "controls": "[]"
   }

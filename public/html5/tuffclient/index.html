@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>TuffClient</title>
+  <meta charset="utf-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="files.css" />
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="logo">Tuff Untested</h1>
+      <nav class="nav">
+      </nav>
+    </header>
+
+    <main>
+      <section id="latest" class="section active">
+        <div class="section-header">
+          <h2>Latest Build</h2>
+          <span class="badge">1.1UT12 - 1.1UT13</span>
+        </div>
+        
+        <div class="card">
+          <h3>Play Online</h3>
+          <div class="link-group">
+            <a href="files/1_1UT12/WASM/" class="btn btn-primary">WASM Version</a>
+            <a href="files/1_1UT13/JS/" class="btn btn-secondary">JS Version</a>
+          </div>
+        </div>
+
+        <div class="card notes">
+          <h3>Release Notes</h3>
+          <p class="version-info">Version 1.1UT13 — Feb 9, 2026</p>
+          <ul>
+            <li>Full trident support with riptide</li>
+            <li>Redid Y0</li>
+            <li>Viablocks WALIA support</li>
+            <li>Huge optimizations</li>
+            <li>Scrollable Zoom</li>
+            <li>Fixed trims</li>
+            <li>Viasounds</li>
+            <li>Server-side Viaentities</li>
+            <li>Redid Viablocks model system</li>
+            <li>Anti Pickup Module</li>
+            <li>Fixed invisible floor and roof for Y0</li>
+            <li>More Viaentities</li>
+          </ul>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.nav-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.nav-btn').forEach(function (b) { b.classList.remove('active'); });
+        document.querySelectorAll('.section').forEach(function (s) { s.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+      });
+    });
+
+    if ('serviceWorker' in navigator) {
+      var swReady = navigator.serviceWorker.register('/sw.js').then(function () {
+        if (navigator.serviceWorker.controller) return;
+        return new Promise(function (r) {
+          navigator.serviceWorker.addEventListener('controllerchange', r, { once: true });
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href*="/files/"]');
+        if (!link) return;
+        e.preventDefault();
+        swReady.then(function () { location.href = link.href; });
+      });
+    }
+  </script>
+</body>
+
+</html>
