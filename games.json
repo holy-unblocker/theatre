@@ -18795,8 +18795,8 @@
     "id": "fg",
     "name": "Flying Gorilla",
     "category": "platformer",
-    "type": "proxy",
-    "src": "https://pages.eli.gift/fg/",
+    "type": "embed",
+    "src": "./html5/fg/index.html",
     "plays": 999999999,
     "controls": "[]"
   }
