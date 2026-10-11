@@ -18779,7 +18779,7 @@
     "category": "sandbox",
     "type": "embed",
     "src": "./html5/tuffclient-wasm/index.html",
-    "plays": 999999998,
+    "plays": 999999997,
     "controls": "[]"
   },
   {
@@ -18788,7 +18788,7 @@
     "category": "sandbox",
     "type": "embed",
     "src": "./html5/tuffclient-js/index.html",
-    "plays": 999999997,
+    "plays": 999999996,
     "controls": "[]"
   },
   {
@@ -18798,6 +18798,15 @@
     "type": "embed",
     "src": "./html5/fg/index.html",
     "plays": 999999999,
+    "controls": "[]"
+  },
+  {
+    "id": "krunkio",
+    "name": "Krunk.io",
+    "category": "shooter",
+    "type": "proxy",
+    "src": "https://krunk.io/",
+    "plays": 999999998,
     "controls": "[]"
   }
 ]
